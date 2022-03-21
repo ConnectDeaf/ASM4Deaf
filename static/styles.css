@@ -1,0 +1,12 @@
+div#gif_type label{
+    margin-right: 3rem;
+}
+button#add_badge:active{
+    font-weight: bold;
+}
+div#badges{
+    height: 30px;
+}
+input#keywords{
+    display: none;
+}

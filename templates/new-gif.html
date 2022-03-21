@@ -3,10 +3,30 @@
 {% block content %}
 <h2>GIF Details</h2>
     <form class="form" id="data" action="#" method="post" enctype="multipart/form-data">
+            
+            <div class="row mt-5">
+                <div class="col">
+                    <h4>Select GIF Type</h4>
+                </div>  
+            </div>
+            <div class="row mb-4" id="gif_type" >
+                <div class="col">
+                    <input type="radio" name="gif_type" id="head_gif" value="head">
+                    <label class="form-label" for="head_gif"><h4>Head</h4></label>
+                    <input type="radio" name="gif_type" id="toso_gif" value="torso">
+                    <label class="form-label" for="torso_gif"><h4>Torso</h4></label>
+                    <input type="radio" name="gif_type" id="fullbody_gif" value="fullbody">
+                    <label class="form-label" for="fullbody_gif"><h4>Full body</h4></label>
+                </div>
+            </div>
             <div class="row my-4">
                 <div class="col">
                     <label class="form-label" for="keywords"><h4>Keywords</h4></label>
-                    <input type="text" class="form-control" name="keywords" id="keywords" required>
+                    <input type="text" class="form-control" name="new_keyword" id="new_keyword" required>
+                    <button type="button" id="add_badge" class="btn btn-secondary">+</button>
+
+                    <div id="badges"></div>
+                    <input type="text" class="form-control" name="keywords" id="keywords" readonly>
                 </div>
             </div>
             
@@ -29,7 +49,7 @@
             <!--- Submit Button --->
             <div class="row my-5">
                 <div class="col">
-                    <button class="btn btn-primary" onclick=onClick() name="submit" type="submit" id="submit">Submit</button>
+                    <button class="btn btn-primary" name="submit" type="submit" id="submit">Submit</button>
                 </div>
             </div>
     </form>
