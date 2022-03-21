@@ -1,0 +1,1 @@
+FILEPATH_ROOT = ".\GIFs\\"

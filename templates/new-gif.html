@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Add New GIF{% endblock%}
+{% block content %}
+<h2>GIF Details</h2>
+    <form class="form" id="data" action="#" method="post" enctype="multipart/form-data">
+            <div class="row my-4">
+                <div class="col">
+                    <label class="form-label" for="keywords"><h4>Keywords</h4></label>
+                    <input type="text" class="form-control" name="keywords" id="keywords" required>
+                </div>
+            </div>
+            
+            <hr class="rounded">
+            
+            <div class="row mt-5">
+                <div class="col">
+                    <h4>File upload</h4>
+                </div>  
+            </div>
+            
+            <!--- File upload --->
+            <div class="row my-5">
+                <div class="col">
+                    <label class="form-label" for="GIFfile"><h5>Select GIF file</h5></label>
+                    <input class="form-control form-control-lg" type="file" name="GIFfile" id="GIFfile" accept=".gif" required>
+                </div>
+            </div>
+            
+            <!--- Submit Button --->
+            <div class="row my-5">
+                <div class="col">
+                    <button class="btn btn-primary" onclick=onClick() name="submit" type="submit" id="submit">Submit</button>
+                </div>
+            </div>
+    </form>
+{% endblock %}
