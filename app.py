@@ -23,7 +23,13 @@ class HeadModel(db.Model):
     def __repr__(self):
         return f"HeadID: {self.HeadID}, Keywords :{self.Keywords}, VideoURL: {self.VideoURL}"
 
-
+@app.route('/login', methods=["POST", "GET"])
+@app.route('/login/', methods=["POST", "GET"])
+def login():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template("login.html")
 
 @app.route('/new', methods=["POST", "GET"])
 @app.route('/new/', methods=["POST", "GET"])
