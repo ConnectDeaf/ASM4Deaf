@@ -2,8 +2,8 @@ function create_new_button_badge(new_keyword){
     let new_badge = document.createElement("button");
     new_badge.type = "button";
     new_badge.classList.add("btn");
-    new_badge.classList.add("btn-primary");
-    new_badge.innerText = new_keyword;
+    new_badge.classList.add("btn-warning");
+    new_badge.innerText = new_keyword + " [x]";
     new_badge.onclick = function(){ //on click, remove self
         new_badge.remove();
 
@@ -61,7 +61,7 @@ $("form#data").submit(function(e) {
 
     //prepare the auxiliary input field's value
     if (prepare_keywords_aux_field() == ""){
-        alert("You canot submit a GIF with no keywords! Please add at least one.");
+        alert("You cannot submit a GIF with no keywords! Please add at least one.");
         return;
     }
 

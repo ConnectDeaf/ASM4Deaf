@@ -7,6 +7,10 @@ button#add_badge:active{
 div#badges{
     height: 30px;
 }
+div#badges button{
+    margin-right: 5px;
+}
+
 input#keywords{
     display: none;
 }
