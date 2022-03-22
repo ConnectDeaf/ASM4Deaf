@@ -4,13 +4,21 @@ div#gif_type label{
 button#add_badge:active{
     font-weight: bold;
 }
-div#badges{
-    height: 30px;
+div#badges p{
+    color: gray;
 }
 div#badges button{
-    margin-right: 5px;
+    margin: 2.5px;
 }
 
 input#keywords{
     display: none;
+}
+
+.keyword-wrapper {
+    margin-top: -30px;
+    margin-left: 25px;
+}
+.keyword-wrapper p{
+    margin-bottom: 5px;
 }

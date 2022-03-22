@@ -48,6 +48,13 @@ $("button#add_badge").click(function(e) {
     //reset new_keyword input field
     new_keyword_element.value = "";
     new_keyword_element.required = false;
+
+
+    //remove "placeholding" span
+    let placeholding_span = document.querySelector("div#badges p");
+    if (placeholding_span){
+        placeholding_span.remove();
+    };
     
     //create and add a new badge with the keyword
     let badges_div = document.querySelector("div#badges");
