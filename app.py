@@ -80,11 +80,11 @@ def add_new():
         #retrieve sign languages and signer races from the database
         races =  SignerRacesModel.query.all()
         races = [[r.RaceID, r.RaceName] for r in races]
-        races = json.dumps(races)
+        #races = json.dumps(races)
        
         languages =  SignLanguagesModel.query.all()
         languages = [[l.LanguageID, l.LanguageName] for l in languages]
-        languages = json.dumps(languages)
+        #languages = json.dumps(languages)
 
         return render_template("new-gif.html", races=races, languages=languages)
   

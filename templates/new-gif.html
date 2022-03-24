@@ -27,9 +27,10 @@
                     <p>Sign Language:</p>
                 </div>
                 <div class="col-7">
-                    <select class="form-select"> <!-- OPTIONS MUST BE DYNAMICALLY CREATED! -->
-                        <option value="1" selected>Language 1</option>
-                        <option value="2">Language 2</option>
+                    <select class="form-select">
+                        {% for l in languages %}
+                                <option value="{{l[0]}}">{{l[1]}}</option>    
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -38,10 +39,10 @@
                     <p>Signer Race:</p>
                 </div>
                 <div class="col-7">
-                    <select class="form-select"> <!-- OPTIONS MUST BE DYNAMICALLY CREATED! -->
-                        <option value="1" selected>Race 1</option>
-                        <option value="2">Race 2</option>
-                        <option value="3">Race 3</option>
+                    <select class="form-select">
+                        {% for r in races %}
+                            <option value="{{r[0]}}">{{r[1]}}</option>    
+                        {% endfor %}
                     </select>
                 </div>
             </div>
