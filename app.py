@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from my_config import FILEPATH_ROOT
 from datauri import DataURI
+import json
 import aux_
 
 app = Flask(__name__)
@@ -10,29 +11,38 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://test_user:test_p
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
  
-class HeadModel(db.Model):
-    __tablename__ = 'heads'
+### DECLARING DATABASE TABLES ###
+class SignerRacesModel(db.Model):
+    __tablename__ = 'signerraces'
  
-    HeadID = db.Column(db.Integer, primary_key = True)
-    Keywords = db.Column(db.String(200))
-    VideoURL = db.Column(db.String(1000))
- 
-    def __init__(self, Keywords, VideoURL):
-        self.Keywords = Keywords
-        self.VideoURL = VideoURL
+    RaceID = db.Column(db.Integer, primary_key = True)
+    RaceName = db.Column(db.String(50))    
+    
+    def __init__(self, RaceID, RaceName):
+        self.RaceID = RaceID
+        self.RaceName = RaceName
  
     def __repr__(self):
-        return f"HeadID: {self.HeadID}, Keywords :{self.Keywords}, VideoURL: {self.VideoURL}"
+        return f"RaceID: {self.RaceID}, RaceName :{self.RaceName}"
 
-@app.route('/login', methods=["POST", "GET"])
-@app.route('/login/', methods=["POST", "GET"])
-def login():
-    if request.method == 'POST':
-        pass
-    else:
-        return render_template("login.html")
 
-@app.route('/new', methods=["POST", "GET"]) #STATUS: Unfinished
+class SignLanguagesModel(db.Model):
+    __tablename__ = 'signlanguages'
+ 
+    LanguageID = db.Column(db.Integer, primary_key = True)
+    LanguageName = db.Column(db.String(50))    
+    
+    def __init__(self, LanguageID, LanguageName):
+        self.LanguageID = LanguageID
+        self.LanguageName = LanguageName
+ 
+    def __repr__(self):
+        return f"LanguageID: {self.LanguageID}, LanguegeName :{self.LanguageName}"
+
+
+
+
+@app.route('/new', methods=["POST", "GET"])
 @app.route('/new/', methods=["POST", "GET"])
 def add_new():
     if request.method == "POST":
@@ -66,13 +76,31 @@ def add_new():
             # PENDING: append the actual error message to this sentence
             return "Failed to add GIF to the database!" 
 
-
-        
     else:
-        return render_template("new-gif.html")
- 
- 
-@app.route('/search', methods=['GET'])
+        #retrieve sign languages and signer races from the database
+        races =  SignerRacesModel.query.all()
+        races = [[r.RaceID, r.RaceName] for r in races]
+        races = json.dumps(races)
+       
+        languages =  SignLanguagesModel.query.all()
+        languages = [[l.LanguageID, l.LanguageName] for l in languages]
+        languages = json.dumps(languages)
+
+        return render_template("new-gif.html", races=races, languages=languages)
+  
+
+
+
+@app.route('/login', methods=["POST", "GET"])#pending
+@app.route('/login/', methods=["POST", "GET"])
+def login():
+    if request.method == 'POST': 
+        pass
+    else:
+        return render_template("login.html")
+
+
+@app.route('/search', methods=['GET'])#pending
 @app.route('/search/', methods=['GET'])
 def search():
     
@@ -99,9 +127,9 @@ def search():
     #return preview page
     return render_template("search-gif.html", keywords=keywords, gif_uri=gif_uri)
 
-    return
 
-@app.route("/retrieve", methods=["GET"])
+
+@app.route("/retrieve", methods=["GET"])#pending
 def retrieve():
     
     #(example) http://10.16.20.182:5000/retrieve?type=heads&id=3
