@@ -7,7 +7,7 @@
     <!-- GIF type selection -->
     <div class="row my-5" id="gif_type">
         <div class="col-5">
-            <h5>Select GIF Type:</h5>
+            <h5>Select type</h5>
             <input type="radio" name="gif_type" id="head_gif" value="head">
             <label class="form-label" for="head_gif">Head</label>
             <input type="radio" name="gif_type" id="toso_gif" value="torso">
@@ -15,13 +15,45 @@
             <input type="radio" name="gif_type" id="fullbody_gif" value="fullbody">
             <label class="form-label" for="fullbody_gif">Full body</label>
         </div>
-        
+    </div>
+
+    
+    <!-- GIF metadata selection -->
+    <div class="row my-5" id="gif_type">
+        <div class="col-5">
+            <h5>Provide metadata</h5> 
+            <div class="row my-1">
+                <div class="col-6">
+                    <p>Sign Language:</p>
+                </div>
+                <div class="col-6">
+                    <select class="form-select"> <!-- OPTIONS MUST BE DYNAMICALLY CREATED! -->
+                        <option value="1" selected>Language 1</option>
+                        <option value="2">Language 2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-6">
+                    <p>Signer Race:</p>
+                </div>
+                <div class="col-6">
+                    <select class="form-select"> <!-- OPTIONS MUST BE DYNAMICALLY CREATED! -->
+                        <option value="1" selected>Race 1</option>
+                        <option value="2">Race 2</option>
+                        <option value="3">Race 3</option>
+                    </select>
+                </div>
+            </div>
+            
+            
+        </div>
     </div>
 
     <!--- File upload --->
     <div class="row my-5">
         <div class="col-5">
-            <h5>Upload GIF file:</h5>
+            <h5>Upload file</h5>
             <input class="form-control" type="file" name="GIFfile" id="GIFfile" accept=".gif" required>
         </div>
     </div>
