@@ -92,10 +92,11 @@ def add_new():
                 
             filepath = aux_.save_gif_on_the_file_system(request, save_directory)
 
-            ### YET UNFINISHED (must learn how to get the primary key of the commited record as well!)
+            ### YET UNFINISHED
             head = HeadsModel(keywords, filepath, signer_race, sign_language)
             db.session.add(head)
             db.session.commit()
+            auto_generated_id = head.HeadID
             ###
         except:
             return "Failed to store the GIF!", 500
