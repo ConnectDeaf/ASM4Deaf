@@ -53,14 +53,18 @@ def add_new():
             signer_race = request.form["signer_race"]
             keywords = request.form["keywords"]
         except:
-            return Response("Incorect parameters", status=400, mimetype='application/json')
+            return "Incorect parameters!", 400
 
-        # create the target save-location path
-        ## PENDING
-        filepath_root = FILEPATH_ROOT + "heads\\" 
-
+        
         try:
-            aux_.save_gif_on_the_file_system(request, filepath_root)
+            if gif_type == "head":
+                save_directory = FILEPATH_ROOT + "heads\\"
+            elif gif_type == "torso":
+                save_directory = FILEPATH_ROOT + "torsos\\"
+            else:
+                save_directory = FILEPATH_ROOT + "fullbodys\\"
+                
+            aux_.save_gif_on_the_file_system(request, save_directory)
 
             #save keywords and local path in the database
             # PENDING
