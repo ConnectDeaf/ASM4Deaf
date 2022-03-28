@@ -10,38 +10,64 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://test_user:test_pass@localhost/asm4deaf"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
- 
-### DECLARING DATABASE TABLES ###
+
+############################### 
+## DECLARING DATABASE TABLES ##
+###############################
 class SignerRacesModel(db.Model):
     __tablename__ = 'signerraces'
  
     RaceID = db.Column(db.Integer, primary_key = True)
-    RaceName = db.Column(db.String(50))    
+    RaceName = db.Column(db.String(50)) 
+    head_gifs = db.relationship('HeadsModel', backref='signerraces', lazy=True)
+    #torso_gifs = db.relationship('TorsosModel', backref='signerraces', lazy=True)
+    #fullbody_gifs = db.relationship('FullbodysModel', backref='signerraces', lazy=True)
     
-    def __init__(self, RaceID, RaceName):
-        self.RaceID = RaceID
+    def __init__(self, RaceName):
         self.RaceName = RaceName
  
     def __repr__(self):
         return f"RaceID: {self.RaceID}, RaceName :{self.RaceName}"
 
-
 class SignLanguagesModel(db.Model):
     __tablename__ = 'signlanguages'
  
     LanguageID = db.Column(db.Integer, primary_key = True)
-    LanguageName = db.Column(db.String(50))    
+    LanguageName = db.Column(db.String(50))
+    #head_gifs = db.relationship('HeadsModel', backref='signerraces', lazy=True)
+    #torso_gifs = db.relationship('TorsosModel', backref='signerraces', lazy=True)
+    #fullbody_gifs = db.relationship('FullbodysModel', backref='signerraces', lazy=True)
     
-    def __init__(self, LanguageID, LanguageName):
-        self.LanguageID = LanguageID
+    def __init__(self, LanguageName):
         self.LanguageName = LanguageName
  
     def __repr__(self):
-        return f"LanguageID: {self.LanguageID}, LanguegeName :{self.LanguageName}"
+        return f"LanguageID: {self.LanguageID}, LanguageName :{self.LanguageName}"
+
+class HeadsModel(db.Model):
+    __tablename__ = 'heads'
+ 
+    HeadID = db.Column(db.Integer, primary_key = True)
+    Keywords = db.Column(db.String(200))
+    VideoURL = db.Column(db.String(1000))
+    RaceID = db.Column(db.Integer, db.ForeignKey('signerraces.RaceID'), nullable=False)
+    LanguageID = db.Column(db.Integer, db.ForeignKey('signlanguages.LanguageID'), nullable=False)
+    
+    def __init__(self, Keywords, VideoURL, RaceID, LanguageID):
+        self.Keywords = Keywords
+        self.VideoURL = VideoURL
+        self.RaceID = RaceID
+        self.LanguageID = LanguageID
+        
+ 
+    def __repr__(self):
+        return f"HeadID: {self.HeadID}, Keywords: {self.Keywords}, VideoURL: {self.VideoURL}, RaceID: {self.RaceID}, LanguageID: {self.LanguageID}"
 
 
 
-
+#################################
+## CREATING THE SITE ENDPOINTS ##
+#################################
 @app.route('/new', methods=["POST", "GET"])
 @app.route('/new/', methods=["POST", "GET"])
 def add_new():
@@ -64,10 +90,13 @@ def add_new():
             else:
                 save_directory = FILEPATH_ROOT + "fullbodys\\"
                 
-            aux_.save_gif_on_the_file_system(request, save_directory)
+            filepath = aux_.save_gif_on_the_file_system(request, save_directory)
 
-            #save keywords and local path in the database
-            # PENDING
+            ### YET UNFINISHED (must learn how to get the primary key of the commited record as well!)
+            head = HeadsModel(keywords, filepath, signer_race, sign_language)
+            db.session.add(head)
+            db.session.commit()
+            ###
         except:
             return "Failed to store the GIF!", 500
 

@@ -24,7 +24,7 @@ function get_keywords_csv(){
     let all_badge_buttons = document.querySelectorAll("div#badges button");  
     let keyword_csv_str = "";  
     all_badge_buttons.forEach(function (item, index){
-        keyword_csv_str += item.innerText + ((index < (all_badge_buttons.length-1)) ? ',' : '');
+        keyword_csv_str += item.innerText.slice(0, -4) + ((index < (all_badge_buttons.length-1)) ? ',' : '');
     });
     return keyword_csv_str;
 }

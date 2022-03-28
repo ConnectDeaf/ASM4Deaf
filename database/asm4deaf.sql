@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2022 at 12:53 PM
+-- Generation Time: Mar 28, 2022 at 03:49 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -74,6 +74,17 @@ CREATE TABLE `signerraces` (
   `RaceName` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `signerraces`
+--
+
+INSERT INTO `signerraces` (`RaceID`, `RaceName`) VALUES
+(1, 'White'),
+(2, 'Black / African American'),
+(3, 'Native Hawaiian / Pacific Islander'),
+(4, 'Asian'),
+(5, 'American Indian / Alaska Native');
+
 -- --------------------------------------------------------
 
 --
@@ -84,6 +95,13 @@ CREATE TABLE `signlanguages` (
   `LanguageID` int(11) NOT NULL,
   `LanguageName` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `signlanguages`
+--
+
+INSERT INTO `signlanguages` (`LanguageID`, `LanguageName`) VALUES
+(1, 'American');
 
 -- --------------------------------------------------------
 
@@ -148,12 +166,29 @@ ALTER TABLE `torsos`
   ADD KEY `torsos_to_signerraces` (`RaceID`),
   ADD KEY `torsos_to_signlanguages` (`LanguageID`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
-
+--
+-- AUTO_INCREMENT for table `signerraces`
+--
 ALTER TABLE `signerraces`
-  MODIFY `RaceID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `RaceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `signlanguages`
+--
 ALTER TABLE `signlanguages`
-  MODIFY `LanguageID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `LanguageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `heads`
+  MODIFY `HeadID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `torsos`
+  MODIFY `TorsoID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `Fullbodys`
+  MODIFY `FullBodyID` int(11) NOT NULL AUTO_INCREMENT;
+
 
 --
 -- Constraints for dumped tables
