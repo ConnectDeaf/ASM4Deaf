@@ -27,7 +27,7 @@
                     <p>Sign Language:</p>
                 </div>
                 <div class="col-5">
-                    <select class="form-select">
+                    <select name="sign_languages" class="form-select">
                         {% for l in languages %}
                                 <option value="{{l[0]}}">{{l[1]}}</option>    
                         {% endfor %}
@@ -39,7 +39,7 @@
                     <p>Signer Race:</p>
                 </div>
                 <div class="col-5">
-                    <select class="form-select">
+                    <select name="signer_race" class="form-select">
                         {% for r in races %}
                             <option value="{{r[0]}}">{{r[1]}}</option>    
                         {% endfor %}

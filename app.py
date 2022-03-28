@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, Response
 from flask_sqlalchemy import SQLAlchemy
 from my_config import FILEPATH_ROOT
 from datauri import DataURI
@@ -46,47 +46,38 @@ class SignLanguagesModel(db.Model):
 @app.route('/new/', methods=["POST", "GET"])
 def add_new():
     if request.method == "POST":
+         
         try:
-            
-            # form fields and files presence-check (return the necessary status codes if not correct)
-            ## PENDING (type, keywords, gif file)
-
-            # get GIF type (according to which the rest of the steps into this function 
-            #                           will be performed or skipped)
-            ## PENDING
-
-            # create the target save-location path
-            ## PENDING
-            filepath_root = FILEPATH_ROOT + "heads\\" 
-
-            # store the received GIF on the file system
-            aux_.save_gif_on_the_file_system(request, filepath_root)
-
-            #get keywords 
+            gif_type = request.form['gif_type']
+            sign_language = request.form["sign_languages"]
+            signer_race = request.form["signer_race"]
             keywords = request.form["keywords"]
+        except:
+            return Response("Incorect parameters", status=400, mimetype='application/json')
+
+        # create the target save-location path
+        ## PENDING
+        filepath_root = FILEPATH_ROOT + "heads\\" 
+
+        try:
+            aux_.save_gif_on_the_file_system(request, filepath_root)
 
             #save keywords and local path in the database
             # PENDING
-
-            #return status message
-            return "Successfully added GIF to the database!"
         except:
-            # return status message
-            # this is just for the UI
-            # PENDING: append the actual error message to this sentence
-            return "Failed to add GIF to the database!" 
+            return "Failed to store the GIF!", 500
 
+        #return status message
+        return "Successfully stored the GIF!", 201
     else:
         #retrieve sign languages and signer races from the database
         races =  SignerRacesModel.query.all()
         races = [[r.RaceID, r.RaceName] for r in races]
-        #races = json.dumps(races)
        
         languages =  SignLanguagesModel.query.all()
         languages = [[l.LanguageID, l.LanguageName] for l in languages]
-        #languages = json.dumps(languages)
-
-        return render_template("new-gif.html", races=races, languages=languages)
+        
+        return render_template("new-gif.html", races=races, languages=languages), 200
   
 
 

@@ -81,11 +81,11 @@ $("form#data").submit(function(e) {
         url: window.location.pathname,
         type: 'POST',
         data: formData,
-        success: function (data) {
-            alert(data)
+        success: function (response) {
+            alert(response);
         },
-        error: function (e) {
-            alert(e)
+        error: function(response) {
+            alert(response.responseText);
         },
         cache: false,
         contentType: false,
