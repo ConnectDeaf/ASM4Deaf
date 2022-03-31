@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2022 at 03:49 PM
+-- Generation Time: Mar 31, 2022 at 03:15 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -24,6 +24,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bodyparts`
+--
+
+CREATE TABLE `bodyparts` (
+  `BodyPartID` int(11) NOT NULL,
+  `Keywords` varchar(200) NOT NULL,
+  `VideoURL` varchar(1000) NOT NULL,
+  `RaceID` int(11) DEFAULT NULL,
+  `LanguageID` int(11) DEFAULT NULL,
+  `PartType` varchar(1) NOT NULL COMMENT '''h'' for head, ''t'' for torso'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fullbodys`
 --
 
@@ -35,20 +50,6 @@ CREATE TABLE `fullbodys` (
   `LanguageID` int(11) DEFAULT NULL,
   `TorsoID` int(11) NOT NULL,
   `HeadID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `heads`
---
-
-CREATE TABLE `heads` (
-  `HeadID` int(11) NOT NULL,
-  `Keywords` varchar(200) NOT NULL,
-  `VideoURL` varchar(1000) NOT NULL,
-  `RaceID` int(11) DEFAULT NULL,
-  `LanguageID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -103,23 +104,17 @@ CREATE TABLE `signlanguages` (
 INSERT INTO `signlanguages` (`LanguageID`, `LanguageName`) VALUES
 (1, 'American');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `torsos`
---
-
-CREATE TABLE `torsos` (
-  `TorsoID` int(11) NOT NULL,
-  `Keywords` varchar(200) NOT NULL,
-  `VideoURL` varchar(1000) NOT NULL,
-  `RaceID` int(11) DEFAULT NULL,
-  `LanguageID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `bodyparts`
+--
+ALTER TABLE `bodyparts`
+  ADD PRIMARY KEY (`BodyPartID`),
+  ADD KEY `BodyParts_to_signerraces` (`RaceID`),
+  ADD KEY `BodyParts_to_signlanguages` (`LanguageID`);
 
 --
 -- Indexes for table `fullbodys`
@@ -130,14 +125,6 @@ ALTER TABLE `fullbodys`
   ADD KEY `HeadID` (`HeadID`),
   ADD KEY `fullbodys_to_signerraces` (`RaceID`),
   ADD KEY `fullbodys_to_signlanguages` (`LanguageID`);
-
---
--- Indexes for table `heads`
---
-ALTER TABLE `heads`
-  ADD PRIMARY KEY (`HeadID`),
-  ADD KEY `heads_to_signerraces` (`RaceID`),
-  ADD KEY `heads_to_signlanguages` (`LanguageID`);
 
 --
 -- Indexes for table `masks`
@@ -159,16 +146,20 @@ ALTER TABLE `signlanguages`
   ADD PRIMARY KEY (`LanguageID`);
 
 --
--- Indexes for table `torsos`
---
-ALTER TABLE `torsos`
-  ADD PRIMARY KEY (`TorsoID`),
-  ADD KEY `torsos_to_signerraces` (`RaceID`),
-  ADD KEY `torsos_to_signlanguages` (`LanguageID`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `bodyparts`
+--
+ALTER TABLE `bodyparts`
+  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `fullbodys`
+--
+ALTER TABLE `fullbodys`
+  MODIFY `FullBodyID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `signerraces`
@@ -182,46 +173,31 @@ ALTER TABLE `signerraces`
 ALTER TABLE `signlanguages`
   MODIFY `LanguageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
-ALTER TABLE `heads`
-  MODIFY `HeadID` int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `torsos`
-  MODIFY `TorsoID` int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `Fullbodys`
-  MODIFY `FullBodyID` int(11) NOT NULL AUTO_INCREMENT;
-
-
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `bodyparts`
+--
+ALTER TABLE `bodyparts`
+  ADD CONSTRAINT `BodyParts_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BodyParts_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `fullbodys`
 --
 ALTER TABLE `fullbodys`
-  ADD CONSTRAINT `fullbodys_ibfk_1` FOREIGN KEY (`TorsoID`) REFERENCES `torsos` (`TorsoID`),
-  ADD CONSTRAINT `fullbodys_ibfk_2` FOREIGN KEY (`HeadID`) REFERENCES `heads` (`HeadID`),
+  ADD CONSTRAINT `fullbodys_ibfk_1` FOREIGN KEY (`TorsoID`) REFERENCES `bodyparts` (`BodyPartID`),
+  ADD CONSTRAINT `fullbodys_ibfk_2` FOREIGN KEY (`HeadID`) REFERENCES `bodyparts` (`BodyPartID`),
   ADD CONSTRAINT `fullbodys_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fullbodys_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `heads`
---
-ALTER TABLE `heads`
-  ADD CONSTRAINT `heads_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `heads_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `masks`
 --
 ALTER TABLE `masks`
   ADD CONSTRAINT `masks_ibfk_1` FOREIGN KEY (`FullBodyID`) REFERENCES `fullbodys` (`FullBodyID`);
-
---
--- Constraints for table `torsos`
---
-ALTER TABLE `torsos`
-  ADD CONSTRAINT `torsos_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `torsos_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

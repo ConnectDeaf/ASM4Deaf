@@ -4,6 +4,7 @@ from my_config import FILEPATH_ROOT
 from datauri import DataURI
 import json
 import aux_
+import time
 
 app = Flask(__name__)
 
@@ -19,8 +20,7 @@ class SignerRacesModel(db.Model):
  
     RaceID = db.Column(db.Integer, primary_key = True)
     RaceName = db.Column(db.String(50)) 
-    head_gifs = db.relationship('HeadsModel', backref='signerraces', lazy=True)
-    #torso_gifs = db.relationship('TorsosModel', backref='signerraces', lazy=True)
+    BodyParts_gifs = db.relationship('BodyPartsModel', backref='signerraces', lazy=True)
     #fullbody_gifs = db.relationship('FullbodysModel', backref='signerraces', lazy=True)
     
     def __init__(self, RaceName):
@@ -34,9 +34,8 @@ class SignLanguagesModel(db.Model):
  
     LanguageID = db.Column(db.Integer, primary_key = True)
     LanguageName = db.Column(db.String(50))
-    #head_gifs = db.relationship('HeadsModel', backref='signerraces', lazy=True)
-    #torso_gifs = db.relationship('TorsosModel', backref='signerraces', lazy=True)
-    #fullbody_gifs = db.relationship('FullbodysModel', backref='signerraces', lazy=True)
+    BodyParts_gifs = db.relationship('BodyPartsModel', backref='signlanguages', lazy=True)
+    #fullbody_gifs = db.relationship('FullbodysModel', backref='signlanguages', lazy=True)
     
     def __init__(self, LanguageName):
         self.LanguageName = LanguageName
@@ -44,24 +43,26 @@ class SignLanguagesModel(db.Model):
     def __repr__(self):
         return f"LanguageID: {self.LanguageID}, LanguageName :{self.LanguageName}"
 
-class HeadsModel(db.Model):
-    __tablename__ = 'heads'
+class BodyPartsModel(db.Model):
+    __tablename__ = 'bodyparts'
  
     HeadID = db.Column(db.Integer, primary_key = True)
     Keywords = db.Column(db.String(200))
     VideoURL = db.Column(db.String(1000))
     RaceID = db.Column(db.Integer, db.ForeignKey('signerraces.RaceID'), nullable=False)
     LanguageID = db.Column(db.Integer, db.ForeignKey('signlanguages.LanguageID'), nullable=False)
+    PartType = db.Column(db.String(1))#'h' or 't'
     
-    def __init__(self, Keywords, VideoURL, RaceID, LanguageID):
+    def __init__(self, Keywords, VideoURL, RaceID, LanguageID, PartType):
         self.Keywords = Keywords
         self.VideoURL = VideoURL
         self.RaceID = RaceID
         self.LanguageID = LanguageID
+        self.PartType = PartType
         
  
     def __repr__(self):
-        return f"HeadID: {self.HeadID}, Keywords: {self.Keywords}, VideoURL: {self.VideoURL}, RaceID: {self.RaceID}, LanguageID: {self.LanguageID}"
+        return f"HeadID: {self.HeadID}, Keywords: {self.Keywords}, VideoURL: {self.VideoURL}, RaceID: {self.RaceID}, LanguageID: {self.LanguageID}, PartType: {self.PartType}"
 
 
 
@@ -80,28 +81,31 @@ def add_new():
             keywords = request.form["keywords"]
         except:
             return "Incorect parameters!", 400
-
         
         try:
             if gif_type == "head":
                 save_directory = FILEPATH_ROOT + "heads\\"
+                unique_filename_prefix = "head"
             elif gif_type == "torso":
                 save_directory = FILEPATH_ROOT + "torsos\\"
-            else:
-                save_directory = FILEPATH_ROOT + "fullbodys\\"
-                
-            filepath = aux_.save_gif_on_the_file_system(request, save_directory)
+                unique_filename_prefix = "torso"
+            
+            unique_filename_suffix = str(int(time.time()))
+            unique_filename = f"{unique_filename_prefix}-{unique_filename_suffix}.gif"
 
-            ### YET UNFINISHED
-            head = HeadsModel(keywords, filepath, signer_race, sign_language)
-            db.session.add(head)
+            filepath = aux_.save_gif_on_the_file_system(request, save_directory, unique_filename)
+
+            if gif_type == "head":
+                new_gif_record = BodyPartsModel(keywords, filepath, signer_race, sign_language, 'h')
+            elif gif_type == "torso":
+                new_gif_record = BodyPartsModel(keywords, filepath, signer_race, sign_language, 't')
+  
+            db.session.add(new_gif_record)
             db.session.commit()
-            auto_generated_id = head.HeadID
-            ###
         except:
+            aux_.delete_gif_file_from_file_system(filepath)            
             return "Failed to store the GIF!", 500
 
-        #return status message
         return "Successfully stored the GIF!", 201
     else:
         #retrieve sign languages and signer races from the database
