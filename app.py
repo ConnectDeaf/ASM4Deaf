@@ -66,12 +66,20 @@ class BodyPartsModel(db.Model):
 
 
 
-#################################
-## CREATING THE SITE ENDPOINTS ##
-#################################
+##############################################################
+##               CREATING THE SITE ENDPOINTS                ##
+##############################################################
+#NOTE: The GET endpoint versions return the pages for th UI,
+#        the POST endpoint versions do the actual work
+##############################################################
+
 @app.route('/new', methods=["POST", "GET"])
 @app.route('/new/', methods=["POST", "GET"])
 def add_new():
+    '''
+        stores the uploaded gif to the filesystem and creates the necessary database entry.
+        (it does not check for duplicates- I don't see a way to automatically check for duplicates)
+    '''
     if request.method == "POST":
          
         try:
@@ -96,9 +104,9 @@ def add_new():
             filepath = aux_.save_gif_on_the_file_system(request, save_directory, unique_filename)
 
             if gif_type == "head":
-                new_gif_record = BodyPartsModel(keywords, filepath, signer_race, sign_language, 'h')
+                new_gif_record = BodyPartsModel(keywords, unique_filename, signer_race, sign_language, 'h')
             elif gif_type == "torso":
-                new_gif_record = BodyPartsModel(keywords, filepath, signer_race, sign_language, 't')
+                new_gif_record = BodyPartsModel(keywords, unique_filename, signer_race, sign_language, 't')
   
             db.session.add(new_gif_record)
             db.session.commit()
@@ -118,48 +126,36 @@ def add_new():
         return render_template("new-gif.html", races=races, languages=languages), 200
   
 
-
-
-@app.route('/login', methods=["POST", "GET"])#pending
-@app.route('/login/', methods=["POST", "GET"])
-def login():
-    if request.method == 'POST': 
-        pass
-    else:
-        return render_template("login.html")
-
-
-@app.route('/search', methods=['GET'])#pending
-@app.route('/search/', methods=['GET'])
+@app.route('/search', methods=['POST','GET'])#pending
+@app.route('/search/', methods=['POST', 'GET'])
 def search():
-    
-    # form fields presence-check (return the necessary status codes if not correct)
-    ## PENDING (type, keywords, gif file)
+    '''
+        searches the database (using the provided gif type, language and keywords)
+        and returns a list of relative ids.
+    '''
 
-    # get GIF type (according to which the rest of the steps into this function 
-    #                           will be performed or skipped)
-    ## PENDING
-    
-    #query the database to find relevant GIFs (get the GIF ids and local paths)
-    ## the table to be queried is determined by the GIF type
-    ## PENDING: will it be a one keyword search or many??
+    if request.method == 'POST':
+        # form fields presence-check (type, language, keywords)
+        ## PENDING
 
-    #retrieve and return the related image Ids??
+        #query the database to find relevant GIFs (get the GIF ids)
+        ## the table to be queried is determined by the GIF type
+        ## PENDING: will it be a one keyword search or many??
 
-
-    filepath = FILEPATH_ROOT + "heads\\"
-    keywords = "dummy,keyword,csv,list"
-
-    # FOR search-gif.html PAGE! (to be moved)
-    #create GIF data URI for preview page
-    gif_uri = DataURI.from_file(filepath)
-    #return preview page
-    return render_template("search-gif.html", keywords=keywords, gif_uri=gif_uri)
+        #retrieve and return the related image Ids
+        ##PENDING
+        
+        return "something - PENDING", 200
+    else:
+        return render_template("search-gif.html"), 200
 
 
 
 @app.route("/retrieve", methods=["GET"])#pending
 def retrieve():
+    '''
+        retrieves an image from the database using its type and id
+    '''
     
     #(example) http://10.16.20.182:5000/retrieve?type=heads&id=3
     type = request.args.get('type', None)
@@ -170,12 +166,23 @@ def retrieve():
     # + I want to learn how to render proper image files into an HTML document
     #       (not sure if this is posible with my current setup though)
     
-    #DOWNLOAD_DIRECTORY = FILEPATH_ROOT + "heads\\"
-    #return send_from_directory(DOWNLOAD_DIRECTORY, path, as_attachment=True)
+    ".\GIFs\torsos\torso-1648732615.gif"
+
+    DOWNLOAD_DIRECTORY = FILEPATH_ROOT + "heads\\"
+
+    return send_from_directory(DOWNLOAD_DIRECTORY, path, as_attachment=True)
     ## https://medium.com/analytics-vidhya/receive-or-return-files-flask-api-8389d42b0684
 
     return f"<h1>{type},{id}</h1>"
     
+
+@app.route('/login', methods=["POST", "GET"])#pending
+@app.route('/login/', methods=["POST", "GET"])
+def login():
+    if request.method == 'POST': 
+        pass
+    else:
+        return render_template("login.html")
 
 
 

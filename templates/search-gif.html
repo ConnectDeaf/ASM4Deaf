@@ -1,6 +1,84 @@
 {% extends "base.html" %}
-{% block title %}Search GIFs{% endblock %}
+{% block title %}Add New GIF{% endblock%}
 {% block content %}
-<p>Keywords: {{keywords}}</p>
-<img src="{{ gif_uri }}" alt='gif preview' height='200' width='200'>
+<h2 class="my-5">GIF Details</h2>
+<form class="form" id="data" action="#" method="post" enctype="multipart/form-data">
+
+    <!-- GIF type selection -->
+    <div class="row my-5" id="gif_type">
+        <div class="col">
+            <h5>Select type</h5>
+            <input type="radio" name="gif_type" id="head_gif" value="head">
+            <label class="form-label" for="head_gif">Head</label>
+            <input type="radio" name="gif_type" id="toso_gif" value="torso">
+            <label class="form-label" for="torso_gif">Torso</label>
+            <input type="radio" name="gif_type" id="fullbody_gif" value="fullbody" disabled>
+            <label class="form-label" for="fullbody_gif">Full body</label>
+        </div>
+    </div>
+
+    
+    <!-- GIF metadata selection -->
+    <div class="row my-5" id="gif_type">
+        <div class="col-8">
+            <h5>Provide metadata</h5> 
+            <div class="row my-1">
+                <div class="col-3">
+                    <p>Sign Language:</p>
+                </div>
+                <div class="col-5">
+                    <select name="sign_languages" class="form-select">
+                        {% for l in languages %}
+                                <option value="{{l[0]}}">{{l[1]}}</option>    
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--- File upload --->
+    <div class="row my-5">
+        <div class="col-5">
+            <h5>Upload file</h5>
+            <input class="form-control" type="file" name="GIFfile" id="GIFfile" accept=".gif" required>
+        </div>
+    </div>
+
+
+    <!-- Keywords Section -->
+    <div class="row my-5">
+        <div class="col">
+           
+            <div class="row">
+                <div class="col-5">
+                    <h5>Add Keywords</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-5">
+                    <input type="text" class="form-control" name="new_keyword" id="new_keyword" placeholder="New keyword" required>
+                    <!--- Submit Button --->
+                    <button tabindex="1" class="btn btn-primary my-4" name="submit" type="submit" id="submit">Submit</button>
+                </div>
+                <div class="col-1">
+                    <button tabindex="0" type="button" id="add_badge" class="btn btn-secondary">Add</button>
+                </div>
+                <div class="col-6">
+                    <div class="row keyword-wrapper">
+                        <p class="text-decoration-underline">Keywords:</p>
+                        <div id="badges">
+                           <p >No keywords yet</p>
+                        </div>
+                        <input type="text" class="form-control" name="keywords" id="keywords" readonly>
+                    </div>
+                </div> 
+            </div>
+            
+        </div>
+    </div>
+        
+    
+</form>
 {% endblock %}
