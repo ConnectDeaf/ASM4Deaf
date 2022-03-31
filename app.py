@@ -91,7 +91,7 @@ def add_new():
                 unique_filename_prefix = "torso"
             
             unique_filename_suffix = str(int(time.time()))
-            unique_filename = f"{unique_filename_prefix}-{unique_filename_suffix}.gif"
+            unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}.gif"
 
             filepath = aux_.save_gif_on_the_file_system(request, save_directory, unique_filename)
 
