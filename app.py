@@ -130,9 +130,15 @@ def add_new():
 @app.route('/search/', methods=['POST', 'GET'])
 def search():
     '''
-        searches the database (using the provided gif type, language and keywords)
+        searches the database (using the provided gif type, language and array of keywords)
         and returns a list of relative ids.
     '''
+
+    #NOTE TO SELF: get the "array of keywords" in the same manner as the csv from add_new function
+    #            (json stringify before returning it!)
+    #            Can also use the same method as for adding tags (for searching them this time)
+    #            at the front end.
+    #  SOS: will have to test this function from Postman!
 
     if request.method == 'POST':
         # form fields presence-check (type, language, keywords)
