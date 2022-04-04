@@ -153,7 +153,7 @@ def retrieve():
     # m = MultipartEncoder(files_dict)
     # return Response(m.to_string(), mimetype=m.content_type), 200
     
-    #RETURN MULTIPLE FILES - OPTION 2: json with Base64 strings
+    #RETURN MULTIPLE FILES - OPTION 2: json with Base64 strings (can also return the URIs instead of Base64 encoding)
     # type = "heads"
     # files_dict = {
     #     "heads" : [],
