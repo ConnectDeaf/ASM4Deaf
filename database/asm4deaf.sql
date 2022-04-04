@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2022 at 03:15 PM
+-- Generation Time: Apr 04, 2022 at 03:34 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `bodyparts` (
   `BodyPartID` int(11) NOT NULL,
   `Keywords` varchar(200) NOT NULL,
-  `VideoURL` varchar(1000) NOT NULL,
+  `FileName` varchar(100) NOT NULL,
   `RaceID` int(11) DEFAULT NULL,
   `LanguageID` int(11) DEFAULT NULL,
   `PartType` varchar(1) NOT NULL COMMENT '''h'' for head, ''t'' for torso'
@@ -45,7 +45,7 @@ CREATE TABLE `bodyparts` (
 CREATE TABLE `fullbodys` (
   `FullBodyID` int(11) NOT NULL,
   `Keywords` varchar(200) NOT NULL,
-  `VideoURL` varchar(1000) NOT NULL,
+  `FileName` varchar(100) NOT NULL,
   `RaceID` int(11) DEFAULT NULL,
   `LanguageID` int(11) DEFAULT NULL,
   `TorsoID` int(11) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE `fullbodys` (
 
 CREATE TABLE `masks` (
   `MaskID` int(11) NOT NULL,
-  `MaskURL` varchar(1000) NOT NULL,
+  `FileName` varchar(100) NOT NULL,
   `FullBodyID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -153,7 +153,7 @@ ALTER TABLE `signlanguages`
 -- AUTO_INCREMENT for table `bodyparts`
 --
 ALTER TABLE `bodyparts`
-  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `fullbodys`

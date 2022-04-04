@@ -1,10 +1,16 @@
-from flask import Flask, render_template, request, send_from_directory, Response
+from flask import Flask, render_template, request, send_file, send_from_directory, Response
+from itsdangerous import base64_encode
+from requests_toolbelt import MultipartEncoder
 from flask_sqlalchemy import SQLAlchemy
 from my_config import FILEPATH_ROOT
+from io import BytesIO
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from datauri import DataURI
 import json
 import aux_
 import time
+import base64
+
 
 app = Flask(__name__)
 
@@ -124,10 +130,57 @@ def add_new():
         languages = [[l.LanguageID, l.LanguageName] for l in languages]
         
         return render_template("new-gif.html", races=races, languages=languages), 200
-  
 
-@app.route('/search', methods=['POST','GET'])#pending
-@app.route('/search/', methods=['POST', 'GET'])
+@app.route("/retrieve", methods=["POST"])#pending
+@app.route("/retrieve/", methods=["POST"])
+def retrieve():
+    '''
+        retrieves multiple GIFs from the database using their type and id
+    '''
+    
+    filename = "torso_1648734447.gif"
+    DOWNLOAD_DIRECTORY = FILEPATH_ROOT + "torsos\\"
+    f1 = DOWNLOAD_DIRECTORY + filename
+    f2 = f1
+
+    filenames = [f1, f2]
+    
+
+    #RETURN MULTIPLE FILES - OPTION 1: MULTIPART ENCODED FILE
+    # files_dict = {}
+    # for fn_index in range(len(filenames)):
+    #     files_dict[f'f_{fn_index}'] = (filenames[fn_index], open(f1, 'rb'), 'text/plain')
+    # m = MultipartEncoder(files_dict)
+    # return Response(m.to_string(), mimetype=m.content_type), 200
+    
+    #RETURN MULTIPLE FILES - OPTION 2: json with Base64 strings
+    # type = "heads"
+    # files_dict = {
+    #     "heads" : [],
+    #     "torsos": [],
+    #     "fullbodys": []
+    # }
+    # for fn_index in range(len(filenames)):
+    #     file_data_as_str = base64.b64encode(open(filenames[fn_index], 'rb').read()).decode("ascii")
+    #     file = {
+    #         "id" : f'dummy_{fn_index}',
+    #         "data": file_data_as_str
+    #     }
+
+    #     files_dict[type].append(file)
+    # return json.dumps(files_dict), 200
+
+    #RETURN MULTIPLE FILES - OPTION 3: ZIP FILE
+    # memory_file = BytesIO()
+    # with ZipFile(memory_file, 'w') as zf:
+    #     for fn in filenames:
+    #         zf.write(fn)
+    # memory_file.seek(0)
+    # return send_file(memory_file, attachment_filename='result.zip', as_attachment=True)
+
+
+@app.route('/query', methods=['POST','GET'])#pending
+@app.route('/query/', methods=['POST', 'GET'])
 def search():
     '''
         searches the database (using the provided gif type, language and array of keywords)
@@ -153,34 +206,8 @@ def search():
         
         return "something - PENDING", 200
     else:
-        return render_template("search-gif.html"), 200
+        return render_template("query-gif.html"), 200
 
-
-
-@app.route("/retrieve", methods=["GET"])#pending
-def retrieve():
-    '''
-        retrieves an image from the database using its type and id
-    '''
-    
-    #(example) http://10.16.20.182:5000/retrieve?type=heads&id=3
-    type = request.args.get('type', None)
-    id = request.args.get('id', None)
-
-
-    #have not yet tried the following 
-    # + I want to learn how to render proper image files into an HTML document
-    #       (not sure if this is posible with my current setup though)
-    
-    ".\GIFs\torsos\torso-1648732615.gif"
-
-    DOWNLOAD_DIRECTORY = FILEPATH_ROOT + "heads\\"
-
-    return send_from_directory(DOWNLOAD_DIRECTORY, path, as_attachment=True)
-    ## https://medium.com/analytics-vidhya/receive-or-return-files-flask-api-8389d42b0684
-
-    return f"<h1>{type},{id}</h1>"
-    
 
 @app.route('/login', methods=["POST", "GET"])#pending
 @app.route('/login/', methods=["POST", "GET"])
