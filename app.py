@@ -1,3 +1,4 @@
+from email.policy import default
 from flask import Flask, render_template, request, send_file, send_from_directory, Response
 from itsdangerous import base64_encode
 from requests_toolbelt import MultipartEncoder
@@ -10,6 +11,8 @@ import json
 import aux_
 import time
 import base64
+import os
+import hashlib
 
 
 app = Flask(__name__)
@@ -21,6 +24,18 @@ db = SQLAlchemy(app)
 ############################### 
 ## DECLARING DATABASE TABLES ##
 ###############################
+class UsersModel(db.Model):
+    __tablename__ = 'users'
+
+    UserID = db.Column(db.Integer, primary_key = True)
+    Email = db.Column(db.String(300)) 
+    PwdSaltedDigest = db.Column(db.String(288))
+    IsVerified = db.Column(db.Integer, default=0)
+    
+    def __init__(self, Email, PwdSaltedDigest):
+        self.Email = Email
+        self.PwdSaltedDigest = PwdSaltedDigest
+
 class SignerRacesModel(db.Model):
     __tablename__ = 'signerraces'
  
@@ -31,9 +46,6 @@ class SignerRacesModel(db.Model):
     
     def __init__(self, RaceName):
         self.RaceName = RaceName
- 
-    def __repr__(self):
-        return f"RaceID: {self.RaceID}, RaceName :{self.RaceName}"
 
 class SignLanguagesModel(db.Model):
     __tablename__ = 'signlanguages'
@@ -45,9 +57,6 @@ class SignLanguagesModel(db.Model):
     
     def __init__(self, LanguageName):
         self.LanguageName = LanguageName
- 
-    def __repr__(self):
-        return f"LanguageID: {self.LanguageID}, LanguageName :{self.LanguageName}"
 
 class BodyPartsModel(db.Model):
     __tablename__ = 'bodyparts'
@@ -66,9 +75,6 @@ class BodyPartsModel(db.Model):
         self.LanguageID = LanguageID
         self.PartType = PartType
         
- 
-    def __repr__(self):
-        return f"HeadID: {self.HeadID}, Keywords: {self.Keywords}, VideoURL: {self.VideoURL}, RaceID: {self.RaceID}, LanguageID: {self.LanguageID}, PartType: {self.PartType}"
 
 
 
@@ -79,9 +85,48 @@ class BodyPartsModel(db.Model):
 #        the POST endpoint versions do the actual work
 ##############################################################
 
+#-------------------------------------------    DO WE NEED TO DO USER MANAGEMENT VIA THE UI?? 
+#                                               (if yes, we need a Flask blueprint)
+#                                               -> current implementation assumes user management via the db
+@app.route('/register', methods=["POST"])#pending
+@app.route('/register/', methods=["POST"])
+def register_user():
+    '''
+        adds an unverified user to the database;
+        the administrator needs to login to the database to verify the user later on
+    '''  
+
+    #https://nitratine.net/blog/post/how-to-hash-passwords-in-python/
+
+    try:
+        email = request.form['email']
+        password = request.form["password"]
+    except:
+            return "Incorect parameters!", 400
+
+    try:
+        #hash password
+        salt = os.urandom(32)
+        pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+        salted_digest = salt + pwd_digest 
+    except:
+        return "Failed to hash password", 500
+
+    try:
+        #add new unverified user to the database
+        new_user_record = UsersModel(email, salted_digest)
+        db.session.add(new_user_record)
+        db.session.commit()
+    except:
+        return "Failed store user data into database", 500
+
+    return "Unverified user successfully added to the database", 200
+    
+
 @app.route('/login', methods=["POST", "GET"])#pending
 @app.route('/login/', methods=["POST", "GET"])
 def login():
+    #https://nitratine.net/blog/post/how-to-hash-passwords-in-python/
     if request.method == 'POST': 
         pass
     else:
@@ -209,7 +254,7 @@ def query():
 
         #query the database to find relevant GIFs (get the GIF ids)
         ## the table to be queried is determined by the GIF type
-        ## PENDING: will it be a one keyword search or many??
+        ## PENDING
 
         #retrieve and return the related image Ids
         ##PENDING
