@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2022 at 02:31 PM
+-- Generation Time: Apr 05, 2022 at 03:53 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -111,18 +111,10 @@ INSERT INTO `signlanguages` (`LanguageID`, `LanguageName`) VALUES
 --
 
 CREATE TABLE `users` (
-  `UserID` int(11) NOT NULL,
   `Email` varchar(300) NOT NULL,
-  `PwdSaltedDigest` varchar(288) NOT NULL,
+  `PwdSaltedDigest` tinyblob NOT NULL,
   `IsVerified` int(1) NOT NULL DEFAULT 0 COMMENT '0 for unverified, 1 for verified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`UserID`, `Email`, `PwdSaltedDigest`, `IsVerified`) VALUES
-(0, 'stavroulla', '????12?\"!`???????C?~ƭ???g??A^?\nu?<???y?$	Uh ~?	t?(\Z?????T?', 0);
 
 --
 -- Indexes for dumped tables
@@ -169,7 +161,7 @@ ALTER TABLE `signlanguages`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserID`);
+  ADD PRIMARY KEY (`Email`);
 
 --
 -- AUTO_INCREMENT for dumped tables

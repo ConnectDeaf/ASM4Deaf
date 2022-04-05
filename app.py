@@ -27,9 +27,8 @@ db = SQLAlchemy(app)
 class UsersModel(db.Model):
     __tablename__ = 'users'
 
-    UserID = db.Column(db.Integer, primary_key = True)
-    Email = db.Column(db.String(300)) 
-    PwdSaltedDigest = db.Column(db.String(288))
+    Email = db.Column(db.String(300), primary_key = True) 
+    PwdSaltedDigest = db.Column(db.LargeBinary)
     IsVerified = db.Column(db.Integer, default=0)
     
     def __init__(self, Email, PwdSaltedDigest):
@@ -85,10 +84,16 @@ class BodyPartsModel(db.Model):
 #        the POST endpoint versions do the actual work
 ##############################################################
 
-#-------------------------------------------    DO WE NEED TO DO USER MANAGEMENT VIA THE UI?? 
-#                                               (if yes, we need a Flask blueprint)
-#                                               -> current implementation assumes user management via the db
-@app.route('/register', methods=["POST"])#pending
+#questions:
+#->DO WE NEED TO DO USER MANAGEMENT VIA THE UI?? (register, login, verify, delete, edit, user roles)
+#        IF NOT, THEN MAKE THE DATABASE COLUMN ENCRYPTED AND JUST STORE THE PASSWORDS IN IT AS IS- TO MAKE THE REGISTRATIONS BY HAND
+
+# next on the to-do list
+#-> CREATE TWO FLASK BLUEPRINTS FOR THE user/ AND gifs/ TO KEEP THINGS TIDY (IN THIS FILE KEEP ONLY THE DATABASE CLASSES, THE BLUEPRINT IMPORTS AND THE CONFIGURATIONS)
+#-> MAKE THE UI WORK WITH THE LOGIN ENDPOINT
+#-> ADD SESSIONS ACCORDING TO LOG IN (MUST MODIFY ALL THE ENDPOINTS CREATED SO FAR)
+
+@app.route('/register', methods=["POST"])#pending (user sessions + might possibly change)
 @app.route('/register/', methods=["POST"])
 def register_user():
     '''
@@ -96,11 +101,10 @@ def register_user():
         the administrator needs to login to the database to verify the user later on
     '''  
 
-    #https://nitratine.net/blog/post/how-to-hash-passwords-in-python/
-
     try:
-        email = request.form['email']
-        password = request.form["password"]
+        request_data = request.get_json()
+        email = request_data['email']
+        password = request_data["password"]
     except:
             return "Incorect parameters!", 400
 
@@ -108,9 +112,13 @@ def register_user():
         #hash password
         salt = os.urandom(32)
         pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-        salted_digest = salt + pwd_digest 
+        salted_digest = salt + pwd_digest
     except:
         return "Failed to hash password", 500
+
+    existence_check_user = UsersModel.query.filter_by(Email=email).first()
+    if existence_check_user:
+        return "User with this email already exists!", 403
 
     try:
         #add new unverified user to the database
@@ -123,17 +131,45 @@ def register_user():
     return "Unverified user successfully added to the database", 200
     
 
-@app.route('/login', methods=["POST", "GET"])#pending
+@app.route('/login', methods=["POST", "GET"])#pending (user sessions + might possibly change)
 @app.route('/login/', methods=["POST", "GET"])
 def login():
-    #https://nitratine.net/blog/post/how-to-hash-passwords-in-python/
-    if request.method == 'POST': 
-        pass
+    if request.method == 'POST':
+        
+        try:
+            request_data = request.get_json()
+            email = request_data['email']
+            password = request_data["password"]
+        except:
+                return "Incorect parameters!", 400
+
+        #retrieve user data from the database
+        found_user = UsersModel.query.filter_by(Email=email).first()
+        if not found_user:
+            return "User not found", 404
+        
+        if not found_user.IsVerified:
+            return "This user has not been unverified yet!", 403
+
+        stored_salt = found_user.PwdSaltedDigest[:32]
+        stored_salted_digest = found_user.PwdSaltedDigest[32:]
+
+        try:
+            #hash password
+            pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), stored_salt, 100000)
+        except:
+            return "Failed to hash password", 500
+
+        if not stored_salted_digest == pwd_digest:
+            return "Incorrect password!", 403
+
+        return "Successfully logged in!", 200
+
     else:
         return render_template("login.html")
 
 
-@app.route('/new', methods=["POST", "GET"])
+@app.route('/new', methods=["POST", "GET"])#pending (user sessions)
 @app.route('/new/', methods=["POST", "GET"])
 def add_new():
     '''
@@ -185,7 +221,8 @@ def add_new():
         
         return render_template("new-gif.html", races=races, languages=languages), 200
 
-@app.route("/retrieve", methods=["POST"])#pending
+
+@app.route("/retrieve", methods=["POST"])#pending (everything)
 @app.route("/retrieve/", methods=["POST"])
 def retrieve():
     '''
@@ -234,7 +271,7 @@ def retrieve():
     return
 
 
-@app.route('/query', methods=['POST','GET'])#pending
+@app.route('/query', methods=['POST','GET'])#pending (everything)
 @app.route('/query/', methods=['POST', 'GET'])
 def query():
     '''
