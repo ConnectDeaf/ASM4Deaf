@@ -62,7 +62,7 @@ $("button#add_badge").click(function(e) {
 });
 
 //submitting the form
-$("form#data").submit(function(e) {
+$("form#new_gif").submit(function(e) {
     //don't redirect
     e.preventDefault();
 

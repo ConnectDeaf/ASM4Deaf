@@ -2,7 +2,7 @@
 {% block title %}Add New GIF{% endblock%}
 {% block content %}
 <h2 class="my-5">GIF Details</h2>
-<form class="form" id="data" action="#" method="post" enctype="multipart/form-data">
+<form class="form" id="new_gif" action="#" method="post" enctype="multipart/form-data">
 
     <!-- GIF type selection -->
     <div class="row my-5" id="gif_type">
@@ -74,7 +74,7 @@
                 <div class="col-5">
                     <input type="text" class="form-control" name="new_keyword" id="new_keyword" placeholder="New keyword" required>
                     <!--- Submit Button --->
-                    <button tabindex="1" class="btn btn-primary my-4" name="submit" type="submit" id="submit">Submit</button>
+                    <button tabindex="1" class="btn btn-primary my-5" name="submit" type="submit" id="submit">Submit</button>
                 </div>
                 <div class="col-1">
                     <button tabindex="0" type="button" id="add_badge" class="btn btn-secondary">Add</button>

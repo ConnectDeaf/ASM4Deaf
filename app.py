@@ -79,6 +79,15 @@ class BodyPartsModel(db.Model):
 #        the POST endpoint versions do the actual work
 ##############################################################
 
+@app.route('/login', methods=["POST", "GET"])#pending
+@app.route('/login/', methods=["POST", "GET"])
+def login():
+    if request.method == 'POST': 
+        pass
+    else:
+        return render_template("login.html")
+
+
 @app.route('/new', methods=["POST", "GET"])
 @app.route('/new/', methods=["POST", "GET"])
 def add_new():
@@ -177,11 +186,12 @@ def retrieve():
     #         zf.write(fn)
     # memory_file.seek(0)
     # return send_file(memory_file, attachment_filename='result.zip', as_attachment=True)
+    return
 
 
 @app.route('/query', methods=['POST','GET'])#pending
 @app.route('/query/', methods=['POST', 'GET'])
-def search():
+def query():
     '''
         searches the database (using the provided gif type, language and array of keywords)
         and returns a list of relative ids.
@@ -207,16 +217,6 @@ def search():
         return "something - PENDING", 200
     else:
         return render_template("query-gif.html"), 200
-
-
-@app.route('/login', methods=["POST", "GET"])#pending
-@app.route('/login/', methods=["POST", "GET"])
-def login():
-    if request.method == 'POST': 
-        pass
-    else:
-        return render_template("login.html")
-
 
 
 
