@@ -1,3 +1,4 @@
+/*********************** Add New GIF page ***********************/
 function create_new_button_badge(new_keyword){
     let new_badge = document.createElement("button");
     new_badge.type = "button";
@@ -16,8 +17,6 @@ function remove_all_keyword_badges(){
     all_badge_buttons.forEach(function (item, index){
         item.remove();
     });
-
-    let new_keyword_element = document.querySelector("input#new_keyword");
 }
 
 function get_keywords_csv(){
@@ -78,7 +77,7 @@ $("form#new_gif").submit(function(e) {
 
     //POST the data
     $.ajax({
-        url: window.location.pathname,
+        url: "http://192.168.0.23:5000/new/",
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -96,3 +95,49 @@ $("form#new_gif").submit(function(e) {
     remove_all_keyword_badges();
     this.reset();
 });
+/****************************************************************/
+
+/************************* Log In page **************************/
+function toggle_password_visibility() {
+    var x = document.querySelector("input#password");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+}
+
+$("form#login").submit(function(e) {
+    //don't redirect
+    e.preventDefault();
+
+    //prepare json
+    jsonData = {
+        "email": document.querySelector("input#email").value,
+        "password": document.querySelector("input#password").value
+    }
+
+    console.log(jsonData);
+
+    //POST the data
+    $.ajax({
+        url: "http://192.168.0.23:5000/login/",
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData),
+        success: function (response) {
+            alert(response);
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        processData: false
+    });
+    
+    //reset the form
+    this.reset();
+});
+
+
+/****************************************************************/

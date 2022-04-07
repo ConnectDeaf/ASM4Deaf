@@ -1,0 +1,4 @@
+-login page element alignment
+-logged in boolean db field + timestamp of last login
+
+-sessions to hide pages unless logged in

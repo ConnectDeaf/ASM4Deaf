@@ -60,16 +60,16 @@ class SignLanguagesModel(db.Model):
 class BodyPartsModel(db.Model):
     __tablename__ = 'bodyparts'
  
-    HeadID = db.Column(db.Integer, primary_key = True)
+    BodyPartID = db.Column(db.Integer, primary_key = True)
     Keywords = db.Column(db.String(200))
-    VideoURL = db.Column(db.String(1000))
+    FileName = db.Column(db.String(1000))
     RaceID = db.Column(db.Integer, db.ForeignKey('signerraces.RaceID'), nullable=False)
     LanguageID = db.Column(db.Integer, db.ForeignKey('signlanguages.LanguageID'), nullable=False)
     PartType = db.Column(db.String(1))#'h' or 't'
     
-    def __init__(self, Keywords, VideoURL, RaceID, LanguageID, PartType):
+    def __init__(self, Keywords, FileName, RaceID, LanguageID, PartType):
         self.Keywords = Keywords
-        self.VideoURL = VideoURL
+        self.FileName = FileName
         self.RaceID = RaceID
         self.LanguageID = LanguageID
         self.PartType = PartType
