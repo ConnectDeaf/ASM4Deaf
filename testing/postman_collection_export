@@ -11,7 +11,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://192.168.0.23:5000/retrieve/",
+					"raw": "http://192.168.0.23:5000/gifs/retrieve/",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -21,6 +21,7 @@
 					],
 					"port": "5000",
 					"path": [
+						"gifs",
 						"retrieve",
 						""
 					]
@@ -35,7 +36,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\" : \"stavroullakoumou.a2@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
+					"raw": "{\r\n    \"email\" : \"stavroullakoumou2.a2@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,7 +44,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.0.23:5000/register/",
+					"raw": "http://192.168.0.23:5000/users/register/",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -53,6 +54,7 @@
 					],
 					"port": "5000",
 					"path": [
+						"users",
 						"register",
 						""
 					]
@@ -75,7 +77,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.0.23:5000/login/",
+					"raw": "http://192.168.0.23:5000/users/login/",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -85,7 +87,44 @@
 					],
 					"port": "5000",
 					"path": [
+						"users",
 						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user logout",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"stavroullakoumou.a2@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.0.23:5000/users/logout/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"23"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"logout",
 						""
 					]
 				}

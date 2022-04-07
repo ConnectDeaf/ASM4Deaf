@@ -1,5 +1,5 @@
 from email.policy import default
-from flask import Flask, render_template, request, send_file, send_from_directory, Response, session, redirect, url_for
+from flask import Flask, render_template, request, send_file, send_from_directory, Response, session, redirect, url_for, flash
 from itsdangerous import base64_encode
 from requests_toolbelt import MultipartEncoder
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +7,7 @@ from my_config import *
 from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from datauri import DataURI
+from datetime import timedelta
 import json
 import aux_
 import time
@@ -17,6 +18,7 @@ import hashlib
 
 app = Flask(__name__)
 app.secret_key = SESSION_ENCRYPTION_SECRET_KEY
+app.permanent_session_lifetime = timedelta(days=USER_SESSION_LIFETIME_IN_DAYS)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{DB_USER}:{DB_USER_PASSWORD}@{DB_IP_ADDRESS}/{DB_TABLENAME}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -141,13 +143,13 @@ def login():
                 return "Already logged in!", 200
             else:
                 return f"You are logged in with another email ({session['user']})," + \
-                            f" please logout and try again with this one ({email})!", 403
+                            f" please logout and try again with this one!", 403
 
         #retrieve user data from the database
         found_user = UsersModel.query.filter_by(Email=email).first()
         if not found_user:
-            return "User not found", 404
-        
+            return f"This user ({email}) does not exist!", 404
+    
         if not found_user.IsVerified:
             return "This user has not been unverified yet!", 403
 
@@ -163,10 +165,12 @@ def login():
         if not stored_salted_digest == pwd_digest:
             return "Incorrect password!", 403
 
-        #create session for user
+        #create a permanent session for user
+        session.permanent = True
         session["user"] = email
-        return "Successfully logged in!", 200
 
+        flash("User successfully logged in!", "info")
+        return "User successfully logged in!", 200
     else:
         return render_template("login.html")
 
@@ -176,9 +180,10 @@ def login():
 def logout():
     if "user" in session:
         session.pop("user", None)
-        return redirect(url_for("login")), 200
-    
-    return "User already logged out!", 200
+        flash("Succesfully logged out!", "info")
+    else:
+        flash("User already logged out!", "info")
+    return redirect(url_for("login")), 200
 
 
 @app.route('/gifs/new', methods=["POST", "GET"])#pending (user sessions)
@@ -188,12 +193,13 @@ def add_new():
         stores the uploaded gif to the filesystem and creates the necessary database entry.
         (it does not check for duplicates- I don't see a way to automatically check for duplicates)
     '''
-    if request.method == "POST":
-         
-        #check if user is logged in
-        if not "user" in session:
-            return "You need to log in to access this page!", 403
 
+    #regardless of method, check if user is logged in
+    if not "user" in session:
+        flash("You need to log in to access the Add New GIF page!", "info")
+        return redirect(url_for("login")), 403
+
+    if request.method == "POST":
         try:
             gif_type = request.form['gif_type']
             sign_language = request.form["sign_languages"]
