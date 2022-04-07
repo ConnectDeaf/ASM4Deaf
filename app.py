@@ -1,9 +1,9 @@
 from email.policy import default
-from flask import Flask, render_template, request, send_file, send_from_directory, Response
+from flask import Flask, render_template, request, send_file, send_from_directory, Response, session
 from itsdangerous import base64_encode
 from requests_toolbelt import MultipartEncoder
 from flask_sqlalchemy import SQLAlchemy
-from my_config import FILEPATH_ROOT
+from my_config import GIF_FILEPATH_ROOT
 from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from datauri import DataURI
@@ -84,17 +84,8 @@ class BodyPartsModel(db.Model):
 #        the POST endpoint versions do the actual work
 ##############################################################
 
-#questions:
-#->DO WE NEED TO DO USER MANAGEMENT VIA THE UI?? (register, login, verify, delete, edit, user roles)
-#        IF NOT, THEN MAKE THE DATABASE COLUMN ENCRYPTED AND JUST STORE THE PASSWORDS IN IT AS IS- TO MAKE THE REGISTRATIONS BY HAND
-
-# next on the to-do list
-#-> CREATE TWO FLASK BLUEPRINTS FOR THE user/ AND gifs/ TO KEEP THINGS TIDY (IN THIS FILE KEEP ONLY THE DATABASE CLASSES, THE BLUEPRINT IMPORTS AND THE CONFIGURATIONS)
-#-> MAKE THE UI WORK WITH THE LOGIN ENDPOINT
-#-> ADD SESSIONS ACCORDING TO LOG IN (MUST MODIFY ALL THE ENDPOINTS CREATED SO FAR)
-
-@app.route('/register', methods=["POST"])#pending (user sessions + might possibly change)
-@app.route('/register/', methods=["POST"])
+@app.route('/users/register', methods=["POST"])#pending (currently only able to be used only via Postman- for testing)
+@app.route('/users/register/', methods=["POST"])
 def register_user():
     '''
         adds an unverified user to the database;
@@ -131,8 +122,8 @@ def register_user():
     return "Unverified user successfully added to the database", 200
     
 
-@app.route('/login', methods=["POST", "GET"])#pending (user sessions + might possibly change)
-@app.route('/login/', methods=["POST", "GET"])
+@app.route('/users/login', methods=["POST", "GET"])#pending (user sessions + might possibly change)
+@app.route('/users/login/', methods=["POST", "GET"])
 def login():
     if request.method == 'POST':
         
@@ -169,8 +160,8 @@ def login():
         return render_template("login.html")
 
 
-@app.route('/new', methods=["POST", "GET"])#pending (user sessions)
-@app.route('/new/', methods=["POST", "GET"])
+@app.route('/gifs/new', methods=["POST", "GET"])#pending (user sessions)
+@app.route('/gifs/new/', methods=["POST", "GET"])
 def add_new():
     '''
         stores the uploaded gif to the filesystem and creates the necessary database entry.
@@ -188,10 +179,10 @@ def add_new():
         
         try:
             if gif_type == "head":
-                save_directory = FILEPATH_ROOT + "heads\\"
+                save_directory = GIF_FILEPATH_ROOT + "heads\\"
                 unique_filename_prefix = "head"
             elif gif_type == "torso":
-                save_directory = FILEPATH_ROOT + "torsos\\"
+                save_directory = GIF_FILEPATH_ROOT + "torsos\\"
                 unique_filename_prefix = "torso"
             
             unique_filename_suffix = str(int(time.time()))
@@ -222,15 +213,15 @@ def add_new():
         return render_template("new-gif.html", races=races, languages=languages), 200
 
 
-@app.route("/retrieve", methods=["POST"])#pending (everything)
-@app.route("/retrieve/", methods=["POST"])
+@app.route("/gifs/retrieve", methods=["POST"])#pending (everything)
+@app.route("/gifs/retrieve/", methods=["POST"])
 def retrieve():
     '''
         retrieves multiple GIFs from the database using their type and id
     '''
     
     filename = "torso_1648734447.gif"
-    DOWNLOAD_DIRECTORY = FILEPATH_ROOT + "torsos\\"
+    DOWNLOAD_DIRECTORY = GIF_FILEPATH_ROOT + "torsos\\"
     f1 = DOWNLOAD_DIRECTORY + filename
     f2 = f1
 
@@ -271,8 +262,8 @@ def retrieve():
     return
 
 
-@app.route('/query', methods=['POST','GET'])#pending (everything)
-@app.route('/query/', methods=['POST', 'GET'])
+@app.route('/gifs/query', methods=['POST','GET'])#pending (everything)
+@app.route('/gifs/query/', methods=['POST', 'GET'])
 def query():
     '''
         searches the database (using the provided gif type, language and array of keywords)

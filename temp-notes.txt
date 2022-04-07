@@ -1,5 +1,16 @@
--login page element alignment
-- email confirmed db field
--logged in boolean db field + timestamp of last login
+questions:
+->DO WE NEED TO DO USER MANAGEMENT VIA THE UI?? (register, login, verify, delete, edit, user roles)
+        IF NOT, THEN MAKE THE DATABASE COLUMN ENCRYPTED AND JUST STORE THE PASSWORDS IN IT AS IS- 
+        TO MAKE THE REGISTRATIONS BY HAND
 
--sessions to hide pages unless logged in
+
+pending:
+- when a user is not logged in, inform so with an alertbox (?) and redirect to login page
+- menu: all pages hidden and inacessible except login.
+        on login success :
+                PYTHON: do session stuff to allow access to these pages,
+                JS: make these links visible on the menu bar
+- menu: must be hidden unless logged in.
+        on click :
+        PYTHON: clear session data,
+        JS: hide corresponding links, redirect to Login page.

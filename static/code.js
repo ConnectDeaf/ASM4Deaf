@@ -1,3 +1,6 @@
+var ADD_NEW_GIF_URL = "http://192.168.0.23:5000/gifs/new/"
+var LOGIN_URL = "http://192.168.0.23:5000/users/login/"
+
 /*********************** Add New GIF page ***********************/
 function create_new_button_badge(new_keyword){
     let new_badge = document.createElement("button");
@@ -77,7 +80,7 @@ $("form#new_gif").submit(function(e) {
 
     //POST the data
     $.ajax({
-        url: "http://192.168.0.23:5000/new/",
+        url: ADD_NEW_GIF_URL,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -121,12 +124,15 @@ $("form#login").submit(function(e) {
 
     //POST the data
     $.ajax({
-        url: "http://192.168.0.23:5000/login/",
+        url: LOGIN_URL,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
             alert(response);
+            alert("When you click OK, you will be redirected to the Add New GIF page.");
+            window.location.href = ADD_NEW_GIF_URL;
+            //PENDING: make the corresponding menu links visible
         },
         error: function(response) {
             alert(response.responseText);
@@ -137,6 +143,7 @@ $("form#login").submit(function(e) {
     
     //reset the form
     this.reset();
+
 });
 
 

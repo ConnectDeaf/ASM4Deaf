@@ -1,1 +1,1 @@
-FILEPATH_ROOT = ".\GIFs\\"
+GIF_FILEPATH_ROOT = ".\GIFs\\"
