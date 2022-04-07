@@ -98,14 +98,14 @@ $("form#new_gif").submit(function(e) {
 /****************************************************************/
 
 /************************* Log In page **************************/
-function toggle_password_visibility() {
+$("input#toggle_password").click(function(e) {
     var x = document.querySelector("input#password");
     if (x.type === "password") {
       x.type = "text";
     } else {
       x.type = "password";
     }
-}
+});
 
 $("form#login").submit(function(e) {
     //don't redirect

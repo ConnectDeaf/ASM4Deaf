@@ -17,11 +17,13 @@
         </div>
         <div class="col-3">
             <input type="password" class="form-control" name="password" id="password" placeholder="password"  maxlength="50" required>
-            <input type="checkbox" onclick="toggle_password_visibility()">Show Password
+            <label class="form-label float-end" for="toggle_password">Show Password</label>
+            <input class="form-label float-end my-2 mx-2" id="toggle_password" type="checkbox" >
+            
         </div>
     </div>
     
-    <div class="row mt-5">
+    <div class="row mt-4">
         <div class="col-5">
             <button class="btn btn-primary" type="submit" name="submit" id="submit">Login</button>
         </div>
