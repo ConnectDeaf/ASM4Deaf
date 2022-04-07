@@ -5,7 +5,7 @@ questions:
 
 
 pending:
-- when a user is not logged in, inform so with an alertbox (?) and redirect to login page
+- when a user is not logged in and tries to access a page they cannot, inform so with an alertbox (?) and redirect to login page
 - menu: all pages hidden and inacessible except login.
         on login success :
                 PYTHON: do session stuff to allow access to these pages,

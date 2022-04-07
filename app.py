@@ -1,9 +1,9 @@
 from email.policy import default
-from flask import Flask, render_template, request, send_file, send_from_directory, Response, session
+from flask import Flask, render_template, request, send_file, send_from_directory, Response, session, redirect, url_for
 from itsdangerous import base64_encode
 from requests_toolbelt import MultipartEncoder
 from flask_sqlalchemy import SQLAlchemy
-from my_config import GIF_FILEPATH_ROOT
+from my_config import *
 from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from datauri import DataURI
@@ -16,8 +16,9 @@ import hashlib
 
 
 app = Flask(__name__)
+app.secret_key = SESSION_ENCRYPTION_SECRET_KEY
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://test_user:test_pass@localhost/asm4deaf"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{DB_USER}:{DB_USER_PASSWORD}@{DB_IP_ADDRESS}/{DB_TABLENAME}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -134,6 +135,14 @@ def login():
         except:
                 return "Incorect parameters!", 400
 
+        #check if the user is already logged in
+        if "user" in session:
+            if session["user"] == email:
+                return "Already logged in!", 200
+            else:
+                return f"You are logged in with another email ({session['user']})," + \
+                            f" please logout and try again with this one ({email})!", 403
+
         #retrieve user data from the database
         found_user = UsersModel.query.filter_by(Email=email).first()
         if not found_user:
@@ -154,10 +163,22 @@ def login():
         if not stored_salted_digest == pwd_digest:
             return "Incorrect password!", 403
 
+        #create session for user
+        session["user"] = email
         return "Successfully logged in!", 200
 
     else:
         return render_template("login.html")
+
+
+@app.route("/users/logout", methods=["GET"])
+@app.route("/users/logout/", methods=["GET"])
+def logout():
+    if "user" in session:
+        session.pop("user", None)
+        return redirect(url_for("login")), 200
+    
+    return "User already logged out!", 200
 
 
 @app.route('/gifs/new', methods=["POST", "GET"])#pending (user sessions)
@@ -169,6 +190,10 @@ def add_new():
     '''
     if request.method == "POST":
          
+        #check if user is logged in
+        if not "user" in session:
+            return "You need to log in to access this page!", 403
+
         try:
             gif_type = request.form['gif_type']
             sign_language = request.form["sign_languages"]
