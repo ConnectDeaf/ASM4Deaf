@@ -18,7 +18,7 @@ import hashlib
 
 app = Flask(__name__)
 app.secret_key = SESSION_ENCRYPTION_SECRET_KEY
-app.permanent_session_lifetime = timedelta(days=USER_SESSION_LIFETIME_IN_DAYS)
+#app.permanent_session_lifetime = timedelta(days=USER_SESSION_LIFETIME_IN_DAYS)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{DB_USER}:{DB_USER_PASSWORD}@{DB_IP_ADDRESS}/{DB_TABLENAME}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -128,8 +128,8 @@ def register_user():
 @app.route('/users/login', methods=["POST", "GET"])#pending (user sessions + might possibly change)
 @app.route('/users/login/', methods=["POST", "GET"])
 def login():
+
     if request.method == 'POST':
-        
         try:
             request_data = request.get_json()
             email = request_data['email']
@@ -137,12 +137,10 @@ def login():
         except:
                 return "Incorect parameters!", 400
 
-        #check if the user is already logged in
+
+        #check if the user is already logged in with another account
         if "user" in session:
-            if session["user"] == email:
-                return "Already logged in!", 200
-            else:
-                return f"You are logged in with another email ({session['user']})," + \
+            return f"You are logged in with another email ({session['user']})," + \
                             f" please logout and try again with this one!", 403
 
         #retrieve user data from the database
@@ -166,13 +164,17 @@ def login():
             return "Incorrect password!", 403
 
         #create a permanent session for user
-        session.permanent = True
+        #session.permanent = True
         session["user"] = email
 
         flash("User successfully logged in!", "info")
         return "User successfully logged in!", 200
     else:
-        return render_template("login.html")
+        if "user" in session:
+            flash("Already logged in!", "info")
+            return redirect(url_for("add_new")), 200
+        return render_template("login.html"), 200
+            
 
 
 @app.route("/users/logout", methods=["GET"])

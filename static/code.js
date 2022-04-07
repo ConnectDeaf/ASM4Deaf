@@ -2,10 +2,24 @@ var ADD_NEW_GIF_URL = "http://192.168.0.23:5000/gifs/new/"
 var LOGIN_URL = "http://192.168.0.23:5000/users/login/"
 
 /****************** All pages (base template) *******************/
-//remove alerts upon clicking on them
 function remove_self_on_click(element){
     element.remove();
 }
+
+function toggle_logging_visibility(){
+    let visible_logging_elements = document.querySelectorAll(".visible-menu-item");
+    let invisible_logging_elements = document.querySelectorAll(".invisible-menu-item");
+    
+    visible_logging_elements.forEach(function (item, index){
+        item.classList.add("invisible-menu-item")
+        item.classList.remove("visible-menu-item")
+    });
+
+    invisible_logging_elements.forEach(function (item, index){
+        item.classList.add("visible-menu-item")
+        item.classList.remove("invisible-menu-item")
+    });
+};
 
 /****************************************************************/
 
@@ -107,6 +121,8 @@ $("form#new_gif").submit(function(e) {
 });
 /****************************************************************/
 
+
+
 /************************* Log In page **************************/
 $("input#toggle_password").click(function(e) {
     var x = document.querySelector("input#password");
@@ -136,8 +152,8 @@ $("form#login").submit(function(e) {
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
+            //HERE: maybe replace the login menu option with the logout (must test the URL functionality though...)
             window.location.href = ADD_NEW_GIF_URL;
-            //PENDING: make the corresponding menu links visible
         },
         error: function(response) {
             alert(response.responseText);
@@ -150,6 +166,5 @@ $("form#login").submit(function(e) {
     this.reset();
 
 });
-
 
 /****************************************************************/

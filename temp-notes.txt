@@ -3,14 +3,17 @@ questions:
         IF NOT, THEN MAKE THE DATABASE COLUMN ENCRYPTED AND JUST STORE THE PASSWORDS IN IT AS IS- 
         TO MAKE THE REGISTRATIONS BY HAND
 
+notes:
+- the session permanence is commented out for debugging purposes (or in general if i decide to do so)
 
 pending:
-- fix the spasing for the login page (it is not very responsive!)
-- when a user is not logged in and tries to access a page they cannot, inform so with an alertbox (?) and redirect to login page
-- menu: all pages hidden and inacessible except login.
+- do some testing to check if everything is alright before starting with the menu links
+        visibility thing (IDEA!! -> maybe REPLACE the Login with the Logout button!)
+- menu links: all pages hidden and inacessible except login.
         on login success :
-                PYTHON: do session stuff to allow access to these pages,
-                JS: make these links visible on the menu bar
-- menu: Logout must be hidden unless logged in.
+        JS: make these links visible on the menu bar
+- menu links: Logout must be hidden unless logged in.
         on click :
         JS: hide logged in corresponding links
+
+- fix the spacing for the login page (it is not very responsive!)
