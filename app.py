@@ -18,7 +18,7 @@ import hashlib
 
 app = Flask(__name__)
 app.secret_key = SESSION_ENCRYPTION_SECRET_KEY
-#app.permanent_session_lifetime = timedelta(days=USER_SESSION_LIFETIME_IN_DAYS)
+app.permanent_session_lifetime = timedelta(days=USER_SESSION_LIFETIME_IN_DAYS)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{DB_USER}:{DB_USER_PASSWORD}@{DB_IP_ADDRESS}/{DB_TABLENAME}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -87,42 +87,48 @@ class BodyPartsModel(db.Model):
 #        the POST endpoint versions do the actual work
 ##############################################################
 
-@app.route('/users/register', methods=["POST"])#pending (currently only able to be used only via Postman- for testing)
-@app.route('/users/register/', methods=["POST"])
+@app.route('/users/register', methods=["POST", "GET"])
+@app.route('/users/register/', methods=["POST", "GET"])
 def register_user():
     '''
         adds an unverified user to the database;
         the administrator needs to login to the database to verify the user later on
     '''  
+    if request.method == 'POST':
+        try:
+            request_data = request.get_json()
+            email = request_data['email']
+            password = request_data["password"]
+        except:
+                return "Incorect parameters!", 400
 
-    try:
-        request_data = request.get_json()
-        email = request_data['email']
-        password = request_data["password"]
-    except:
-            return "Incorect parameters!", 400
+        try:
+            #hash password
+            salt = os.urandom(32)
+            pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+            salted_digest = salt + pwd_digest
+        except:
+            return "Failed to process (hash) password!", 500
 
-    try:
-        #hash password
-        salt = os.urandom(32)
-        pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-        salted_digest = salt + pwd_digest
-    except:
-        return "Failed to hash password", 500
+        existence_check_user = UsersModel.query.filter_by(Email=email).first()
+        if existence_check_user:
+            return "User with this email already exists!", 403
 
-    existence_check_user = UsersModel.query.filter_by(Email=email).first()
-    if existence_check_user:
-        return "User with this email already exists!", 403
+        try:
+            #add new unverified user to the database
+            new_user_record = UsersModel(email, salted_digest)
+            db.session.add(new_user_record)
+            db.session.commit()
+        except:
+            return "Failed store user data into database", 500
 
-    try:
-        #add new unverified user to the database
-        new_user_record = UsersModel(email, salted_digest)
-        db.session.add(new_user_record)
-        db.session.commit()
-    except:
-        return "Failed store user data into database", 500
-
-    return "Unverified user successfully added to the database", 200
+        flash("Thak you for your registration! An administrator will examine your request soon.")
+        return redirect(url_for("login")), 200
+    else:
+        if "user" in session:
+            flash("You cannot register while you are logged in!", "info")
+            return redirect(url_for("login")), 403
+        return render_template("register.html"), 200
     
 
 @app.route('/users/login', methods=["POST", "GET"])#pending (user sessions + might possibly change)
@@ -164,7 +170,7 @@ def login():
             return "Incorrect password!", 403
 
         #create a permanent session for user
-        #session.permanent = True
+        session.permanent = True
         session["user"] = email
 
         flash("User successfully logged in!", "info")

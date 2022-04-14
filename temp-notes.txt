@@ -8,5 +8,8 @@ notes:
 
 pending:
 - fix the spacing for the login page (it is not very responsive!)
-- start on the querying endpoint
-- finish the retrieve endpoint (need to ask Achileas how to proceed with this)
+- how to return the images?? should their directory be available for everyone to access?
+
+
+meeting notes:
+- created the login/logout functionality

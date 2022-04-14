@@ -1,26 +1,20 @@
-var ADD_NEW_GIF_URL = "http://localhost:5000/gifs/new/"
-var LOGIN_URL = "http://localhost:5000/users/login/"
+var ADD_NEW_GIF_URL = "http://localhost:5000/gifs/new/";
+var LOGIN_URL = "http://localhost:5000/users/login/";
+var REGISTER_URL = "http://localhost:5000/users/register/";
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){
     element.remove();
 }
 
-function toggle_logging_visibility(){
-    let visible_logging_elements = document.querySelectorAll(".visible-menu-item");
-    let invisible_logging_elements = document.querySelectorAll(".invisible-menu-item");
-    
-    visible_logging_elements.forEach(function (item, index){
-        item.classList.add("invisible-menu-item")
-        item.classList.remove("visible-menu-item")
-    });
-
-    invisible_logging_elements.forEach(function (item, index){
-        item.classList.add("visible-menu-item")
-        item.classList.remove("invisible-menu-item")
-    });
-};
-
+$("input#toggle_password").click(function(e) {
+    var x = document.querySelector("input#password");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+});
 /****************************************************************/
 
 /*********************** Add New GIF page ***********************/
@@ -124,15 +118,6 @@ $("form#new_gif").submit(function(e) {
 
 
 /************************* Log In page **************************/
-$("input#toggle_password").click(function(e) {
-    var x = document.querySelector("input#password");
-    if (x.type === "password") {
-      x.type = "text";
-    } else {
-      x.type = "password";
-    }
-});
-
 $("form#login").submit(function(e) {
     //don't redirect
     e.preventDefault();
@@ -151,6 +136,42 @@ $("form#login").submit(function(e) {
         data: JSON.stringify(jsonData),
         success: function (response) {
             window.location.href = ADD_NEW_GIF_URL;
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        processData: false
+    });
+    
+    //reset the form
+    this.reset();
+
+});
+/****************************************************************/
+
+
+
+
+/************************* Register page **************************/
+$("form#register").submit(function(e) {
+    //don't redirect
+    e.preventDefault();
+
+    //prepare json
+    jsonData = {
+        "email": document.querySelector("input#email").value,
+        "password": document.querySelector("input#password").value
+    }
+
+    //POST the data
+    $.ajax({
+        url: REGISTER_URL,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData),
+        success: function (response) {
+            window.location.href = LOGIN_URL;
         },
         error: function(response) {
             alert(response.responseText);
