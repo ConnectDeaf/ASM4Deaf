@@ -7,13 +7,6 @@ notes:
 - the session permanence is commented out for debugging purposes (or in general if i decide to do so)
 
 pending:
-- do some testing to check if everything is alright before starting with the menu links
-        visibility thing (IDEA!! -> maybe REPLACE the Login with the Logout button!)
-- menu links: all pages hidden and inacessible except login.
-        on login success :
-        JS: make these links visible on the menu bar
-- menu links: Logout must be hidden unless logged in.
-        on click :
-        JS: hide logged in corresponding links
-
 - fix the spacing for the login page (it is not very responsive!)
+- start on the querying endpoint
+- finish the retrieve endpoint

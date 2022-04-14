@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Search GIFs{% endblock %}
+{% block navbar_options %}
+<li class="nav-item">
+    <a id="login_menu_option" class="nav-link" href="{{ url_for('login') }}">Login</a>
+</li>
+{% endblock %}
 {% block content %}
 <h2 class="my-5">Log In</h2>
 <form class="form" id="login" action="#" method="post" enctype="multipart/form-data">

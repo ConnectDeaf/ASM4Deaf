@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Add New GIF{% endblock%}
+{% block navbar_options %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('add_new') }}">Add New GIF</a>
+</li>
+<li class="nav-item">
+    <a id="logout_menu_option" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+</li>
+{% endblock %}
 {% block content %}
 <h2 class="my-5">GIF Details</h2>
 <form class="form" id="new_gif" action="#" method="post" enctype="multipart/form-data">

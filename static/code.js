@@ -1,5 +1,5 @@
-var ADD_NEW_GIF_URL = "http://192.168.0.23:5000/gifs/new/"
-var LOGIN_URL = "http://192.168.0.23:5000/users/login/"
+var ADD_NEW_GIF_URL = "http://localhost:5000/gifs/new/"
+var LOGIN_URL = "http://localhost:5000/users/login/"
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){
@@ -143,8 +143,6 @@ $("form#login").submit(function(e) {
         "password": document.querySelector("input#password").value
     }
 
-    console.log(jsonData);
-
     //POST the data
     $.ajax({
         url: LOGIN_URL,
@@ -152,7 +150,6 @@ $("form#login").submit(function(e) {
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
-            //HERE: maybe replace the login menu option with the logout (must test the URL functionality though...)
             window.location.href = ADD_NEW_GIF_URL;
         },
         error: function(response) {
