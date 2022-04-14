@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 14, 2022 at 11:49 AM
+-- Generation Time: Apr 14, 2022 at 03:18 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -46,7 +46,10 @@ INSERT INTO `bodyparts` (`BodyPartID`, `Keywords`, `FileName`, `RaceID`, `Langua
 (7, 'good', 'test1b', 2, 1, 'b'),
 (8, 'morning', 'test2b', 1, 1, 'b'),
 (9, 'good morning', 'test3h', 2, 1, 'h'),
-(10, 'good morning', 'test3b', 2, 1, 'b');
+(10, 'good morning', 'test3b', 2, 1, 'b'),
+(11, 'sand face', 'head_1649936865.gif', 1, 1, 'h'),
+(12, 'aa', 'head_1649936898.gif', 1, 1, 'h'),
+(13, 'DD', 'torso_1649940222.gif', 1, 1, 't');
 
 -- --------------------------------------------------------
 
@@ -133,8 +136,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Email`, `PwdSaltedDigest`, `IsVerified`) VALUES
-('stavroullakoumou.a2@gmail.com', 0x49789b1d04682bc9d56866548b5d05293769b2bd8b3ebdee58c6b06bd880ecccb935699350e1b00c8500ab15d5a0621a4eea13e686d86d0935bfe90df6ac8e90, 1),
-('stavroullakoumou2.a2@gmail.com', 0x50a96e0d000c1ed88bd1cbcbd2f84b9a6ad034fff4ec2c260db081c70919fb2c5c30e63db15fbe72ec9f94cef78b5494e2848ab579efbacbe754f06d693b03f7, 1);
+('stavroullakoumou.a2@gmail.com', 0x49789b1d04682bc9d56866548b5d05293769b2bd8b3ebdee58c6b06bd880ecccb935699350e1b00c8500ab15d5a0621a4eea13e686d86d0935bfe90df6ac8e90, 1);
 
 --
 -- Indexes for dumped tables
@@ -191,7 +193,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bodyparts`
 --
 ALTER TABLE `bodyparts`
-  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `fullbodys`

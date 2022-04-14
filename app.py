@@ -252,17 +252,6 @@ def add_new():
         return render_template("new-gif.html", races=races, languages=languages), 200
 
 
-@app.route('/gifs/retrieve/<gif_type>/<path:path>', methods=["GET"])
-def retrieve(gif_type, path):
-    '''
-        returns GIF files
-    '''
-    if "user" in session:
-        return send_from_directory(f'{GIF_FILEPATH_ROOT}/{gif_type}', path)
-    else:
-        return "Forbidden Access", 403
-
-
 @app.route('/gifs/retrieve', methods=['POST','GET'])#pending
 @app.route('/gifs/retrieve/', methods=['POST', 'GET'])
 def get_urls_for():
@@ -292,6 +281,16 @@ def get_urls_for():
     else:
         return render_template("query-gif.html"), 200
 
+
+@app.route('/gifs/retrieve/<gif_type>/<path:path>', methods=["GET"])
+def retrieve(gif_type, path):
+    '''
+        returns GIF files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{GIF_FILEPATH_ROOT}/{gif_type}', path)
+    else:
+        return "Forbidden Access", 403
 
 
 if __name__ == '__main__':

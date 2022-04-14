@@ -99,10 +99,19 @@
 			"response": []
 		},
 		{
-			"name": "retrieve specific gifs",
+			"name": "get urls for related gifs using keyword list",
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"h\",\r\n    \"keywords\": [\"aa\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:5000/gifs/retrieve/",
 					"protocol": "http",
@@ -120,21 +129,12 @@
 			"response": []
 		},
 		{
-			"name": "query database for gif ids",
+			"name": "retrieve specific gif",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"h\",\r\n    \"keywords\": [\"good\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:5000/gifs/query/",
+					"raw": "http://localhost:5000/gifs/retrieve/heads/head_1649936898.gif",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -142,8 +142,9 @@
 					"port": "5000",
 					"path": [
 						"gifs",
-						"query",
-						""
+						"retrieve",
+						"heads",
+						"head_1649936898.gif"
 					]
 				}
 			},
