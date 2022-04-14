@@ -1,5 +1,4 @@
 import os
-from unittest import result
 
 def save_gif_on_the_file_system(request, filepath_root, filename):
 
@@ -36,11 +35,17 @@ def prepare_database_keyword_query(sign_language, gif_type, keywords):
     return query_str
 
 
-def create_ids_dictionary_from_cursor_results(cursor_results):
+def create_dictionary_array_from_cursor_results(cursor_results):
     
-    result_dictionary = {"ids" : []}
+    result_dictionary = []
     
     for row in cursor_results:
-        result_dictionary["ids"].append(row._asdict()["BodyPartID"])
+        gif_record_dict = row._asdict()
+        result_dictionary.append({
+            "id" : gif_record_dict["BodyPartID"],
+            "filename": gif_record_dict["FileName"]
+        })
     
     return result_dictionary
+
+

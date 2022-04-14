@@ -253,7 +253,7 @@ def add_new():
 
 
 @app.route('/gifs/retrieve/<gif_type>/<path:path>', methods=["GET"])
-def send_report(gif_type, path):
+def retrieve(gif_type, path):
     '''
         returns GIF files
     '''
@@ -263,24 +263,13 @@ def send_report(gif_type, path):
         return "Forbidden Access", 403
 
 
-@app.route("/gifs/retrieve", methods=["GET"])#pending (merge with the below one)
-@app.route("/gifs/retrieve/", methods=["GET"])
-def retrieve():
+@app.route('/gifs/retrieve', methods=['POST','GET'])#pending
+@app.route('/gifs/retrieve/', methods=['POST', 'GET'])
+def get_urls_for():
     '''
-        retrieves multiple GIFs from the database using their type and id
-    '''
-    
-    filename = "head_1649936898.gif"
-
-    return url_for("static", filename=f"GIFs/heads/{filename}"), 200
-
-
-@app.route('/gifs/query', methods=['POST','GET'])#pending
-@app.route('/gifs/query/', methods=['POST', 'GET'])
-def query():
-    '''
-        searches the database (using the provided gif type, language and array of keywords)
-        and returns a list of relative ids.
+        queries the database (using the provided gif type, language and array of keywords)
+        and returns a list of relative ids and filenames (to be used for subsequent calls to
+        retrieve the GIFs- or simply put together the URL and use in an img html element.
     '''
 
     if request.method == 'POST':
@@ -295,8 +284,8 @@ def query():
 
         try:
             query_str = aux_.prepare_database_keyword_query(sign_language, gif_type, keywords)
-            matching_gif_records = db.engine.execute(query_str)
-            return jsonify(aux_.create_ids_dictionary_from_cursor_results(matching_gif_records)), 200
+            gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str))
+            return jsonify(gifs_dict_array), 200
         except:
             return "Failed to perform database query.", 500
 
