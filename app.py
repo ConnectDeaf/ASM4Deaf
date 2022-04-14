@@ -252,6 +252,17 @@ def add_new():
         return render_template("new-gif.html", races=races, languages=languages), 200
 
 
+@app.route('/gifs/retrieve/<gif_type>/<path:path>', methods=["GET"])
+def send_report(gif_type, path):
+    '''
+        returns GIF files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{GIF_FILEPATH_ROOT}/{gif_type}', path)
+    else:
+        return "Forbidden Access", 403
+
+
 @app.route("/gifs/retrieve", methods=["GET"])#pending (merge with the below one)
 @app.route("/gifs/retrieve/", methods=["GET"])
 def retrieve():

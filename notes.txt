@@ -21,17 +21,11 @@ Meeting Notes:
 - Add new GIF page for heads and torsos.
 
 
-[QUESTION]
-- Can I have the GIFs exposed (i.e. anyone can access them if they have the right URL),
-        or do I need to think of another approach?
-        (-> use Base64 for GIF retrieval and data URIs for displaying them on the UI;
-                use an input argument according to which the response will have the Base64
-                or the URI- this is to make the UI rendering easier)
-
-
 [PENDING]
-- Create an endpoint that queries the database and returns the URLs/Base64/URIs for the matching GIFs
-        among with their ids. (waiting for a reply to the QUESTION above)
+- Create an endpoint that queries the database and returns the URLs for the matching GIFs
+        among with their ids.
+        > The URLs can only be accessed while the user's session is not expired
+                -currently 1 day after last login. After expiration the user must login again.
 - Create a query page for browsing what is already in the database
         (i.e. testing the endpoint mentioned above)
 - Create an Add New GIF page for fullbody GIFs
