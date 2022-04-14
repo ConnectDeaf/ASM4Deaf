@@ -131,7 +131,7 @@ def register_user():
         return render_template("register.html"), 200
     
 
-@app.route('/users/login', methods=["POST", "GET"])#pending (user sessions + might possibly change)
+@app.route('/users/login', methods=["POST", "GET"])
 @app.route('/users/login/', methods=["POST", "GET"])
 def login():
 
@@ -194,7 +194,7 @@ def logout():
     return redirect(url_for("login")), 200
 
 
-@app.route('/gifs/new', methods=["POST", "GET"])#pending (user sessions)
+@app.route('/gifs/new', methods=["POST", "GET"])
 @app.route('/gifs/new/', methods=["POST", "GET"])
 def add_new():
     '''
@@ -252,56 +252,19 @@ def add_new():
         return render_template("new-gif.html", races=races, languages=languages), 200
 
 
-@app.route("/gifs/retrieve", methods=["POST"])#pending (everything)
-@app.route("/gifs/retrieve/", methods=["POST"])
+@app.route("/gifs/retrieve", methods=["GET"])#pending (merge with the below one)
+@app.route("/gifs/retrieve/", methods=["GET"])
 def retrieve():
     '''
         retrieves multiple GIFs from the database using their type and id
     '''
     
-    filename = "torso_1648734447.gif"
-    DOWNLOAD_DIRECTORY = GIF_FILEPATH_ROOT + "torsos\\"
-    f1 = DOWNLOAD_DIRECTORY + filename
-    f2 = f1
+    filename = "head_1649936898.gif"
 
-    filenames = [f1, f2]
-    
-
-    #RETURN MULTIPLE FILES - OPTION 1: MULTIPART ENCODED FILE
-    # files_dict = {}
-    # for fn_index in range(len(filenames)):
-    #     files_dict[f'f_{fn_index}'] = (filenames[fn_index], open(f1, 'rb'), 'text/plain')
-    # m = MultipartEncoder(files_dict)
-    # return Response(m.to_string(), mimetype=m.content_type), 200
-    
-    #RETURN MULTIPLE FILES - OPTION 2: json with Base64 strings (can also return the URIs instead of Base64 encoding)
-    # type = "heads"
-    # files_dict = {
-    #     "heads" : [],
-    #     "torsos": [],
-    #     "fullbodys": []
-    # }
-    # for fn_index in range(len(filenames)):
-    #     file_data_as_str = base64.b64encode(open(filenames[fn_index], 'rb').read()).decode("ascii")
-    #     file = {
-    #         "id" : f'dummy_{fn_index}',
-    #         "data": file_data_as_str
-    #     }
-
-    #     files_dict[type].append(file)
-    # return json.dumps(files_dict), 200
-
-    #RETURN MULTIPLE FILES - OPTION 3: ZIP FILE
-    # memory_file = BytesIO()
-    # with ZipFile(memory_file, 'w') as zf:
-    #     for fn in filenames:
-    #         zf.write(fn)
-    # memory_file.seek(0)
-    # return send_file(memory_file, attachment_filename='result.zip', as_attachment=True)
-    return
+    return url_for("static", filename=f"GIFs/heads/{filename}"), 200
 
 
-@app.route('/gifs/query', methods=['POST','GET'])#pending (everything)
+@app.route('/gifs/query', methods=['POST','GET'])#pending
 @app.route('/gifs/query/', methods=['POST', 'GET'])
 def query():
     '''

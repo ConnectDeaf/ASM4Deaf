@@ -1,0 +1,42 @@
+questions:
+->DO WE NEED TO DO USER MANAGEMENT VIA THE UI?? (register, login, verify, delete, edit, user roles)
+        IF NOT, THEN MAKE THE DATABASE COLUMN ENCRYPTED AND JUST STORE THE PASSWORDS IN IT AS IS- 
+        TO MAKE THE REGISTRATIONS BY HAND
+
+notes:
+- the session permanence is commented out for debugging purposes (or in general if i decide to do so)
+
+pending:
+- how to return the images?? should their directory be available for everyone to access?
+
+
+Meeting Notes:
+
+[DONE]
+- Implemented a very generic database schema (can easily be extended)
+- Implemented register, login, logout functionality and UI pages
+        > Currently: must use database to verify and edit a user;
+                   password cannot be changed, must remove user and re-register them;
+                   no user roles, everyone is an Admin.
+- Add new GIF page for heads and torsos.
+
+
+[QUESTION]
+- Can I have the GIFs exposed (i.e. anyone can access them if they have the right URL),
+        or do I need to think of another approach?
+        (-> use Base64 for GIF retrieval and data URIs for displaying them on the UI;
+                use an input argument according to which the response will have the Base64
+                or the URI- this is to make the UI rendering easier)
+
+
+[PENDING]
+- Create an endpoint that queries the database and returns the URLs/Base64/URIs for the matching GIFs
+        among with their ids. (waiting for a reply to the QUESTION above)
+- Create a query page for browsing what is already in the database
+        (i.e. testing the endpoint mentioned above)
+- Create an Add New GIF page for fullbody GIFs
+        > Must allow the user to use similar functionality to the one of query page in order
+                to select the head and torso which are combined by the fullbody that is to be
+                uploaded. (to avoid manual search and typing of these 2 ids)
+
+
