@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2022 at 02:40 PM
+-- Generation Time: Apr 14, 2022 at 11:49 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -35,6 +35,18 @@ CREATE TABLE `bodyparts` (
   `LanguageID` int(11) DEFAULT NULL,
   `PartType` varchar(1) NOT NULL COMMENT '''h'' for head, ''t'' for torso'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `bodyparts`
+--
+
+INSERT INTO `bodyparts` (`BodyPartID`, `Keywords`, `FileName`, `RaceID`, `LanguageID`, `PartType`) VALUES
+(5, 'good', 'test1h', 2, 1, 'h'),
+(6, 'morning', 'test2h', 1, 1, 'h'),
+(7, 'good', 'test1b', 2, 1, 'b'),
+(8, 'morning', 'test2b', 1, 1, 'b'),
+(9, 'good morning', 'test3h', 2, 1, 'h'),
+(10, 'good morning', 'test3b', 2, 1, 'b');
 
 -- --------------------------------------------------------
 
@@ -179,7 +191,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bodyparts`
 --
 ALTER TABLE `bodyparts`
-  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `fullbodys`

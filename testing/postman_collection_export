@@ -6,30 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "retrieve specific gifs",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://192.168.0.23:5000/gifs/retrieve/",
-					"protocol": "http",
-					"host": [
-						"192",
-						"168",
-						"0",
-						"23"
-					],
-					"port": "5000",
-					"path": [
-						"gifs",
-						"retrieve",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "register new user",
 			"request": {
 				"method": "POST",
@@ -44,13 +20,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.0.23:5000/users/register/",
+					"raw": "http://localhost:5000/users/register/",
 					"protocol": "http",
 					"host": [
-						"192",
-						"168",
-						"0",
-						"23"
+						"localhost"
 					],
 					"port": "5000",
 					"path": [
@@ -77,13 +50,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.0.23:5000/users/login/",
+					"raw": "http://localhost:5000/users/login/",
 					"protocol": "http",
 					"host": [
-						"192",
-						"168",
-						"0",
-						"23"
+						"localhost"
 					],
 					"port": "5000",
 					"path": [
@@ -113,18 +83,66 @@
 					}
 				},
 				"url": {
-					"raw": "http://192.168.0.23:5000/users/logout/",
+					"raw": "http://localhost:5000/users/logout/",
 					"protocol": "http",
 					"host": [
-						"192",
-						"168",
-						"0",
-						"23"
+						"localhost"
 					],
 					"port": "5000",
 					"path": [
 						"users",
 						"logout",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "retrieve specific gifs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/gifs/retrieve/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"gifs",
+						"retrieve",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query database for gif ids",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"h\",\r\n    \"keywords\": [\"good\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/gifs/query/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"gifs",
+						"query",
 						""
 					]
 				}

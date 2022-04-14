@@ -1,5 +1,5 @@
 from email.policy import default
-from flask import Flask, render_template, request, send_file, send_from_directory, Response, session, redirect, url_for, flash
+from flask import Flask, render_template, request, send_file, send_from_directory, Response, session, redirect, url_for, flash, jsonify
 from itsdangerous import base64_encode
 from requests_toolbelt import MultipartEncoder
 from flask_sqlalchemy import SQLAlchemy
@@ -303,13 +303,21 @@ def query():
         and returns a list of relative ids.
     '''
 
-    #NOTE TO SELF: get the "array of keywords" in the same manner as the csv from add_new function
-    #            (json stringify before returning it!)
-    #            Can also use the same method as for adding tags (for searching them this time)
-    #            at the front end.
-    #  SOS: will have to test this function from Postman!
-
     if request.method == 'POST':
+
+        try:
+            request_data = request.get_json()
+            sign_language = request_data['sign_language']
+            gif_type = request_data["gif_type"]
+            keywords = request_data["keywords"]
+        except:
+                return "Incorect parameters!", 400
+
+        query_str = aux_.prepare_database_keyword_query(sign_language, gif_type, keywords)
+        matching_gif_records = db.engine.execute(query_str)
+        return jsonify(aux_.create_ids_dictionary_from_cursor_results(matching_gif_records)), 200
+
+
         # form fields presence-check (type, language, keywords)
         ## PENDING
 

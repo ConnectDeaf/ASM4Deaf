@@ -9,4 +9,4 @@ notes:
 pending:
 - fix the spacing for the login page (it is not very responsive!)
 - start on the querying endpoint
-- finish the retrieve endpoint
+- finish the retrieve endpoint (need to ask Achileas how to proceed with this)
