@@ -7,7 +7,7 @@ notes:
 - the session permanence is commented out for debugging purposes (or in general if i decide to do so)
 
 pending:
-- fix the spacing for the login page (it is not very responsive!)
+- fix the spacing for the login+registration pages
 - how to return the images?? should their directory be available for everyone to access?
 
 
