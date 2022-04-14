@@ -313,22 +313,13 @@ def query():
         except:
                 return "Incorect parameters!", 400
 
-        query_str = aux_.prepare_database_keyword_query(sign_language, gif_type, keywords)
-        matching_gif_records = db.engine.execute(query_str)
-        return jsonify(aux_.create_ids_dictionary_from_cursor_results(matching_gif_records)), 200
+        try:
+            query_str = aux_.prepare_database_keyword_query(sign_language, gif_type, keywords)
+            matching_gif_records = db.engine.execute(query_str)
+            return jsonify(aux_.create_ids_dictionary_from_cursor_results(matching_gif_records)), 200
+        except:
+            return "Failed to perform database query.", 500
 
-
-        # form fields presence-check (type, language, keywords)
-        ## PENDING
-
-        #query the database to find relevant GIFs (get the GIF ids)
-        ## the table to be queried is determined by the GIF type
-        ## PENDING
-
-        #retrieve and return the related image Ids
-        ##PENDING
-        
-        return "something - PENDING", 200
     else:
         return render_template("query-gif.html"), 200
 
