@@ -26,7 +26,8 @@ Meeting Notes:
                         Currently do not know how they are implemented, but can find out.
                 >> Can just allow open access to all the endpoints from which we retrieve GIF data.
 - Created the Add new GIF page for heads and torsos.
-- Created a query page for browsing what is already in the database (i.e. testing the endpoint mentioned above)
+- Created a query page for testing the API (i.e. getting the same results as the user
+        will get on their phone)
 
 
 [PENDING]
