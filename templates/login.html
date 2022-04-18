@@ -2,10 +2,10 @@
 {% block title %}Search GIFs{% endblock %}
 {% block navbar_options %}
 <li class="nav-item">
-    <a id="login_menu_option" class="nav-link" href="{{ url_for('login') }}">Login</a>
+    <a class="nav-link fw-bold" href="{{ url_for('login') }}">Login</a>
 </li>
 <li class="nav-item">
-    <a id="login_menu_option" class="nav-link" href="{{ url_for('register_user') }}">Register</a>
+    <a class="nav-link" href="{{ url_for('register_user') }}">Register</a>
 </li>
 {% endblock %}
 {% block content %}
