@@ -2,8 +2,8 @@ var ADD_NEW_GIF_URL = "http://localhost:5000/gifs/new/";
 var LOGIN_URL = "http://localhost:5000/users/login/";
 var REGISTER_URL = "http://localhost:5000/users/register/";
 var QUERY_URL = "http://localhost:5000/gifs/retrieve/";
-var REQUEST_HEAD_URL = "http://localhost:5000/gifs/retrieve/heads/";
-var REQUEST_TORSO_URL = "http://localhost:5000/gifs/retrieve/torsos/";
+var RETRIEVE_HEAD_URL = "http://localhost:5000/gifs/retrieve/heads/";
+var RETRIEVE_TORSO_URL = "http://localhost:5000/gifs/retrieve/torsos/";
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){
@@ -214,6 +214,41 @@ function prepare_json_data_for_query(){
     return jsonData;
 }
 
+
+function prepare_url_for_gif(gif_type, gif_details){
+    if (gif_type == 'h'){
+        return RETRIEVE_HEAD_URL + gif_details["filename"];
+    }
+
+    return RETRIEVE_TORSO_URL + gif_details["filename"];
+}
+
+function img_create(src, alt, width, height) {
+
+    let img = document.createElement("img");
+    img.setAttribute('src', src);
+    img.setAttribute('alt', alt);
+    img.setAttribute('height', width);
+    img.setAttribute('width', height);
+
+    return img;
+}
+
+
+
+function display_gifs_in_preview_area(response){
+
+    let gif_preview_area = document.querySelector("div#gif_preview_area");
+    response["gif_matches"].forEach( function(gif, index){
+        let src = prepare_url_for_gif(response["gif_type"], gif);
+        let alt = "";
+        let width = "300";
+        let height = "";
+        gif_preview_area.appendChild(img_create(src, alt, width, height))
+    });
+
+}
+
 $("form#query_gifs").submit(function(e) {
     //don't redirect
     e.preventDefault();
@@ -228,10 +263,8 @@ $("form#query_gifs").submit(function(e) {
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
-            console.log(response);
-        
-            // PENDING: call a function that creates the URLs for the matching and adds
-                    //  image elements to display them on the UI
+            //console.log(response);
+            display_gifs_in_preview_area(response);
         },
         error: function(response) {
             alert(response.responseText);

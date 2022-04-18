@@ -279,7 +279,9 @@ def get_urls_for():
         try:
             query_str = aux_.prepare_database_keyword_query(sign_language, gif_type, keywords)
             gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str))
-            return jsonify(gifs_dict_array), 200
+            augmented_response = { "gif_type" : gif_type,
+                                   "gif_matches" : gifs_dict_array}
+            return jsonify(augmented_response), 200
         except:
             return "Failed to perform database query.", 500
 
