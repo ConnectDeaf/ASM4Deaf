@@ -30,6 +30,17 @@ Meeting Notes:
 
 
 [PENDING]
+- Create a page for viewing all users
+        > Functionality: verify user,
+                         change user password,
+                         delete user (SOS: cannot delete self therefore do not provide delete option for self-
+                                                do provide the change password option though).
+        > Shows all verified and unverified users (above functionality applies to both).
+- Create a page for editing (metadata) or deleting GIFs
+        > Functionality: use query-like interface to find an GIF,
+                         edit GIF metadata (except filename and type- to change type, delete and re-insert),
+                         delete GIF.
+
 - Create an Add New GIF page for fullbody GIFs
         > Must allow the user to use similar functionality to the one of query page in order
                 to select the head and torso which are combined by the fullbody that is to be

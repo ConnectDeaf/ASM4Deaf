@@ -113,7 +113,7 @@ $("form#new_gif").submit(function(e) {
     });
 
     //reset the form and badges area
-    remove_all_keyword_badges("div#badges button");
+    remove_all_elements_matching_to_selector("div#badges button");
     this.reset();
 });
 /****************************************************************/
