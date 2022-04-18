@@ -25,6 +25,7 @@ Meeting Notes:
                 -currently 1 day after last login. After expiration the user must login again.
                 >> Maybe this should be replaced by accessTokens(?)
                         Currently do not know how they are implemented, but can find out.
+                >> Can just allow open access to all the endpoints from which we retrieve GIF data.
 
 
 [PENDING]

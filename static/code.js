@@ -186,3 +186,58 @@ $("form#register").submit(function(e) {
 });
 
 /****************************************************************/
+
+
+
+/*********************** Query GIF page *************************/
+function prepare_json_data_for_query(){
+    
+    let sign_language_select = document.getElementById('language');
+    let sign_language = sign_language_select.options[sign_language_select.selectedIndex].value;
+
+    let gif_type = 'h';
+    if (document.querySelector("input#torso_gif").checked){
+        gif_type = 'b';
+    }
+
+    let kwords = document.querySelector("input#query_keywords").split(/(?:,| )+/);
+
+    jsonData = {
+        "sign_language": sign_language,
+        "gif_type": gif_type,
+        "keywords": kwords
+    }
+
+    return jsonData;
+}
+
+$("form#register").submit(function(e) {
+    //don't redirect
+    e.preventDefault();
+
+    //prepare json
+    jsonData = prepare_json_data_for_query();
+
+    //POST the data
+    $.ajax({
+        url: REGISTER_URL,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData),
+        success: function (response) {
+            alert(response);// for testing
+            // PENDING: call a function that creates the URLs for the matching and adds
+                    //  image elements to display them on the UI
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        processData: false
+    });
+    
+    //reset the form
+    this.reset();
+
+});
+/****************************************************************/

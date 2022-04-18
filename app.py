@@ -258,11 +258,16 @@ def get_urls_for():
     '''
         queries the database (using the provided gif type, language and array of keywords)
         and returns a list of relative ids and filenames (to be used for subsequent calls to
-        retrieve the GIFs- or simply put together the URL and use in an img html element.
+        retrieve the GIFs- or simply put together the URL and use in an img html element).
     '''
 
-    if request.method == 'POST':
+    #regardless of method, check if user is logged in
+    if not "user" in session:
+        flash("You need to log in to access the Add New GIF page!", "info")
+        return redirect(url_for("login")), 403
 
+
+    if request.method == 'POST':
         try:
             request_data = request.get_json()
             sign_language = request_data['sign_language']
@@ -279,7 +284,10 @@ def get_urls_for():
             return "Failed to perform database query.", 500
 
     else:
-        return render_template("query-gif.html"), 200
+        languages =  SignLanguagesModel.query.all()
+        languages = [[l.LanguageID, l.LanguageName] for l in languages]
+        
+        return render_template("query-gif.html", languages=languages), 200
 
 
 @app.route('/gifs/retrieve/<gif_type>/<path:path>', methods=["GET"])
@@ -291,6 +299,7 @@ def retrieve(gif_type, path):
         return send_from_directory(f'{GIF_FILEPATH_ROOT}/{gif_type}', path)
     else:
         return "Forbidden Access", 403
+
 
 
 if __name__ == '__main__':

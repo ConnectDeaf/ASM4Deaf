@@ -2,7 +2,10 @@
 {% block title %}Add New GIF{% endblock%}
 {% block navbar_options %}
 <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('add_new') }}">Add New GIF</a>
+    <a class="nav-link fw-bold" href="{{ url_for('add_new') }}">Add New</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('get_urls_for') }}">Query</a>
 </li>
 <li class="nav-item">
     <a id="logout_menu_option" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
@@ -16,18 +19,16 @@
     <div class="row my-5" id="gif_type">
         <div class="col">
             <h5>Select type</h5>
-            <input type="radio" name="gif_type" id="head_gif" value="head">
+            <input type="radio" name="gif_type" id="head_gif" value="head" checked>
             <label class="form-label" for="head_gif">Head</label>
             <input type="radio" name="gif_type" id="toso_gif" value="torso">
             <label class="form-label" for="torso_gif">Torso</label>
-            <!-- <input type="radio" name="gif_type" id="fullbody_gif" value="fullbody" disabled>
-            <label class="form-label" for="fullbody_gif">Full body</label> -->
         </div>
     </div>
 
     
     <!-- GIF metadata selection -->
-    <div class="row my-5" id="gif_type">
+    <div class="row my-5">
         <div class="col-8">
             <h5>Provide metadata</h5> 
             <div class="row my-1">
