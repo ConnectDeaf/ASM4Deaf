@@ -1,6 +1,9 @@
 var ADD_NEW_GIF_URL = "http://localhost:5000/gifs/new/";
 var LOGIN_URL = "http://localhost:5000/users/login/";
 var REGISTER_URL = "http://localhost:5000/users/register/";
+var QUERY_URL = "http://localhost:5000/gifs/retrieve/";
+var REQUEST_HEAD_URL = "http://localhost:5000/gifs/retrieve/heads/";
+var REQUEST_TORSO_URL = "http://localhost:5000/gifs/retrieve/torsos/";
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){
@@ -192,7 +195,7 @@ $("form#register").submit(function(e) {
 /*********************** Query GIF page *************************/
 function prepare_json_data_for_query(){
     
-    let sign_language_select = document.getElementById('language');
+    let sign_language_select = document.querySelector("select#sing_languages");
     let sign_language = sign_language_select.options[sign_language_select.selectedIndex].value;
 
     let gif_type = 'h';
@@ -200,7 +203,7 @@ function prepare_json_data_for_query(){
         gif_type = 'b';
     }
 
-    let kwords = document.querySelector("input#query_keywords").split(/(?:,| )+/);
+    let kwords = document.querySelector("input#query_keywords").value.split(/(?:,| )+/);
 
     jsonData = {
         "sign_language": sign_language,
@@ -211,7 +214,7 @@ function prepare_json_data_for_query(){
     return jsonData;
 }
 
-$("form#register").submit(function(e) {
+$("form#query_gifs").submit(function(e) {
     //don't redirect
     e.preventDefault();
 
@@ -220,12 +223,13 @@ $("form#register").submit(function(e) {
 
     //POST the data
     $.ajax({
-        url: REGISTER_URL,
+        url: QUERY_URL,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
-            alert(response);// for testing
+            console.log(response);
+        
             // PENDING: call a function that creates the URLs for the matching and adds
                     //  image elements to display them on the UI
         },

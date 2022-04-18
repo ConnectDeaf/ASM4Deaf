@@ -24,7 +24,7 @@
                     <h5>GIF type</h5>
                     <input type="radio" name="gif_type" id="head_gif" value="head" checked>
                     <label class="form-label" for="head_gif">Head</label>
-                    <input type="radio" name="gif_type" id="toso_gif" value="torso">
+                    <input type="radio" name="gif_type" id="torso_gif" value="torso">
                     <label class="form-label" for="torso_gif">Torso</label>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                     <p>Sign Language:</p>
                 </div>
                 <div class="col-8">
-                    <select name="sign_languages" class="form-select">
+                    <select name="sign_languages" id="sing_languages" class="form-select">
                         {% for l in languages %}
                                 <option value="{{l[0]}}">{{l[1]}}</option>    
                         {% endfor %}
