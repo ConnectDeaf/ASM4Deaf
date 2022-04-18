@@ -18,19 +18,18 @@ Meeting Notes:
         > Currently: must use database to verify and edit a user;
                    password cannot be changed, must remove user and re-register them;
                    no user roles, everyone is an Admin.
-- Add new GIF page for heads and torsos.
-- Create an endpoint that queries the database and returns the URLs for the matching GIFs
+- Created an endpoint that queries the database and returns the URLs for the matching GIFs
         among with their ids.
         > The URLs can only be accessed while the user's session is not expired
                 -currently 1 day after last login. After expiration the user must login again.
                 >> Maybe this should be replaced by accessTokens(?)
                         Currently do not know how they are implemented, but can find out.
                 >> Can just allow open access to all the endpoints from which we retrieve GIF data.
+- Created the Add new GIF page for heads and torsos.
+- Created a query page for browsing what is already in the database (i.e. testing the endpoint mentioned above)
 
 
 [PENDING]
-- Create a query page for browsing what is already in the database
-        (i.e. testing the endpoint mentioned above)
 - Create an Add New GIF page for fullbody GIFs
         > Must allow the user to use similar functionality to the one of query page in order
                 to select the head and torso which are combined by the fullbody that is to be

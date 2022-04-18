@@ -1,5 +1,7 @@
 /****************** All pages (base template) *******************/
-
+nav li:active{
+    text-decoration: underline;
+}
 /****************************************************************/
 
 
@@ -42,6 +44,4 @@ div#gif_preview_area{
 div#gif_preview_area img, div#gif_preview_area{
     border: 1px grey solid;
 }
-
-
 /****************************************************************/
