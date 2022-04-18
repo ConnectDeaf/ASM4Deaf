@@ -5,14 +5,14 @@
     <a class="nav-link" href="{{ url_for('add_new') }}">Add New</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link fw-bold" href="{{ url_for('get_urls_for') }}">Query</a>
+    <a class="nav-link fw-bold" href="{{ url_for('get_urls_for') }}">Test</a>
 </li>
 <li class="nav-item">
     <a id="logout_menu_option" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
 </li>
 {% endblock %}
 {% block content %}
-<h2 class="my-5">Query Details</h2>
+<h2 class="my-5">Test the API</h2>
 <form class="form" id="query_gifs" action="#" method="post" enctype="multipart/form-data">
 
     <div class="row my-5">

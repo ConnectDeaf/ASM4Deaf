@@ -79,7 +79,6 @@ class BodyPartsModel(db.Model):
         
 
 
-
 ##############################################################
 ##               CREATING THE SITE ENDPOINTS                ##
 ##############################################################
@@ -252,7 +251,7 @@ def add_new():
         return render_template("new-gif.html", races=races, languages=languages), 200
 
 
-@app.route('/gifs/retrieve', methods=['POST','GET'])#pending
+@app.route('/gifs/retrieve', methods=['POST','GET'])
 @app.route('/gifs/retrieve/', methods=['POST', 'GET'])
 def get_urls_for():
     '''
