@@ -36,9 +36,12 @@ input#keywords{
 /************************ Query GIF page ************************/
 div#gif_preview_area{
     width: 100%;
-    max-height: 400px;
+    height: 400px;
 }
 
+div#gif_preview_area img, div#gif_preview_area{
+    border: 1px grey solid;
+}
 
 
 /****************************************************************/

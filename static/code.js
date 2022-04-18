@@ -10,6 +10,13 @@ function remove_self_on_click(element){
     element.remove();
 }
 
+function remove_all_elements_matching_to_selector(selector){
+    let elements = document.querySelectorAll(selector);  
+    elements.forEach(function (item, index){
+        item.remove();
+    });
+}
+
 $("input#toggle_password").click(function(e) {
     var x = document.querySelector("input#password");
     if (x.type === "password") {
@@ -31,13 +38,6 @@ function create_new_button_badge(new_keyword){
         new_badge.remove();
     }
     return new_badge;
-}
-
-function remove_all_keyword_badges(){
-    let all_badge_buttons = document.querySelectorAll("div#badges button");  
-    all_badge_buttons.forEach(function (item, index){
-        item.remove();
-    });
 }
 
 function get_keywords_csv(){
@@ -113,7 +113,7 @@ $("form#new_gif").submit(function(e) {
     });
 
     //reset the form and badges area
-    remove_all_keyword_badges();
+    remove_all_keyword_badges("div#badges button");
     this.reset();
 });
 /****************************************************************/
@@ -240,11 +240,10 @@ function display_gifs_in_preview_area(response){
 
     let gif_preview_area = document.querySelector("div#gif_preview_area");
     response["gif_matches"].forEach( function(gif, index){
-        let src = prepare_url_for_gif(response["gif_type"], gif);
-        let alt = "";
-        let width = "300";
-        let height = "";
-        gif_preview_area.appendChild(img_create(src, alt, width, height))
+        let gif_element = img_create(prepare_url_for_gif(response["gif_type"], gif), gif["filename"], "", "");
+        gif_element.classList.add("my-2");
+        gif_element.classList.add("mx-2");
+        gif_preview_area.appendChild(gif_element)
     });
 
 }
@@ -263,7 +262,7 @@ $("form#query_gifs").submit(function(e) {
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
-            //console.log(response);
+            remove_all_elements_matching_to_selector("div#gif_preview_area img");
             display_gifs_in_preview_area(response);
         },
         error: function(response) {
