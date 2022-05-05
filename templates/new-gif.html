@@ -29,10 +29,10 @@
     
     <!-- GIF metadata selection -->
     <div class="row my-5">
-        <div class="col-8">
+        <div class="col-12">
             <h5>Provide metadata</h5> 
             <div class="row">
-                <div class="col-4 offset-8">
+                <div class="col-4 offset-5">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" name="new_language_toggle" id="new_language_toggle" />
                         <label class="form-check-label" for="new_language_toggle">New Language</label>
@@ -41,25 +41,25 @@
             </div>
 
             <div class="row my-1">
-                <div class="col-3">
+                <div class="col-2">
                     <p>Sign Language:</p>
                 </div>
-                <div class="col-5">
+                <div class="col-3">
                     <select id="sign_languages" name="sign_languages" class="form-select">
                         {% for l in languages %}
                                 <option value="{{l[0]}}">{{l[1]}}</option>    
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <input type="text" name="new_language" id="new_language"  class="form-control" placeholder="Enter New Sign Language" disabled>
                 </div>
             </div>
             <div class="row mt-2 mb-1">
-                <div class="col-3">
+                <div class="col-2">
                     <p>Signer Race:</p>
                 </div>
-                <div class="col-5">
+                <div class="col-3">
                     <select name="signer_race" class="form-select">
                         {% for r in races %}
                             <option value="{{r[0]}}">{{r[1]}}</option>    
