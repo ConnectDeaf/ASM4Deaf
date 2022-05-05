@@ -48,4 +48,3 @@ def create_dictionary_array_from_cursor_results(cursor_results):
     
     return result_dictionary
 
-

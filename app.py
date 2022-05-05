@@ -209,7 +209,23 @@ def add_new():
     if request.method == "POST":
         try:
             gif_type = request.form['gif_type']
-            sign_language = request.form["sign_languages"]
+
+            if request.form['new_language_toggle']:
+                try:
+                    #insert the new language into the database
+                    sign_language_name = request.form["new_language"].lower()
+                    for lang in SignLanguagesModel.query.all():
+                        if lang.LanguageName == sign_language_name:
+                            return "Sign language already exists!", 400
+                    new_language_record = SignLanguagesModel(sign_language_name)
+                    db.session.add(new_language_record)
+                    db.session.commit()
+                    sign_language = new_language_record.LanguageID
+                except:
+                    return "Failed to create new sign language!", 500
+            else:
+                sign_language = request.form["sign_languages"]
+
             signer_race = request.form["signer_race"]
             keywords = request.form["keywords"]
         except:
