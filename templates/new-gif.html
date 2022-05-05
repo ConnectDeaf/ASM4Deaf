@@ -31,19 +31,31 @@
     <div class="row my-5">
         <div class="col-8">
             <h5>Provide metadata</h5> 
+            <div class="row">
+                <div class="col-4 offset-8">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="new_language_toggle" />
+                        <label class="form-check-label" for="new_language_toggle">New Language</label>
+                      </div>
+                </div>
+            </div>
+
             <div class="row my-1">
                 <div class="col-3">
                     <p>Sign Language:</p>
                 </div>
                 <div class="col-5">
-                    <select name="sign_languages" class="form-select">
+                    <select id="sign_languages" name="sign_languages" class="form-select">
                         {% for l in languages %}
                                 <option value="{{l[0]}}">{{l[1]}}</option>    
                         {% endfor %}
                     </select>
                 </div>
+                <div class="col-4">
+                    <input type="text" id="new_language"  class="form-control" placeholder="Enter New Sign Language" disabled>
+                </div>
             </div>
-            <div class="row my-1">
+            <div class="row mt-2 mb-1">
                 <div class="col-3">
                     <p>Signer Race:</p>
                 </div>
@@ -64,7 +76,7 @@
     <div class="row my-5">
         <div class="col-5">
             <h5>Upload file</h5>
-            <input class="form-control" type="file" name="GIFfile" id="GIFfile" accept=".gif" required>
+            <input class="form-control" type="file" name="GIFfile" id="GIFfile" required>
         </div>
     </div>
 

@@ -56,6 +56,20 @@ function prepare_keywords_aux_field(){
     return keywords.value;
 }
 
+//toggle switch
+$("input#new_language_toggle").click(function(e) {
+    let toggle  = document.querySelector("input#new_language_toggle");
+    let new_language_input_box = document.querySelector("input#new_language");
+    let existing_sign_languages_select = document.querySelector("select#sign_languages");
+    if (toggle.checked) {
+        new_language_input_box.removeAttribute('disabled');
+        existing_sign_languages_select.setAttribute('disabled', '');
+    } else {
+        new_language_input_box.setAttribute('disabled', '');
+        existing_sign_languages_select.removeAttribute('disabled');
+    }
+});
+
 //adding badges with the entered keywords
 $("button#add_badge").click(function(e) {
 
