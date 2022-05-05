@@ -33,7 +33,7 @@ function create_new_button_badge(new_keyword){
     new_badge.type = "button";
     new_badge.classList.add("btn");
     new_badge.classList.add("btn-warning");
-    new_badge.innerText = new_keyword + " [x]";
+    new_badge.innerText = new_keyword.toLowerCase() + " [x]";
     new_badge.onclick = function(){ //on click, remove self
         new_badge.remove();
     }

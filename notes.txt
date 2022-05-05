@@ -31,6 +31,7 @@ Meeting Notes:
 
 
 [PENDING]
+- Allow to create a new sign language from the Add New GIF page
 - Create a page for viewing all users
         > Functionality: verify user,
                          change user password,
