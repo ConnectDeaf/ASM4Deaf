@@ -27,3 +27,4 @@ SQLAlchemy==1.4.32
 Werkzeug==2.0.3
 dlib == 19.*
 PyOpenGL == 3.1.5
+scipy
