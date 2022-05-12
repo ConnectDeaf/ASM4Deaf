@@ -214,7 +214,7 @@ function prepare_json_data_for_query(){
 
     let gif_type = 'h';
     if (document.querySelector("input#torso_gif").checked){
-        gif_type = 'b';
+        gif_type = 't';
     }
 
     let kwords = document.querySelector("input#query_keywords").value.split(/(?:,| )+/);

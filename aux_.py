@@ -21,7 +21,7 @@ def prepare_database_keyword_query(sign_language, gif_type, keywords):
 
     query_str = "SELECT * FROM "
 
-    if gif_type == 'h' or gif_type == 'b':
+    if gif_type == 'h' or gif_type == 't':
         query_str += f"bodyparts WHERE PartType='{gif_type}' AND"
     else:
         query_str += "fullbodys WHERE"
