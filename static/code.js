@@ -1,9 +1,9 @@
-var ADD_NEW_GIF_URL = "http://localhost:5000/gifs/new/";
-var LOGIN_URL = "http://localhost:5000/users/login/";
-var REGISTER_URL = "http://localhost:5000/users/register/";
-var QUERY_URL = "http://localhost:5000/gifs/retrieve/";
-var RETRIEVE_HEAD_URL = "http://localhost:5000/gifs/retrieve/heads/";
-var RETRIEVE_TORSO_URL = "http://localhost:5000/gifs/retrieve/torsos/";
+var ADD_NEW_GIF_URL = "http://10.16.20.139:5000/gifs/new/";
+var LOGIN_URL = "http://10.16.20.139:5000/users/login/";
+var REGISTER_URL = "http://10.16.20.139:5000/users/register/";
+var QUERY_URL = "http://10.16.20.139:5000/gifs/retrieve/";
+var RETRIEVE_HEAD_URL = "http://10.16.20.139:5000/gifs/retrieve/heads/";
+var RETRIEVE_TORSO_URL = "http://10.16.20.139:5000/gifs/retrieve/torsos/";
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){

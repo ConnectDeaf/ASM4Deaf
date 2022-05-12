@@ -207,22 +207,24 @@ def add_new():
 
     if request.method == "POST":
         try:
-            gif_type = request.form['gif_type']
 
-            if request.form['new_language_toggle']:
-                try:
-                    #insert the new language into the database
-                    sign_language_name = request.form["new_language"].lower()
-                    for lang in SignLanguagesModel.query.all():
-                        if lang.LanguageName == sign_language_name:
-                            return "Sign language already exists!", 400
-                    new_language_record = SignLanguagesModel(sign_language_name)
-                    db.session.add(new_language_record)
-                    db.session.commit()
-                    sign_language = new_language_record.LanguageID
-                except:
-                    return "Failed to create new sign language!", 500
-            else:
+            gif_type = request.form['gif_type']
+            
+            try:
+                if request.form['new_language_toggle']:
+                    try:
+                        #insert the new language into the database
+                        sign_language_name = request.form["new_language"].lower()
+                        for lang in SignLanguagesModel.query.all():
+                            if lang.LanguageName == sign_language_name:
+                                return "Sign language already exists!", 400
+                        new_language_record = SignLanguagesModel(sign_language_name)
+                        db.session.add(new_language_record)
+                        db.session.commit()
+                        sign_language = new_language_record.LanguageID
+                    except:
+                        return "Failed to create new sign language!", 500
+            except:
                 sign_language = request.form["sign_languages"]
 
             signer_race = request.form["signer_race"]
@@ -232,10 +234,10 @@ def add_new():
         
         try:
             if gif_type == "head":
-                save_directory = GIF_FILEPATH_ROOT + "heads\\"
+                save_directory = GIF_FILEPATH_ROOT + "heads/"
                 unique_filename_prefix = "head"
             elif gif_type == "torso":
-                save_directory = GIF_FILEPATH_ROOT + "torsos\\"
+                save_directory = GIF_FILEPATH_ROOT + "torsos/"
                 unique_filename_prefix = "torso"
             
             unique_filename_suffix = str(int(time.time()))
