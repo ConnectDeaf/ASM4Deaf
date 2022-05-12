@@ -95,11 +95,11 @@ CREATE TABLE `signerraces` (
 --
 
 INSERT INTO `signerraces` (`RaceID`, `RaceName`) VALUES
-(1, 'White'),
-(2, 'Black / African American'),
-(3, 'Native Hawaiian / Pacific Islander'),
-(4, 'Asian'),
-(5, 'American Indian / Alaska Native');
+(1, 'white'),
+(2, 'black / african american'),
+(3, 'native hawaiian / pacific islander'),
+(4, 'asian'),
+(5, 'american indian / alaska native');
 
 -- --------------------------------------------------------
 
@@ -117,7 +117,7 @@ CREATE TABLE `signlanguages` (
 --
 
 INSERT INTO `signlanguages` (`LanguageID`, `LanguageName`) VALUES
-(1, 'American');
+(1, 'american');
 
 -- --------------------------------------------------------
 
@@ -126,7 +126,7 @@ INSERT INTO `signlanguages` (`LanguageID`, `LanguageName`) VALUES
 --
 
 CREATE TABLE `users` (
-  `Email` varchar(300) NOT NULL,
+  `Email` varchar(100) NOT NULL,
   `PwdSaltedDigest` tinyblob NOT NULL,
   `IsVerified` int(1) NOT NULL DEFAULT 0 COMMENT '0 for unverified, 1 for verified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

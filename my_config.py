@@ -1,5 +1,5 @@
-DB_USER = "test_user"
-DB_USER_PASSWORD = "test_pass"
+DB_USER = "root"
+DB_USER_PASSWORD = "root_"
 DB_IP_ADDRESS = "localhost"
 DB_TABLENAME = "asm4deaf"
 
