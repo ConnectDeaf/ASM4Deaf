@@ -7,12 +7,14 @@ from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from datauri import DataURI
 from datetime import timedelta
+from faceswap.openCV.videoFaceSwap.videoFaceSwapping import swap
 import json
 import aux_
 import time
 import base64
 import os
 import hashlib
+
 
 
 app = Flask(__name__)
@@ -241,7 +243,7 @@ def add_new():
                 unique_filename_prefix = "torso"
             
             unique_filename_suffix = str(int(time.time()))
-            unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}.gif"
+            unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{GIF_FILE_FORMAT}"
 
             filepath = aux_.save_gif_on_the_file_system(request, save_directory, unique_filename)
 
@@ -318,6 +320,40 @@ def retrieve(gif_type, path):
     else:
         return "Forbidden Access", 403
 
+
+@app.route('/gifs/faceswap/openCV', methods=["GET"])
+def faceswap():
+    '''
+        creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
+    '''
+    if "user" in session:
+        if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
+            return "Incorect arguments!", 400
+
+        gif_filename = request.args.get('gif_filename')
+        head_photo = request.args.get('head_photo')
+
+        gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
+        head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
+        
+        unique_filename_prefix = "swap"
+        unique_filename_suffix = str(int(time.time()))
+        unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{SWAPS_FILE_FORMAT}"
+        result_fullpath = f"{SWAPS_FILEPATH_ROOT}/{unique_filename}"
+
+        try:
+            swap(DETECTOR_FULLPATH, gif_fullpath, head_photo_fullpath, result_fullpath)       
+        except e:
+            return "Failed to faceswap!", 500
+
+        try:
+            return send_from_directory(SWAPS_FILEPATH_ROOT, unique_filename), 200
+        except:
+            return "Failed to retrieve faceswap video file.", 500
+    else:
+        return "Forbidden Access", 403
+
+    pass
 
 
 if __name__ == '__main__':

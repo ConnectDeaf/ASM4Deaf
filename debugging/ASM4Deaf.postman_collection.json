@@ -20,10 +20,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/users/register/",
+					"raw": "http://10.16.20.139:5000/users/register/",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"16",
+						"20",
+						"139"
 					],
 					"port": "5000",
 					"path": [
@@ -50,10 +53,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/users/login/",
+					"raw": "http://10.16.20.139:5000/users/login/",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"16",
+						"20",
+						"139"
 					],
 					"port": "5000",
 					"path": [
@@ -83,10 +89,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/users/logout/",
+					"raw": "http://10.16.20.139:5000/users/logout/",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"16",
+						"20",
+						"139"
 					],
 					"port": "5000",
 					"path": [
@@ -105,7 +114,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"h\",\r\n    \"keywords\": [\"aa\"]\r\n}",
+					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"t\",\r\n    \"keywords\": [\"a\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -113,10 +122,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/gifs/retrieve/",
+					"raw": "http://10.16.20.139:5000/gifs/retrieve/",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"16",
+						"20",
+						"139"
 					],
 					"port": "5000",
 					"path": [
@@ -145,6 +157,40 @@
 						"retrieve",
 						"heads",
 						"head_1649936898.gif"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "faceswap openCV",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://10.16.20.139:5000/gifs/faceswap/openCV?gif_filename=test_swap_gif.mp4&head_photo=test_swap_head.jpg",
+					"protocol": "http",
+					"host": [
+						"10",
+						"16",
+						"20",
+						"139"
+					],
+					"port": "5000",
+					"path": [
+						"gifs",
+						"faceswap",
+						"openCV"
+					],
+					"query": [
+						{
+							"key": "gif_filename",
+							"value": "test_swap_gif.mp4"
+						},
+						{
+							"key": "head_photo",
+							"value": "test_swap_head.jpg"
+						}
 					]
 				}
 			},
