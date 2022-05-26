@@ -6,8 +6,8 @@ from OpenGL.GLU import *
 
 import numpy as np
 
-import os
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+# import os
+# os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 
 def setOrtho(w, h):

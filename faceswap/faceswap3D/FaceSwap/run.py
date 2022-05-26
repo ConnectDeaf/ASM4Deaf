@@ -29,6 +29,7 @@ replace_face = sys.argv[2]
 initial_video = sys.argv[1]
 slow_down_by = 2
 
+
 #you need to download shape_predictor_68_face_landmarks.dat from the link below and unpack it where the solution file is
 #http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2
 
@@ -61,12 +62,14 @@ renderer = FaceRendering.FaceRenderer(cameraImg, textureImg, textureCoords, mesh
 
 
 print("Starting video writer")
+fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
 writer = cv2.VideoWriter(os.path.join(os.path.dirname(__file__),
                                         repo_root_dir,
                                         output_filename),
-                                        cv2.VideoWriter_fourcc(*'DIVX'),
+                                        fourcc,
                                         fps,
                                         (cameraImg.shape[1], cameraImg.shape[0]))
+print('HERE***************************')
 if writer.isOpened():
     print("Writer succesfully opened")
 else:
