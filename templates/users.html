@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Add New GIF{% endblock%}
+{% block navbar_options %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('add_new') }}">Add New</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('get_urls_for') }}">Test</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-bold" href="{{ url_for('manage_users') }}">Users</a>
+</li>
+<li class="nav-item">
+    <a id="logout_menu_option" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+</li>
+{% endblock %}
+{% block content %}
+<h2 class="my-5">Manage Users</h2>
+
+{% endblock %}

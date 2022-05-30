@@ -182,7 +182,6 @@ def login():
         return render_template("login.html"), 200
             
 
-
 @app.route("/users/logout", methods=["GET"])
 @app.route("/users/logout/", methods=["GET"])
 def logout():
@@ -192,6 +191,15 @@ def logout():
     else:
         flash("User already logged out!", "info")
     return redirect(url_for("login")), 200
+
+
+@app.route("/users/manage", methods=["GET"])
+@app.route("/users/manage/", methods=["GET"])
+def manage_users():
+    if not "user" in session:
+        flash("You need to log in to access the Managae Users page!", "info")
+        return redirect(url_for("login")), 403
+    return render_template("users.html"), 200
 
 
 @app.route('/gifs/new', methods=["POST", "GET"])
