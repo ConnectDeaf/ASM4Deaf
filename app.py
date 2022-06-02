@@ -193,6 +193,7 @@ def logout():
     return redirect(url_for("login")), 200
 
 
+
 @app.route("/users/remove/<email>", methods=["PUT"])#pending
 def remove_user(email):
     return "removed", 200
@@ -208,7 +209,6 @@ def manage_users():
     if not "user" in session:
         flash("You need to log in to access the Managae Users page!", "info")
         return redirect(url_for("login")), 403
-
     users =  UsersModel.query.order_by(UsersModel.Email.asc()).all()
     users = [[u.UserID, u.Email, u.IsVerified] for u in users]
     return render_template("users.html", users=users), 200
