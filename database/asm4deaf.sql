@@ -36,20 +36,6 @@ CREATE TABLE `bodyparts` (
   `PartType` varchar(1) NOT NULL COMMENT '''h'' for head, ''t'' for torso'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `bodyparts`
---
-
-INSERT INTO `bodyparts` (`BodyPartID`, `Keywords`, `FileName`, `RaceID`, `LanguageID`, `PartType`) VALUES
-(5, 'good', 'test1h', 2, 1, 'h'),
-(6, 'morning', 'test2h', 1, 1, 'h'),
-(7, 'good', 'test1b', 2, 1, 'b'),
-(8, 'morning', 'test2b', 1, 1, 'b'),
-(9, 'good morning', 'test3h', 2, 1, 'h'),
-(10, 'good morning', 'test3b', 2, 1, 'b'),
-(11, 'sand face', 'head_1649936865.gif', 1, 1, 'h'),
-(12, 'aa', 'head_1649936898.gif', 1, 1, 'h'),
-(13, 'DD', 'torso_1649940222.gif', 1, 1, 't');
 
 -- --------------------------------------------------------
 
@@ -126,17 +112,11 @@ INSERT INTO `signlanguages` (`LanguageID`, `LanguageName`) VALUES
 --
 
 CREATE TABLE `users` (
+  `UserID` int(11) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `PwdSaltedDigest` tinyblob NOT NULL,
   `IsVerified` int(1) NOT NULL DEFAULT 0 COMMENT '0 for unverified, 1 for verified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`Email`, `PwdSaltedDigest`, `IsVerified`) VALUES
-('stavroullakoumou.a2@gmail.com', 0x49789b1d04682bc9d56866548b5d05293769b2bd8b3ebdee58c6b06bd880ecccb935699350e1b00c8500ab15d5a0621a4eea13e686d86d0935bfe90df6ac8e90, 1);
 
 --
 -- Indexes for dumped tables
@@ -183,7 +163,7 @@ ALTER TABLE `signlanguages`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`Email`);
+  ADD PRIMARY KEY (`UserID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -212,6 +192,13 @@ ALTER TABLE `signerraces`
 --
 ALTER TABLE `signlanguages`
   MODIFY `LanguageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
 
 --
 -- Constraints for dumped tables

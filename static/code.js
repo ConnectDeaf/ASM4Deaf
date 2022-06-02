@@ -4,6 +4,8 @@ var REGISTER_URL = "http://10.16.20.139:5000/users/register/";
 var QUERY_URL = "http://10.16.20.139:5000/gifs/retrieve/";
 var RETRIEVE_HEAD_URL = "http://10.16.20.139:5000/gifs/retrieve/heads/";
 var RETRIEVE_TORSO_URL = "http://10.16.20.139:5000/gifs/retrieve/torsos/";
+var REMOVE_USER_URL = "http://10.16.20.139:5000/users/remove/";
+var VERIFY_USER_URL = "http://10.16.20.139:5000/users/verify/";
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){
@@ -207,7 +209,7 @@ $("form#register").submit(function(e) {
 
 
 /*********************** Query GIF page *************************/
-function prepare_json_data_for_query(){
+function prepare_json_data_for_query_page(){
     
     let sign_language_select = document.querySelector("select#sing_languages");
     let sign_language = sign_language_select.options[sign_language_select.selectedIndex].value;
@@ -267,7 +269,7 @@ $("form#query_gifs").submit(function(e) {
     e.preventDefault();
 
     //prepare json
-    jsonData = prepare_json_data_for_query();
+    jsonData = prepare_json_data_for_query_page();
 
     //POST the data
     $.ajax({
@@ -288,6 +290,53 @@ $("form#query_gifs").submit(function(e) {
     
     //reset the form
     this.reset();
+
+});
+/****************************************************************/
+
+
+/********************** Manage Users page ***********************/
+function extract_user_email_from_element(element){
+    return element.getAttribute('email');
+}
+
+function prepare_json_data_for_user_removal(remove_button){
+    return {"email" : remove_button.getAttribute('email')};
+}
+
+function remove_user_from_table(user_email){
+    console.log('here');
+    let table_row_selector = "tr#table_row_" + user_email;
+    console.log(table_row_selector);
+    remove_self_on_click(document.querySelector(table_row_selector));
+}
+
+$("button.remove-button").click(function() {
+   
+    let button = this;
+
+    //prepare json
+    jsonData = prepare_json_data_for_user_removal(button);
+
+    //PUT the data
+    $.ajax({
+        url: REMOVE_USER_URL + extract_user_email_from_element(button),
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData),
+        success: function (response) {
+            alert(response);
+            console.log("accccc");
+            let email = extract_user_email_from_element(button);
+            console.log("aaa");
+            remove_user_from_table(email);
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        processData: false
+    });
 
 });
 /****************************************************************/

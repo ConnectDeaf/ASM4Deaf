@@ -31,6 +31,7 @@ db = SQLAlchemy(app)
 class UsersModel(db.Model):
     __tablename__ = 'users'
 
+    UserID = db.Column(db.Integer, primary_key = True)
     Email = db.Column(db.String(300), primary_key = True) 
     PwdSaltedDigest = db.Column(db.LargeBinary)
     IsVerified = db.Column(db.Integer, default=0)
@@ -78,7 +79,6 @@ class BodyPartsModel(db.Model):
         self.LanguageID = LanguageID
         self.PartType = PartType
         
-
 
 ##############################################################
 ##               CREATING THE SITE ENDPOINTS                ##
@@ -182,7 +182,6 @@ def login():
         return render_template("login.html"), 200
             
 
-
 @app.route("/users/logout", methods=["GET"])
 @app.route("/users/logout/", methods=["GET"])
 def logout():
@@ -192,6 +191,27 @@ def logout():
     else:
         flash("User already logged out!", "info")
     return redirect(url_for("login")), 200
+
+
+@app.route("/users/remove/<email>", methods=["PUT"])#pending
+def remove_user(email):
+    return "removed", 200
+    
+@app.route("/users/verify/<email>", methods=["PUT"])#pending
+def verify_user(email):
+    return "verified", 200
+
+
+@app.route("/users/manage", methods=["GET"])
+@app.route("/users/manage/", methods=["GET"])
+def manage_users():
+    if not "user" in session:
+        flash("You need to log in to access the Managae Users page!", "info")
+        return redirect(url_for("login")), 403
+
+    users =  UsersModel.query.order_by(UsersModel.Email.asc()).all()
+    users = [[u.UserID, u.Email, u.IsVerified] for u in users]
+    return render_template("users.html", users=users), 200
 
 
 @app.route('/gifs/new', methods=["POST", "GET"])

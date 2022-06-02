@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock%}
+{% block navbar_options %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('add_new') }}">Add New</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('get_urls_for') }}">Test</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-bold" href="{{ url_for('manage_users') }}">Users</a>
+</li>
+<li class="nav-item">
+    <a id="logout_menu_option" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+</li>
+{% endblock %}
+{% block content %}
+<h2 class="my-5">Manage Users</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="fw-bold">Email</th>
+            <th class="fw-bold">Verification</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+            <tr id="table_row_{{u[0]}}">
+                <th>
+                    <span class="fw-normal">{{u[1]}}</span>
+                </th>
+                <th>
+                    {% if u[2] == 1 %}
+                        <span class="badge bg-success">Verified</span>
+                        <button type="button" class="btn btn-link invisible">Verify</button>
+                    {% else %}
+                        <span class="badge bg-secondary">Pending</span>
+                        <button id="verify_{{u[0]}}" email="{{u[1]}}" type="button" class="btn btn-link verify-button">Verify</button>
+                    {% endif %}
+                    <button id="remove_{{u[0]}}" email="{{u[1]}}" type="button" class="btn btn-link mr-1 remove-button">Remove</button>
+                </th>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    
+
+
+{% endblock %}

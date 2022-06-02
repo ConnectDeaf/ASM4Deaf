@@ -114,7 +114,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"t\",\r\n    \"keywords\": [\"a\"]\r\n}",
+					"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"gif_type\" : \"t\",\r\n    \"keywords\": [\"sss\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -146,17 +146,20 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/gifs/retrieve/heads/head_1649936898.gif",
+					"raw": "http://10.16.20.139:5000/gifs/retrieve/heads/head_1652702474.mp4",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"16",
+						"20",
+						"139"
 					],
 					"port": "5000",
 					"path": [
 						"gifs",
 						"retrieve",
 						"heads",
-						"head_1649936898.gif"
+						"head_1652702474.mp4"
 					]
 				}
 			},
