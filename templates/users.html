@@ -17,7 +17,6 @@
 {% block content %}
 <h2 class="my-5">Manage Users</h2>
 
-<<<<<<< HEAD
 <table class="table table-striped">
     <thead>
         <tr>
@@ -37,9 +36,9 @@
                         <button type="button" class="btn btn-link invisible">Verify</button>
                     {% else %}
                         <span class="badge bg-secondary">Pending</span>
-                        <button id="verify_{{u[0]}}" email="{{u[1]}}" type="button" class="btn btn-link verify-button">Verify</button>
+                        <button id="verify_{{u[0]}}" user_id="{{u[0]}}" email="{{u[1]}}" type="button" class="btn btn-link verify-button">Verify</button>
                     {% endif %}
-                    <button id="remove_{{u[0]}}" email="{{u[1]}}" type="button" class="btn btn-link mr-1 remove-button">Remove</button>
+                    <button id="remove_{{u[0]}}"  user_id="{{u[0]}}" email="{{u[1]}}" type="button" class="btn btn-link mr-1 remove-button">Remove</button>
                 </th>
             </tr>
         {% endfor %}
