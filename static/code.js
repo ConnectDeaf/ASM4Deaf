@@ -304,15 +304,26 @@ function extract_user_id_from_element(element){
     return element.getAttribute('user_id');
 }
 
-function prepare_json_data_for_user_removal(remove_button){
+function prepare_json_data_for_user(remove_button){
     return {"user_id" : extract_user_id_from_element(remove_button)};
 }
 
 function remove_user_from_table(user_id){
     console.log(user_id);
     let table_row_selector = "tr#table_row_" + user_id;
-    // console.log(table_row_selector);
     remove_self_on_click(document.querySelector(table_row_selector));
+}
+
+function turn_pending_badge_to_verification_badge(user_id){
+    let badge = document.querySelector("span.badge#badge_"+user_id);
+    badge.classList.add("bg-success");
+    badge.classList.remove("bg-secondary");
+    badge.innerText = "Verified";
+}
+
+function hide_verify_buttonlink(user_id){
+    let buttonlink = document.querySelector("button.verify-button#verify_"+user_id);
+    buttonlink.classList.add("invisible");
 }
 
 $("button.remove-button").click(function() {
@@ -320,7 +331,7 @@ $("button.remove-button").click(function() {
     let button = this;
 
     //prepare json
-    jsonData = prepare_json_data_for_user_removal(button);
+    jsonData = prepare_json_data_for_user(button);
 
     //PUT the data
     $.ajax({
@@ -332,6 +343,34 @@ $("button.remove-button").click(function() {
             let user_id = extract_user_id_from_element(button);
             remove_user_from_table(user_id);
             alert("User successfully removed from database!");
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        processData: false
+    });
+
+});
+
+$("button.verify-button").click(function() {
+   
+    let button = this;
+
+    //prepare json
+    jsonData = prepare_json_data_for_user(button);
+
+    //PUT the data
+    $.ajax({
+        url: VERIFY_USER_URL + extract_user_email_from_element(button),
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData),
+        success: function (response) {
+            let user_id = extract_user_id_from_element(button);
+            turn_pending_badge_to_verification_badge(user_id);
+            hide_verify_buttonlink(user_id);
+            alert(response);
         },
         error: function(response) {
             alert(response.responseText);
