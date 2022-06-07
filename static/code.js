@@ -342,7 +342,7 @@ $("button.remove-button").click(function() {
         success: function (response) {
             let user_id = extract_user_id_from_element(button);
             remove_user_from_table(user_id);
-            alert("User successfully removed from database!");
+            alert(response);
         },
         error: function(response) {
             alert(response.responseText);

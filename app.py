@@ -207,7 +207,7 @@ def remove_user(email):
     UsersModel.query.filter_by(Email=email).delete()
     db.session.commit()
 
-    return "removed", 200
+    return "User successfully removed!", 200
     
 @app.route("/users/verify/<email>", methods=["PUT"])#pending
 def verify_user(email):
