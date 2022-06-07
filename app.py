@@ -215,10 +215,7 @@ def verify_user(email):
         flash("You must be logged in to verify a user!", "info")
         return redirect(url_for("login")), 403
 
-    if session["user"] == email:
-        return "You cannot verify yourself!", 400
-
-    UsersModel.query.filter_by(Email=email).IsVerified = 1
+    UsersModel.query.filter_by(Email=email).first().IsVerified = 1
     db.session.commit()
 
     return "User has been verified!", 200
