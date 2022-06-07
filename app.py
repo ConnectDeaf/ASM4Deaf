@@ -194,8 +194,19 @@ def logout():
 
 
 
-@app.route("/users/remove/<email>", methods=["PUT"])#pending
+@app.route("/users/remove/<email>", methods=["DELETE"])#pending
 def remove_user(email):
+
+    if not "user" in session:
+        flash("You must be logged in to remove a user!", "info")
+        return redirect(url_for("login")), 403
+
+    if session["user"] == email:
+        return "You cannot remove yourself! This is to ensure that at least one person has access to this web UI.", 400
+
+    UsersModel.query.filter_by(Email=email).delete()
+    db.session.commit()
+
     return "removed", 200
     
 @app.route("/users/verify/<email>", methods=["PUT"])#pending
@@ -207,9 +218,9 @@ def verify_user(email):
 @app.route("/users/manage/", methods=["GET"])
 def manage_users():
     if not "user" in session:
-        flash("You need to log in to access the Managae Users page!", "info")
+        flash("You need to log in to access the Manage Users page!", "info")
         return redirect(url_for("login")), 403
-    users =  UsersModel.query.order_by(UsersModel.Email.asc()).all()
+    users =  UsersModel.query.order_by(UsersModel.UserID.asc()).all()
     users = [[u.UserID, u.Email, u.IsVerified] for u in users]
     return render_template("users.html", users=users), 200
 

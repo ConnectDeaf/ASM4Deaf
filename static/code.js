@@ -336,7 +336,7 @@ $("button.remove-button").click(function() {
     //PUT the data
     $.ajax({
         url: REMOVE_USER_URL + extract_user_email_from_element(button),
-        type: 'PUT',
+        type: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
