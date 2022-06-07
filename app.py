@@ -211,7 +211,18 @@ def remove_user(email):
     
 @app.route("/users/verify/<email>", methods=["PUT"])#pending
 def verify_user(email):
-    return "verified", 200
+    if not "user" in session:
+        flash("You must be logged in to verify a user!", "info")
+        return redirect(url_for("login")), 403
+
+    if session["user"] == email:
+        return "You cannot verify yourself!", 400
+
+    UsersModel.query.filter_by(Email=email).IsVerified = 1
+    db.session.commit()
+
+    return "User has been verified!", 200
+    
 
 
 @app.route("/users/manage", methods=["GET"])
