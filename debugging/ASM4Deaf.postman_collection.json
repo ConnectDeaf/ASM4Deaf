@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "672765b3-b087-4578-9876-ba378baae1b5",
+		"name": "ASM4Deaf",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11689828"
+	},
+	"item": [
+		{
+			"name": "videos",
+			"item": [
+				{
+					"name": "retrieve specific video",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/videos/head_1652702474.mp4",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"head_1652702474.mp4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query videos using keywords",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"keywords\": [\"sss\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/videos/retrieve/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"retrieve",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all video filenames",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/videos/retrieve/all_filenames/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"retrieve",
+								"all_filenames",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all video keywords",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/videos/retrieve/keywords",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"retrieve",
+								"keywords"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "images",
+			"item": [
+				{
+					"name": "retrieve specific image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/images/retrieve/image1.jpg",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"images",
+								"retrieve",
+								"image1.jpg"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all image filenames",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/images/retrieve/all_filenames/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"images",
+								"retrieve",
+								"all_filenames",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "register new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"stavroullakoumou2.a2@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/users/register/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"stavroullakoumou.a2@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/users/login/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user logout",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"stavroullakoumou.a2@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/users/logout/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\" : \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/users/verify/stavroullakoumou2.a2@gmail.com",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"verify",
+								"stavroullakoumou2.a2@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove user (cannot remove self)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\" : \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/users/remove/stavroullakoumou2.a2@gmail.com",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"remove",
+								"stavroullakoumou2.a2@gmail.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "faceswap",
+			"item": [
+				{
+					"name": "faceswap openCV - PENDING",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/faceswap/openCV?gif_filename=test_swap_gif.mp4&head_photo=test_swap_head.jpg",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"faceswap",
+								"openCV"
+							],
+							"query": [
+								{
+									"key": "gif_filename",
+									"value": "test_swap_gif.mp4"
+								},
+								{
+									"key": "head_photo",
+									"value": "test_swap_head.jpg"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -75,6 +75,15 @@ class VideosModel(db.Model):
         self.RaceID = RaceID
         self.LanguageID = LanguageID
         
+class ImagesModel(db.Model):
+    __tablename__ = 'images'
+ 
+    ImageID = db.Column(db.Integer, primary_key = True)
+    FileName = db.Column(db.String(1000))
+    
+    def __init__(self, FileName):
+        self.FileName = FileName
+    
 
 ##############################################################
 ##               CREATING THE SITE ENDPOINTS                ##
@@ -126,7 +135,6 @@ def register_user():
             return redirect(url_for("login")), 403
         return render_template("register.html"), 200
     
-
 @app.route('/users/login', methods=["POST", "GET"])
 @app.route('/users/login/', methods=["POST", "GET"])
 def login():
@@ -174,10 +182,9 @@ def login():
     else:
         if "user" in session:
             flash("Already logged in!", "info")
-            return redirect(url_for("add_new")), 200
+            return redirect(url_for("add_new_video")), 200
         return render_template("login.html"), 200
             
-
 @app.route("/users/logout", methods=["GET"])
 @app.route("/users/logout/", methods=["GET"])
 def logout():
@@ -187,7 +194,6 @@ def logout():
     else:
         flash("User already logged out!", "info")
     return redirect(url_for("login")), 200
-
 
 @app.route("/users/remove/<email>", methods=["DELETE"])#pending
 def remove_user(email):
@@ -215,7 +221,6 @@ def verify_user(email):
 
     return "User has been verified!", 200
     
-
 @app.route("/users/manage", methods=["GET"])
 @app.route("/users/manage/", methods=["GET"])
 def manage_users():
@@ -226,6 +231,7 @@ def manage_users():
     users = [[u.UserID, u.Email, u.IsVerified] for u in users]
     return render_template("users.html", users=users), 200
 
+###########################
 
 @app.route('/media/videos/new', methods=["POST", "GET"])
 @app.route('/media/videos/new/', methods=["POST", "GET"])
@@ -297,10 +303,19 @@ def add_new_video():
         
         return render_template("new-video.html", races=races, languages=languages), 200
 
+@app.route('/media/videos/retrieve/<path:path>', methods=["GET"])
+def retrieve_video(path):
+    '''
+        returns video files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/videos/', path)
+    else:
+        return "Forbidden Access", 403
 
 @app.route('/media/videos/retrieve', methods=['POST','GET'])
 @app.route('/media/videos/retrieve/', methods=['POST', 'GET'])
-def get_urls_for_video():
+def query_video_filenames():
     '''
         queries the database (using the provided language and array of keywords)
         and returns a list of relative ids and filenames (to be used for subsequent calls to
@@ -336,23 +351,26 @@ def get_urls_for_video():
         
         return render_template("query-video.html", languages=languages), 200
 
-
-@app.route('/media/videos/retrieve/<path:path>', methods=["GET"])
-def retrieve(path):
+@app.route('/media/videos/retrieve/all_filenames', methods=["GET"])
+@app.route('/media/videos/retrieve/all_filenames/', methods=["GET"])
+def get_all_video_filenames():
     '''
-        returns video files
+        Retrieves the filenames of all the available videos from the database.
+        These filenames must be appended to the URL for video retrieval.
     '''
+    
     if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/videos/', path)
+        all_videos =  VideosModel.query.all()
+        all_videos = [v.FileName for v in all_videos]
+        return jsonify(all_videos), 200
     else:
         return "Forbidden Access", 403
-
 
 @app.route('/media/videos/retrieve/keywords', methods=["GET"])
 @app.route('/media/videos/retrieve/keywords/', methods=["GET"])
 def get_all_video_keywords():
     '''
-        Retrieves all the available keywords from the database. (no duplicates)
+        Retrieves all the available keywords from the database. (no duplicates or empty strings)
     '''
     
     if "user" in session:
@@ -367,8 +385,18 @@ def get_all_video_keywords():
         return jsonify(keywords_no_duplicates), 200
     else:
         return "Forbidden Access", 403
-    
+ 
 
+
+@app.route('/media/images/retrieve/<path:path>', methods=["GET"])
+def retrieve_image(path):
+    '''
+        returns image files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/images/', path)
+    else:
+        return "Forbidden Access", 403
 
 @app.route('/media/images/new', methods=["POST", "GET"])
 @app.route('/media/images/new/', methods=["POST", "GET"]) # PENDING
@@ -377,8 +405,24 @@ def add_new_image():
 
 @app.route('/media/images/retrieve', methods=['POST','GET'])
 @app.route('/media/images/retrieve/', methods=['POST', 'GET']) #PENDING
-def get_urls_for_image():
+def query_image_filenames():
     return render_template("all-images.html"), 200
+
+@app.route('/media/images/retrieve/all_filenames', methods=["GET"])
+@app.route('/media/images/retrieve/all_filenames/', methods=["GET"])
+def get_all_image_filenames():
+    '''
+        Retrieves the filenames of all the available images from the database.
+        These filenames must be appended to the URL for image retrieval.
+    '''
+    
+    if "user" in session:
+        all_videos =  ImagesModel.query.all()
+        all_videos = [i.FileName for i in all_videos]
+        return jsonify(all_videos), 200
+    else:
+        return "Forbidden Access", 403
+
 
 # @app.route('/faceswap/openCV', methods=["GET"])
 # def faceswap():
