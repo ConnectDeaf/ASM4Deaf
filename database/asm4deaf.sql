@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 14, 2022 at 03:18 PM
+-- Generation Time: Jun 22, 2022 at 11:41 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -24,45 +24,12 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bodyparts`
+-- Table structure for table `images`
 --
 
-CREATE TABLE `bodyparts` (
-  `BodyPartID` int(11) NOT NULL,
-  `Keywords` varchar(200) NOT NULL,
-  `FileName` varchar(100) NOT NULL,
-  `RaceID` int(11) DEFAULT NULL,
-  `LanguageID` int(11) DEFAULT NULL,
-  `PartType` varchar(1) NOT NULL COMMENT '''h'' for head, ''t'' for torso'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fullbodys`
---
-
-CREATE TABLE `fullbodys` (
-  `FullBodyID` int(11) NOT NULL,
-  `Keywords` varchar(200) NOT NULL,
-  `FileName` varchar(100) NOT NULL,
-  `RaceID` int(11) DEFAULT NULL,
-  `LanguageID` int(11) DEFAULT NULL,
-  `TorsoID` int(11) NOT NULL,
-  `HeadID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `masks`
---
-
-CREATE TABLE `masks` (
-  `MaskID` int(11) NOT NULL,
-  `FileName` varchar(100) NOT NULL,
-  `FullBodyID` int(11) NOT NULL
+CREATE TABLE `images` (
+  `ImageID` int(11) NOT NULL,
+  `FileName` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -119,33 +86,43 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`UserID`, `Email`, `PwdSaltedDigest`, `IsVerified`) VALUES
+(1, 'stavroullakoumou.a2@gmail.com', 0x378a80fba951acdc9da611bafa72a825482081beadf29545a102934fef6bf2d5b058dd16e75068c067e27283224954e9b112b8c3851717c32929b8127abbccd9, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `videos`
+--
+
+CREATE TABLE `videos` (
+  `VideoID` int(11) NOT NULL,
+  `Keywords` varchar(200) NOT NULL,
+  `FileName` varchar(100) NOT NULL,
+  `RaceID` int(11) DEFAULT NULL,
+  `LanguageID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `videos`
+--
+
+INSERT INTO `videos` (`VideoID`, `Keywords`, `FileName`, `RaceID`, `LanguageID`) VALUES
+(1, 'aaaa', 'gif_1655884180.mp4', 1, 1),
+(2, 'aaa', 'video_1655885064.mp4', 1, 1);
+
+--
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `bodyparts`
+-- Indexes for table `images`
 --
-ALTER TABLE `bodyparts`
-  ADD PRIMARY KEY (`BodyPartID`),
-  ADD KEY `BodyParts_to_signerraces` (`RaceID`),
-  ADD KEY `BodyParts_to_signlanguages` (`LanguageID`);
-
---
--- Indexes for table `fullbodys`
---
-ALTER TABLE `fullbodys`
-  ADD PRIMARY KEY (`FullBodyID`),
-  ADD KEY `TorsoID` (`TorsoID`),
-  ADD KEY `HeadID` (`HeadID`),
-  ADD KEY `fullbodys_to_signerraces` (`RaceID`),
-  ADD KEY `fullbodys_to_signlanguages` (`LanguageID`);
-
---
--- Indexes for table `masks`
---
-ALTER TABLE `masks`
-  ADD PRIMARY KEY (`MaskID`),
-  ADD KEY `FullBodyID` (`FullBodyID`);
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`ImageID`);
 
 --
 -- Indexes for table `signerraces`
@@ -166,20 +143,22 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`UserID`);
 
 --
+-- Indexes for table `videos`
+--
+ALTER TABLE `videos`
+  ADD PRIMARY KEY (`VideoID`),
+  ADD KEY `videos_to_signerraces` (`RaceID`),
+  ADD KEY `videos_to_signlanguages` (`LanguageID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `bodyparts`
+-- AUTO_INCREMENT for table `images`
 --
-ALTER TABLE `bodyparts`
-  MODIFY `BodyPartID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `fullbodys`
---
-ALTER TABLE `fullbodys`
-  MODIFY `FullBodyID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `images`
+  MODIFY `ImageID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `signerraces`
@@ -197,34 +176,24 @@ ALTER TABLE `signlanguages`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
+--
+-- AUTO_INCREMENT for table `videos`
+--
+ALTER TABLE `videos`
+  MODIFY `VideoID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `bodyparts`
+-- Constraints for table `videos`
 --
-ALTER TABLE `bodyparts`
-  ADD CONSTRAINT `BodyParts_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `BodyParts_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `fullbodys`
---
-ALTER TABLE `fullbodys`
-  ADD CONSTRAINT `fullbodys_ibfk_1` FOREIGN KEY (`TorsoID`) REFERENCES `bodyparts` (`BodyPartID`),
-  ADD CONSTRAINT `fullbodys_ibfk_2` FOREIGN KEY (`HeadID`) REFERENCES `bodyparts` (`BodyPartID`),
-  ADD CONSTRAINT `fullbodys_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fullbodys_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `masks`
---
-ALTER TABLE `masks`
-  ADD CONSTRAINT `masks_ibfk_1` FOREIGN KEY (`FullBodyID`) REFERENCES `fullbodys` (`FullBodyID`);
+ALTER TABLE `videos`
+  ADD CONSTRAINT `videos_to_signerraces` FOREIGN KEY (`RaceID`) REFERENCES `signerraces` (`RaceID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `videos_to_signlanguages` FOREIGN KEY (`LanguageID`) REFERENCES `signlanguages` (`LanguageID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

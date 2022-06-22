@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Preview Images{% endblock%}
+{% block navbar_options %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Add New
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('add_new_video') }}">Video</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('add_new_video') }}">Image</a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle fw-bold" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Preview
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('get_urls_for_video') }}">Videos</a>
+        </li>
+        <li class="nav-item fw-bold">
+            <a class="nav-link" href="{{ url_for('get_urls_for_image') }}">Images</a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('manage_users') }}">Users</a>
+</li>
+<li class="nav-item">
+    <a id="logout_menu_option" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+</li>
+{% endblock %}
+{% block content %}
+<h2 class="my-5">Preview Images</h2>
+{% endblock %}

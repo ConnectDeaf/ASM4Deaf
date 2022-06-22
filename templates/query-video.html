@@ -1,11 +1,30 @@
 {% extends "base.html" %}
-{% block title %}Query GIFs{% endblock%}
+{% block title %}Preview Videos{% endblock%}
 {% block navbar_options %}
-<li class="nav-item">
-    <a class="nav-link" href="{{ url_for('add_new') }}">Add New</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link fw-bold" href="{{ url_for('get_urls_for') }}">Test</a>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Add New
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('add_new_video') }}">Video</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('add_new_image') }}">Image</a>
+        </li>
+    </ul>
+</li><li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle fw-bold" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Preview
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+        <li class="nav-item fw-bold">
+            <a class="nav-link" href="{{ url_for('get_urls_for_video') }}">Videos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('get_urls_for_image') }}">Images</a>
+        </li>
+    </ul>
 </li>
 <li class="nav-item">
     <a class="nav-link" href="{{ url_for('manage_users') }}">Users</a>
@@ -15,23 +34,12 @@
 </li>
 {% endblock %}
 {% block content %}
-<h2 class="my-5">Test the API</h2>
+<h2 class="my-5">Preview Videos</h2>
 <form class="form" id="query_gifs" action="#" method="post" enctype="multipart/form-data">
 
     <div class="row my-5">
         <div class="col-6">
-            <!-- GIF type selection -->
-            <div class="row" id="gif_type">
-                <div class="col">
-                    <h5>GIF type</h5>
-                    <input type="radio" name="gif_type" id="head_gif" value="head" checked>
-                    <label class="form-label" for="head_gif">Head</label>
-                    <input type="radio" name="gif_type" id="torso_gif" value="torso">
-                    <label class="form-label" for="torso_gif">Torso</label>
-                </div>
-            </div>
-
-
+            
             <!-- GIF metadata selection -->
             <div class="row my-5">
                 <h5>GIF Metadata</h5>

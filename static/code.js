@@ -1,11 +1,11 @@
-var ADD_NEW_GIF_URL = "http://10.16.20.139:5000/gifs/new/";
-var LOGIN_URL = "http://10.16.20.139:5000/users/login/";
-var REGISTER_URL = "http://10.16.20.139:5000/users/register/";
-var QUERY_URL = "http://10.16.20.139:5000/gifs/retrieve/";
-var RETRIEVE_HEAD_URL = "http://10.16.20.139:5000/gifs/retrieve/heads/";
-var RETRIEVE_TORSO_URL = "http://10.16.20.139:5000/gifs/retrieve/torsos/";
-var REMOVE_USER_URL = "http://10.16.20.139:5000/users/remove/";
-var VERIFY_USER_URL = "http://10.16.20.139:5000/users/verify/";
+var LOGIN_URL = "http://10.16.20.233:5000/users/login/";
+var REGISTER_URL = "http://10.16.20.233:5000/users/register/";
+var REMOVE_USER_URL = "http://10.16.20.233:5000/users/remove/";
+var VERIFY_USER_URL = "http://10.16.20.233:5000/users/verify/";
+var ADD_NEW_VIDEO_URL = "http://10.16.20.233:5000/media/videos/new/";
+var QUERY_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
+var RETRIEVE_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
+var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/"; //pending
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){
@@ -114,7 +114,7 @@ $("form#new_gif").submit(function(e) {
 
     //POST the data
     $.ajax({
-        url: ADD_NEW_GIF_URL,
+        url: ADD_NEW_VIDEO_URL,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -154,9 +154,10 @@ $("form#login").submit(function(e) {
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
-            window.location.href = ADD_NEW_GIF_URL;
+            window.location.href = ADD_NEW_VIDEO_URL;
         },
         error: function(response) {
+            console.log(response);
             alert(response.responseText);
         },
         cache: false,
@@ -214,16 +215,10 @@ function prepare_json_data_for_query_page(){
     let sign_language_select = document.querySelector("select#sing_languages");
     let sign_language = sign_language_select.options[sign_language_select.selectedIndex].value;
 
-    let gif_type = 'h';
-    if (document.querySelector("input#torso_gif").checked){
-        gif_type = 't';
-    }
-
     let kwords = document.querySelector("input#query_keywords").value.split(/(?:,| )+/);
 
     jsonData = {
         "sign_language": sign_language,
-        "gif_type": gif_type,
         "keywords": kwords
     }
 
@@ -231,32 +226,27 @@ function prepare_json_data_for_query_page(){
 }
 
 
-function prepare_url_for_gif(gif_type, gif_details){
-    if (gif_type == 'h'){
-        return RETRIEVE_HEAD_URL + gif_details["filename"];
-    }
+function video_create(src, alt, width, height, id) {
 
-    return RETRIEVE_TORSO_URL + gif_details["filename"];
-}
+    let video = document.createElement("video");
+    video.setAttribute('src', src);
+    video.setAttribute('alt', alt);
+    video.setAttribute('height', height);
+    video.setAttribute('width', width);
+    video.setAttribute('id', id);
+    video.autoplay = false;
+    video.controls = true;
 
-function img_create(src, alt, width, height) {
-
-    let img = document.createElement("img");
-    img.setAttribute('src', src);
-    img.setAttribute('alt', alt);
-    img.setAttribute('height', width);
-    img.setAttribute('width', height);
-
-    return img;
+    return video;
 }
 
 
-
-function display_gifs_in_preview_area(response){
+function display_videos_in_preview_area(response){
 
     let gif_preview_area = document.querySelector("div#gif_preview_area");
     response["gif_matches"].forEach( function(gif, index){
-        let gif_element = img_create(prepare_url_for_gif(response["gif_type"], gif), gif["filename"], "", "");
+        console.log(RETRIEVE_VIDEO_URL+gif["filename"])
+        let gif_element = video_create(RETRIEVE_VIDEO_URL+gif["filename"], "", "300", "350", gif["id"]);
         gif_element.classList.add("my-2");
         gif_element.classList.add("mx-2");
         gif_preview_area.appendChild(gif_element)
@@ -273,13 +263,13 @@ $("form#query_gifs").submit(function(e) {
 
     //POST the data
     $.ajax({
-        url: QUERY_URL,
+        url: QUERY_VIDEO_URL,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
             remove_all_elements_matching_to_selector("div#gif_preview_area img");
-            display_gifs_in_preview_area(response);
+            display_videos_in_preview_area(response);
         },
         error: function(response) {
             alert(response.responseText);

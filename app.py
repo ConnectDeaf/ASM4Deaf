@@ -7,7 +7,7 @@ from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from datauri import DataURI
 from datetime import timedelta
-from faceswap.openCV.videoFaceSwap.videoFaceSwapping import swap
+# from faceswap.openCV.videoFaceSwap.videoFaceSwapping import swap
 import json
 import aux_
 import time
@@ -45,8 +45,7 @@ class SignerRacesModel(db.Model):
  
     RaceID = db.Column(db.Integer, primary_key = True)
     RaceName = db.Column(db.String(50)) 
-    BodyParts_gifs = db.relationship('BodyPartsModel', backref='signerraces', lazy=True)
-    #fullbody_gifs = db.relationship('FullbodysModel', backref='signerraces', lazy=True)
+    Videos = db.relationship('VideosModel', backref='signerraces', lazy=True)
     
     def __init__(self, RaceName):
         self.RaceName = RaceName
@@ -56,28 +55,25 @@ class SignLanguagesModel(db.Model):
  
     LanguageID = db.Column(db.Integer, primary_key = True)
     LanguageName = db.Column(db.String(50))
-    BodyParts_gifs = db.relationship('BodyPartsModel', backref='signlanguages', lazy=True)
-    #fullbody_gifs = db.relationship('FullbodysModel', backref='signlanguages', lazy=True)
+    Videos = db.relationship('VideosModel', backref='signlanguages', lazy=True)
     
     def __init__(self, LanguageName):
         self.LanguageName = LanguageName
 
-class BodyPartsModel(db.Model):
-    __tablename__ = 'bodyparts'
+class VideosModel(db.Model):
+    __tablename__ = 'videos'
  
-    BodyPartID = db.Column(db.Integer, primary_key = True)
+    VideoID = db.Column(db.Integer, primary_key = True)
     Keywords = db.Column(db.String(200))
     FileName = db.Column(db.String(1000))
     RaceID = db.Column(db.Integer, db.ForeignKey('signerraces.RaceID'), nullable=False)
     LanguageID = db.Column(db.Integer, db.ForeignKey('signlanguages.LanguageID'), nullable=False)
-    PartType = db.Column(db.String(1))#'h' or 't'
     
-    def __init__(self, Keywords, FileName, RaceID, LanguageID, PartType):
+    def __init__(self, Keywords, FileName, RaceID, LanguageID):
         self.Keywords = Keywords
         self.FileName = FileName
         self.RaceID = RaceID
         self.LanguageID = LanguageID
-        self.PartType = PartType
         
 
 ##############################################################
@@ -193,7 +189,6 @@ def logout():
     return redirect(url_for("login")), 200
 
 
-
 @app.route("/users/remove/<email>", methods=["DELETE"])#pending
 def remove_user(email):
 
@@ -221,7 +216,6 @@ def verify_user(email):
     return "User has been verified!", 200
     
 
-
 @app.route("/users/manage", methods=["GET"])
 @app.route("/users/manage/", methods=["GET"])
 def manage_users():
@@ -233,9 +227,9 @@ def manage_users():
     return render_template("users.html", users=users), 200
 
 
-@app.route('/gifs/new', methods=["POST", "GET"])
-@app.route('/gifs/new/', methods=["POST", "GET"])
-def add_new():
+@app.route('/media/videos/new', methods=["POST", "GET"])
+@app.route('/media/videos/new/', methods=["POST", "GET"])
+def add_new_video():
     '''
         stores the uploaded gif to the filesystem and creates the necessary database entry.
         (it does not check for duplicates- I don't see a way to automatically check for duplicates)
@@ -249,8 +243,6 @@ def add_new():
     if request.method == "POST":
         try:
 
-            gif_type = request.form['gif_type']
-            
             try:
                 if request.form['new_language_toggle']:
                     try:
@@ -274,27 +266,24 @@ def add_new():
             return "Incorect parameters!", 400
         
         try:
-            if gif_type == "head":
-                save_directory = GIF_FILEPATH_ROOT + "heads/"
-                unique_filename_prefix = "head"
-            elif gif_type == "torso":
-                save_directory = GIF_FILEPATH_ROOT + "torsos/"
-                unique_filename_prefix = "torso"
+            save_directory = MEDIA_FILEPATH_ROOT + "videos/"
+            filename_prefix = "video"
             
             unique_filename_suffix = str(int(time.time()))
-            unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{GIF_FILE_FORMAT}"
+            unique_filename = f"{filename_prefix}_{unique_filename_suffix}{VIDEO_FILE_FORMAT}"
 
             filepath = aux_.save_gif_on_the_file_system(request, save_directory, unique_filename)
 
-            if gif_type == "head":
-                new_gif_record = BodyPartsModel(keywords, unique_filename, signer_race, sign_language, 'h')
-            elif gif_type == "torso":
-                new_gif_record = BodyPartsModel(keywords, unique_filename, signer_race, sign_language, 't')
-  
+            new_gif_record = VideosModel(keywords, unique_filename, signer_race, sign_language)
+            
             db.session.add(new_gif_record)
             db.session.commit()
         except:
-            aux_.delete_gif_file_from_file_system(filepath)            
+            try:
+                aux_.delete_gif_file_from_file_system(filepath)
+            except:
+                pass
+
             return "Failed to store the GIF!", 500
 
         return "Successfully stored the GIF!", 201
@@ -306,16 +295,16 @@ def add_new():
         languages =  SignLanguagesModel.query.all()
         languages = [[l.LanguageID, l.LanguageName] for l in languages]
         
-        return render_template("new-gif.html", races=races, languages=languages), 200
+        return render_template("new-video.html", races=races, languages=languages), 200
 
 
-@app.route('/gifs/retrieve', methods=['POST','GET'])
-@app.route('/gifs/retrieve/', methods=['POST', 'GET'])
-def get_urls_for():
+@app.route('/media/videos/retrieve', methods=['POST','GET'])
+@app.route('/media/videos/retrieve/', methods=['POST', 'GET'])
+def get_urls_for_video():
     '''
-        queries the database (using the provided gif type, language and array of keywords)
+        queries the database (using the provided language and array of keywords)
         and returns a list of relative ids and filenames (to be used for subsequent calls to
-        retrieve the GIFs- or simply put together the URL and use in an img html element).
+        simply put together the URL and use as a source in a video html element).
     '''
 
     #regardless of method, check if user is logged in
@@ -328,16 +317,15 @@ def get_urls_for():
         try:
             request_data = request.get_json()
             sign_language = request_data['sign_language']
-            gif_type = request_data["gif_type"]
             keywords = request_data["keywords"]
         except:
                 return "Incorect parameters!", 400
 
         try:
-            query_str = aux_.prepare_database_keyword_query(sign_language, gif_type, keywords)
+            query_str = aux_.prepare_database_keyword_query(sign_language, keywords)
             gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str))
-            augmented_response = { "gif_type" : gif_type,
-                                   "gif_matches" : gifs_dict_array}
+            augmented_response = { "gif_matches" : gifs_dict_array}
+
             return jsonify(augmented_response), 200
         except:
             return "Failed to perform database query.", 500
@@ -346,53 +334,63 @@ def get_urls_for():
         languages =  SignLanguagesModel.query.all()
         languages = [[l.LanguageID, l.LanguageName] for l in languages]
         
-        return render_template("query-gif.html", languages=languages), 200
+        return render_template("query-video.html", languages=languages), 200
 
 
-@app.route('/gifs/retrieve/<gif_type>/<path:path>', methods=["GET"])
-def retrieve(gif_type, path):
+@app.route('/media/videos/retrieve/<path:path>', methods=["GET"])
+def retrieve(path):
     '''
-        returns GIF files
+        returns video files
     '''
     if "user" in session:
-        return send_from_directory(f'{GIF_FILEPATH_ROOT}/{gif_type}', path)
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/videos/', path)
     else:
         return "Forbidden Access", 403
 
 
-@app.route('/gifs/faceswap/openCV', methods=["GET"])
-def faceswap():
-    '''
-        creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
-    '''
-    if "user" in session:
-        if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
-            return "Incorect arguments!", 400
+@app.route('/media/images/new', methods=["POST", "GET"])
+@app.route('/media/images/new/', methods=["POST", "GET"]) # PENDING
+def add_new_image():
+    return render_template("new-image.html"), 200
 
-        gif_filename = request.args.get('gif_filename')
-        head_photo = request.args.get('head_photo')
+@app.route('/media/images/retrieve', methods=['POST','GET'])
+@app.route('/media/images/retrieve/', methods=['POST', 'GET']) #PENDING
+def get_urls_for_image():
+    return render_template("all-images.html"), 200
 
-        gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
-        head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
+# @app.route('/faceswap/openCV', methods=["GET"])
+# def faceswap():
+#     '''
+#         creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
+#     '''
+#     if "user" in session:
+#         if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
+#             return "Incorect arguments!", 400
+
+#         gif_filename = request.args.get('gif_filename')
+#         head_photo = request.args.get('head_photo')
+
+#         gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
+#         head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
         
-        unique_filename_prefix = "swap"
-        unique_filename_suffix = str(int(time.time()))
-        unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{SWAPS_FILE_FORMAT}"
-        result_fullpath = f"{SWAPS_FILEPATH_ROOT}/{unique_filename}"
+#         unique_filename_prefix = "swap"
+#         unique_filename_suffix = str(int(time.time()))
+#         unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{SWAPS_FILE_FORMAT}"
+#         result_fullpath = f"{SWAPS_FILEPATH_ROOT}/{unique_filename}"
 
-        try:
-            swap(DETECTOR_FULLPATH, gif_fullpath, head_photo_fullpath, result_fullpath)       
-        except e:
-            return "Failed to faceswap!", 500
+#         try:
+#             swap(DETECTOR_FULLPATH, gif_fullpath, head_photo_fullpath, result_fullpath)       
+#         except e:
+#             return "Failed to faceswap!", 500
 
-        try:
-            return send_from_directory(SWAPS_FILEPATH_ROOT, unique_filename), 200
-        except:
-            return "Failed to retrieve faceswap video file.", 500
-    else:
-        return "Forbidden Access", 403
+#         try:
+#             return send_from_directory(SWAPS_FILEPATH_ROOT, unique_filename), 200
+#         except:
+#             return "Failed to retrieve faceswap video file.", 500
+#     else:
+#         return "Forbidden Access", 403
 
-    pass
+#     pass
 
 
 if __name__ == '__main__':
