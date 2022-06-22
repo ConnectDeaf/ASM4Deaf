@@ -2,10 +2,15 @@ var LOGIN_URL = "http://10.16.20.233:5000/users/login/";
 var REGISTER_URL = "http://10.16.20.233:5000/users/register/";
 var REMOVE_USER_URL = "http://10.16.20.233:5000/users/remove/";
 var VERIFY_USER_URL = "http://10.16.20.233:5000/users/verify/";
+
 var ADD_NEW_VIDEO_URL = "http://10.16.20.233:5000/media/videos/new/";
 var QUERY_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
 var RETRIEVE_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
-var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/"; //pending
+
+var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+var RETRIEVE_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+
 
 /****************** All pages (base template) *******************/
 function remove_self_on_click(element){

@@ -348,6 +348,28 @@ def retrieve(path):
         return "Forbidden Access", 403
 
 
+@app.route('/media/videos/retrieve/keywords', methods=["GET"])
+@app.route('/media/videos/retrieve/keywords/', methods=["GET"])
+def get_all_video_keywords():
+    '''
+        Retrieves all the available keywords from the database. (no duplicates)
+    '''
+    
+    if "user" in session:
+        keywords =  VideosModel.query.all()
+        keywords_with_duplicates = ""
+        for k in keywords:
+            keywords_with_duplicates += k.Keywords + ','
+        
+        keywords_with_duplicates = keywords_with_duplicates.split(',')
+        keywords_no_duplicates =  list(filter(None, list(dict.fromkeys(keywords_with_duplicates))))
+
+        return jsonify(keywords_no_duplicates), 200
+    else:
+        return "Forbidden Access", 403
+    
+
+
 @app.route('/media/images/new', methods=["POST", "GET"])
 @app.route('/media/images/new/', methods=["POST", "GET"]) # PENDING
 def add_new_image():
