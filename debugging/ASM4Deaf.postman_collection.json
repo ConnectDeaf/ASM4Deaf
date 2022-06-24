@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "672765b3-b087-4578-9876-ba378baae1b5",
+		"_postman_id": "1f7d96f4-6379-4da9-b492-0808d7cbd9c6",
 		"name": "ASM4Deaf",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11689828"
@@ -9,6 +9,56 @@
 		{
 			"name": "videos",
 			"item": [
+				{
+					"name": "add a new video",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "sign_languages",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "signer_race",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "keywords",
+									"value": "kword1,kword2",
+									"type": "text"
+								},
+								{
+									"key": "GIFfile",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/videos/new/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"new",
+								""
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "retrieve specific video",
 					"request": {
@@ -124,6 +174,41 @@
 			"name": "images",
 			"item": [
 				{
+					"name": "add a new image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Imagefile",
+									"type": "file",
+									"src": "/C:/Users/stavr/Downloads/Capture-rebel.PNG"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/images/new/",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"images",
+								"new",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "retrieve specific image",
 					"request": {
 						"method": "GET",
@@ -169,6 +254,44 @@
 								"retrieve",
 								"all_filenames",
 								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "faceswap",
+			"item": [
+				{
+					"name": "faceswap openCV - PENDING",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/faceswap/openCV?gif_filename=test_swap_gif.mp4&head_photo=test_swap_head.jpg",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"faceswap",
+								"openCV"
+							],
+							"query": [
+								{
+									"key": "gif_filename",
+									"value": "test_swap_gif.mp4"
+								},
+								{
+									"key": "head_photo",
+									"value": "test_swap_head.jpg"
+								}
 							]
 						}
 					},
@@ -342,44 +465,6 @@
 								"users",
 								"remove",
 								"stavroullakoumou2.a2@gmail.com"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "faceswap",
-			"item": [
-				{
-					"name": "faceswap openCV - PENDING",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://10.16.20.233:5000/faceswap/openCV?gif_filename=test_swap_gif.mp4&head_photo=test_swap_head.jpg",
-							"protocol": "http",
-							"host": [
-								"10",
-								"16",
-								"20",
-								"233"
-							],
-							"port": "5000",
-							"path": [
-								"faceswap",
-								"openCV"
-							],
-							"query": [
-								{
-									"key": "gif_filename",
-									"value": "test_swap_gif.mp4"
-								},
-								{
-									"key": "head_photo",
-									"value": "test_swap_head.jpg"
-								}
 							]
 						}
 					},

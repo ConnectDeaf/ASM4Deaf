@@ -278,7 +278,7 @@ def add_new_video():
             unique_filename_suffix = str(int(time.time()))
             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{VIDEO_FILE_FORMAT}"
 
-            filepath = aux_.save_gif_on_the_file_system(request, save_directory, unique_filename)
+            filepath = aux_.save_on_the_file_system(request, "GIFfile" , save_directory, unique_filename)
 
             new_gif_record = VideosModel(keywords, unique_filename, signer_race, sign_language)
             
@@ -286,7 +286,7 @@ def add_new_video():
             db.session.commit()
         except:
             try:
-                aux_.delete_gif_file_from_file_system(filepath)
+                aux_.delete_file_from_file_system(filepath)
             except:
                 pass
 
@@ -401,7 +401,43 @@ def retrieve_image(path):
 @app.route('/media/images/new', methods=["POST", "GET"])
 @app.route('/media/images/new/', methods=["POST", "GET"]) # PENDING
 def add_new_image():
-    return render_template("new-image.html"), 200
+    '''
+        stores the uploaded image to the filesystem and creates the necessary database entry.
+        (it does not check for duplicates- I don't see a way to automatically check for duplicates)
+    '''
+
+    #regardless of method, check if user is logged in
+    if not "user" in session:
+        flash("You need to log in to access the Add New Image page!", "info")
+        return redirect(url_for("login")), 403
+
+    if request.method == "POST":
+
+        try:
+            save_directory = MEDIA_FILEPATH_ROOT + "images/"
+            filename_prefix = "image"
+            
+            unique_filename_suffix = str(int(time.time()))
+            unique_filename = f"{filename_prefix}_{unique_filename_suffix}{IMAGE_FILE_FORMAT}"
+
+            filepath = aux_.save_on_the_file_system(request, "Imagefile", save_directory, unique_filename)
+
+            new_image_record = ImagesModel(unique_filename)
+            
+            db.session.add(new_image_record)
+            db.session.commit()
+        except:
+            try:
+                aux_.delete_file_from_file_system(filepath)
+            except:
+                pass
+
+            return "Failed to store the image!", 500
+
+        return "Successfully stored the image!", 201
+    else:
+        return render_template("new-image.html"), 200
+
 
 @app.route('/media/images/retrieve', methods=['POST','GET'])
 @app.route('/media/images/retrieve/', methods=['POST', 'GET']) #PENDING

@@ -35,4 +35,22 @@
 {% endblock %}
 {% block content %}
 <h2 class="my-5">Add New Image</h2>
+<form class="form" id="new_image" action="#" method="post" enctype="multipart/form-data">
+
+    <!--- File upload --->
+    <div class="row my-5">
+        <div class="col-5">
+            <h5>Upload file</h5>
+            <input class="form-control" type="file" name="Imagefile" id="Imagefile" accept=".jpg" required>
+        </div>
+    </div>
+
+    <!--- Submit Button --->
+    <div class="row my-5">
+        <div class="col">
+            <button class="btn btn-primary" name="submit" type="submit" id="submit">Submit</button>
+        </div>
+    </div>
+    
+</form>
 {% endblock %}
