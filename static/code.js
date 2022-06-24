@@ -376,3 +376,40 @@ $("button.verify-button").click(function() {
 
 });
 /****************************************************************/
+
+
+
+/********************** Add New Image page **********************/
+//submitting the form
+$("form#new_image").submit(function(e) {
+    //don't redirect
+    e.preventDefault();
+
+    //prepare the data to POST
+    var formData = new FormData(this);
+
+    //POST the data
+    $.ajax({
+        url: ADD_NEW_IMAGE_URL,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            alert(response);
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+
+    this.reset();
+});
+/****************************************************************/
+
+
+/******************** Preview All Images page *******************/
+
+
+/****************************************************************/
