@@ -1,5 +1,6 @@
 import os
 
+
 def save_on_the_file_system(request, filename_getter_name , filepath_root, filename):
 
     filepath = f"{filepath_root}{filename}"
@@ -39,4 +40,7 @@ def create_dictionary_array_from_cursor_results(cursor_results):
         })
     
     return result_dictionary
+
+
+
 

@@ -273,12 +273,14 @@ def add_new_video():
         
         try:
             save_directory = MEDIA_FILEPATH_ROOT + "videos/"
+            thumbnail_save_directory = MEDIA_FILEPATH_ROOT + "thumbnails/video_thumbnails/"
             filename_prefix = "video"
             
             unique_filename_suffix = str(int(time.time()))
             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{VIDEO_FILE_FORMAT}"
 
             filepath = aux_.save_on_the_file_system(request, "GIFfile" , save_directory, unique_filename)
+            thumbnail_filepath = aux_.save_on_the_file_system(request, "GIFfile" , thumbnail_save_directory, unique_filename)
 
             new_gif_record = VideosModel(keywords, unique_filename, signer_race, sign_language)
             
@@ -287,6 +289,7 @@ def add_new_video():
         except:
             try:
                 aux_.delete_file_from_file_system(filepath)
+                aux_.delete_file_from_file_system(thumbnail_filepath)
             except:
                 pass
 
@@ -309,7 +312,7 @@ def retrieve_video(path):
         returns video files
     '''
     if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/videos/', path)
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/video_thumbnails/', path)
     else:
         return "Forbidden Access", 403
 
@@ -394,7 +397,7 @@ def retrieve_image(path):
         returns image files
     '''
     if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/images/', path)
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/image_thumbnails/', path)
     else:
         return "Forbidden Access", 403
 
@@ -415,12 +418,14 @@ def add_new_image():
 
         try:
             save_directory = MEDIA_FILEPATH_ROOT + "images/"
+            thumbnail_save_directory = MEDIA_FILEPATH_ROOT + "thumbnails/image_thumbnails/"
             filename_prefix = "image"
             
             unique_filename_suffix = str(int(time.time()))
             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{IMAGE_FILE_FORMAT}"
 
             filepath = aux_.save_on_the_file_system(request, "Imagefile", save_directory, unique_filename)
+            thumbnail_filepath = aux_.save_on_the_file_system(request, "Imagefile", thumbnail_save_directory, unique_filename)
 
             new_image_record = ImagesModel(unique_filename)
             
@@ -429,6 +434,7 @@ def add_new_image():
         except:
             try:
                 aux_.delete_file_from_file_system(filepath)
+                aux_.delete_file_from_file_system(thumbnail_filepath)
             except:
                 pass
 
