@@ -195,7 +195,7 @@ def logout():
         flash("User already logged out!", "info")
     return redirect(url_for("login")), 200
 
-@app.route("/users/remove/<email>", methods=["DELETE"])#pending
+@app.route("/users/remove/<email>", methods=["DELETE"])
 def remove_user(email):
 
     if not "user" in session:
@@ -210,7 +210,7 @@ def remove_user(email):
 
     return "User successfully removed!", 200
     
-@app.route("/users/verify/<email>", methods=["PUT"])#pending
+@app.route("/users/verify/<email>", methods=["PUT"])
 def verify_user(email):
     if not "user" in session:
         flash("You must be logged in to verify a user!", "info")
@@ -306,8 +306,18 @@ def add_new_video():
         
         return render_template("new-video.html", races=races, languages=languages), 200
 
-@app.route('/media/videos/retrieve/<path:path>', methods=["GET"])
-def retrieve_video(path):
+@app.route('/media/videos/retrieve/original/<path:path>', methods=["GET"])
+def retrieve_video_original(path):
+    '''
+        returns video files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/videos/', path)
+    else:
+        return "Forbidden Access", 403
+
+@app.route('/media/videos/retrieve/thumbnail/<path:path>', methods=["GET"])
+def retrieve_video_thumbnail(path):
     '''
         returns video files
     '''
@@ -315,6 +325,7 @@ def retrieve_video(path):
         return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/video_thumbnails/', path)
     else:
         return "Forbidden Access", 403
+
 
 @app.route('/media/videos/retrieve', methods=['POST','GET'])
 @app.route('/media/videos/retrieve/', methods=['POST', 'GET'])
@@ -402,7 +413,7 @@ def retrieve_image(path):
         return "Forbidden Access", 403
 
 @app.route('/media/images/new', methods=["POST", "GET"])
-@app.route('/media/images/new/', methods=["POST", "GET"]) # PENDING
+@app.route('/media/images/new/', methods=["POST", "GET"])
 def add_new_image():
     '''
         stores the uploaded image to the filesystem and creates the necessary database entry.
@@ -444,10 +455,9 @@ def add_new_image():
     else:
         return render_template("new-image.html"), 200
 
-
 @app.route('/media/images/retrieve', methods=['POST','GET'])
 @app.route('/media/images/retrieve/', methods=['POST', 'GET']) #PENDING
-def query_image_filenames():
+def query_image_filenames():    
     return render_template("all-images.html"), 200
 
 @app.route('/media/images/retrieve/all_filenames', methods=["GET"])
@@ -466,8 +476,8 @@ def get_all_image_filenames():
         return "Forbidden Access", 403
 
 
-# @app.route('/faceswap/openCV', methods=["GET"])
-# def faceswap():
+# @app.route('/faceswap/openCV', methods=["GET"]) #PENDING
+# def faceswap_with_ids():
 #     '''
 #         creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
 #     '''
@@ -475,11 +485,14 @@ def get_all_image_filenames():
 #         if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
 #             return "Incorect arguments!", 400
 
+
+#         ## PENDING ## : GET IDs + USE DB & PASSED IDs TO GET IMAGE AND VIDEO NAMEs
 #         gif_filename = request.args.get('gif_filename')
 #         head_photo = request.args.get('head_photo')
 
 #         gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
 #         head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
+#         ###############
         
 #         unique_filename_prefix = "swap"
 #         unique_filename_suffix = str(int(time.time()))
@@ -498,7 +511,41 @@ def get_all_image_filenames():
 #     else:
 #         return "Forbidden Access", 403
 
-#     pass
+# @app.route('/faceswap/openCV', methods=["POST"]) #PENDING
+# def faceswap_with_user_image():
+#     '''
+#         creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
+#         faceswapping image is the user's face (they took a picture of themselves)
+#     '''
+#     if "user" in session:
+#         if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
+#             return "Incorect arguments!", 400
+
+#         gif_filename = request.args.get('gif_filename')
+#         head_photo = request.args.get('head_photo')
+
+#         ## PENDING ## : RETRIEVE THE USER'S FACE-FILE + USE DB & PASSED ID TO GET THE VIDEO NAME
+#         gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
+#         head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
+#         ###############
+        
+#         unique_filename_prefix = "swap"
+#         unique_filename_suffix = str(int(time.time()))
+#         unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{SWAPS_FILE_FORMAT}"
+#         result_fullpath = f"{SWAPS_FILEPATH_ROOT}/{unique_filename}"
+
+#         try:
+#             swap(DETECTOR_FULLPATH, gif_fullpath, head_photo_fullpath, result_fullpath)       
+#         except e:
+#             return "Failed to faceswap!", 500
+
+#         try:
+#             return send_from_directory(SWAPS_FILEPATH_ROOT, unique_filename), 200
+#         except:
+#             return "Failed to retrieve faceswap video file.", 500
+#     else:
+#         return "Forbidden Access", 403
+
 
 
 if __name__ == '__main__':

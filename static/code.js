@@ -1,15 +1,16 @@
-var LOGIN_URL = "http://10.16.20.233:5000/users/login/";
-var REGISTER_URL = "http://10.16.20.233:5000/users/register/";
-var REMOVE_USER_URL = "http://10.16.20.233:5000/users/remove/";
-var VERIFY_USER_URL = "http://10.16.20.233:5000/users/verify/";
+var LOGIN_URL = "http://172.20.227.205:5000/users/login/";
+var REGISTER_URL = "http://172.20.227.205:5000/users/register/";
+var REMOVE_USER_URL = "http://172.20.227.205:5000/users/remove/";
+var VERIFY_USER_URL = "http://172.20.227.205:5000/users/verify/";
 
-var ADD_NEW_VIDEO_URL = "http://10.16.20.233:5000/media/videos/new/";
-var QUERY_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
-var RETRIEVE_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
+var ADD_NEW_VIDEO_URL = "http://172.20.227.205:5000/media/videos/new/";
+var QUERY_VIDEO_URL = "http://172.20.227.205:5000/media/videos/retrieve/";
+var RETRIEVE_VIDEO_ORIGINAL_URL = "http://172.20.227.205:5000/media/videos/retrieve/original/";
+var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://172.20.227.205:5000/media/videos/retrieve/thumbnail/";
 
-var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
-var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
-var RETRIEVE_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+var ADD_NEW_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
+var QUERY_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
+var RETRIEVE_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
 
 
 /****************** All pages (base template) *******************/
@@ -250,8 +251,8 @@ function display_videos_in_preview_area(response){
 
     let gif_preview_area = document.querySelector("div#gif_preview_area");
     response["gif_matches"].forEach( function(gif, index){
-        console.log(RETRIEVE_VIDEO_URL+gif["filename"])
-        let gif_element = video_create(RETRIEVE_VIDEO_URL+gif["filename"], "", "300", "350", gif["id"]);
+        console.log(RETRIEVE_VIDEO_ORIGINAL_URL+gif["filename"])
+        let gif_element = video_create(RETRIEVE_VIDEO_ORIGINAL_URL+gif["filename"], "", "300", "350", gif["id"]);
         gif_element.classList.add("my-2");
         gif_element.classList.add("mx-2");
         gif_preview_area.appendChild(gif_element)
