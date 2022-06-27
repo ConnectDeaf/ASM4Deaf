@@ -14,6 +14,7 @@ import time
 import base64
 import os
 import hashlib
+import shutil
 
 
 
@@ -280,7 +281,8 @@ def add_new_video():
             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{VIDEO_FILE_FORMAT}"
 
             filepath = aux_.save_on_the_file_system(request, "GIFfile" , save_directory, unique_filename)
-            thumbnail_filepath = aux_.save_on_the_file_system(request, "GIFfile" , thumbnail_save_directory, unique_filename)
+            thumbnail_filepath = f"{thumbnail_save_directory}{unique_filename}"
+            shutil.copy(filepath, thumbnail_filepath)
 
             new_gif_record = VideosModel(keywords, unique_filename, signer_race, sign_language)
             
@@ -401,8 +403,18 @@ def get_all_video_keywords():
  
 ###########################
 
-@app.route('/media/images/retrieve/<path:path>', methods=["GET"])
-def retrieve_image(path):
+@app.route('/media/images/retrieve/originals/<path:path>', methods=["GET"])
+def retrieve_image_original(path):
+    '''
+        returns image files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/images/', path)
+    else:
+        return "Forbidden Access", 403
+
+@app.route('/media/images/retrieve/thumbnails/<path:path>', methods=["GET"])
+def retrieve_image_thumbnail(path):
     '''
         returns image files
     '''
@@ -435,7 +447,8 @@ def add_new_image():
             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{IMAGE_FILE_FORMAT}"
 
             filepath = aux_.save_on_the_file_system(request, "Imagefile", save_directory, unique_filename)
-            thumbnail_filepath = aux_.save_on_the_file_system(request, "Imagefile", thumbnail_save_directory, unique_filename)
+            thumbnail_filepath = f"{thumbnail_save_directory}{unique_filename}"
+            shutil.copy(filepath, thumbnail_filepath)
 
             new_image_record = ImagesModel(unique_filename)
             
@@ -454,9 +467,9 @@ def add_new_image():
     else:
         return render_template("new-image.html"), 200
 
-@app.route('/media/images/retrieve', methods=["POST", "GET"])
-@app.route('/media/images/retrieve/', methods=["POST", "GET"])#PENDING
-def get_all_images():
+@app.route('/media/images/retrieve', methods=["GET"])
+@app.route('/media/images/retrieve/', methods=["GET"])#PENDING
+def query_image_filenames():
     '''
         Retrieves the filenames of all the available images from the database.
         These filenames must be appended to the URL for image retrieval.
@@ -469,11 +482,24 @@ def get_all_images():
     all_images =  ImagesModel.query.all()
     all_images = [i.FileName for i in all_images]
 
-    if request.method == "POST":
-        #PENDING TO pass the related information to the template so it can render the images
-        return render_template("all-images.html"), 200
-    else:
+    #PENDING TO pass the related information to the template so it can render the images
+
+    return render_template("all-images.html"), 200
+    
+@app.route('/media/images/retrieve/all_filenames', methods=["GET"])
+@app.route('/media/images/retrieve/all_filenames/', methods=["GET"])
+def get_all_image_filenames():
+    '''
+        Retrieves the filenames of all the available images from the database.
+        These filenames must be appended to the URL for image retrieval.
+    '''
+    
+    if "user" in session:
+        all_images =  ImagesModel.query.all()
+        all_images = [i.FileName for i in all_images]
         return jsonify(all_images), 200
+    else:
+        return "Forbidden Access", 403
 
 ###########################
 

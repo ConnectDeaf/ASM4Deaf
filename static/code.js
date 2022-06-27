@@ -5,12 +5,13 @@ var VERIFY_USER_URL = "http://172.20.227.205:5000/users/verify/";
 
 var ADD_NEW_VIDEO_URL = "http://172.20.227.205:5000/media/videos/new/";
 var QUERY_VIDEO_URL = "http://172.20.227.205:5000/media/videos/retrieve/";
-var RETRIEVE_VIDEO_ORIGINAL_URL = "http://172.20.227.205:5000/media/videos/retrieve/original/";
-var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://172.20.227.205:5000/media/videos/retrieve/thumbnail/";
+var RETRIEVE_VIDEO_ORIGINAL_URL = "http://172.20.227.205:5000/media/videos/retrieve/originals/";
+var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://172.20.227.205:5000/media/videos/retrieve/thumbnails/";
 
 var ADD_NEW_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
 var QUERY_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
-var RETRIEVE_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
+var RETRIEVE_IMAGE_ORIGINAL_URL = "http://172.20.227.205:5000/media/images/retrieve/originals/";
+var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://172.20.227.205:5000/media/images/retrieve/thumbnails/";
 
 
 /****************** All pages (base template) *******************/
