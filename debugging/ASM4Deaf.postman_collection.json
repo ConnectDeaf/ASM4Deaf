@@ -40,13 +40,13 @@
 							]
 						},
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/videos/new/",
+							"raw": "http://172.20.227.205:5000/media/videos/new/",
 							"protocol": "http",
 							"host": [
-								"10",
-								"16",
+								"172",
 								"20",
-								"233"
+								"227",
+								"205"
 							],
 							"port": "5000",
 							"path": [
@@ -60,12 +60,12 @@
 					"response": []
 				},
 				{
-					"name": "retrieve specific video",
+					"name": "retrieve specific video - original",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/videos/head_1652702474.mp4",
+							"raw": "http://10.16.20.233:5000/media/videos/retrieve/originals/video_1656323473.mp4",
 							"protocol": "http",
 							"host": [
 								"10",
@@ -77,7 +77,35 @@
 							"path": [
 								"media",
 								"videos",
-								"head_1652702474.mp4"
+								"retrieve",
+								"originals",
+								"video_1656323473.mp4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve specific video - thumbnail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://172.20.227.205:5000/media/videos/retrieve/thumbnails/video_1656319306.mp4",
+							"protocol": "http",
+							"host": [
+								"172",
+								"20",
+								"227",
+								"205"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"retrieve",
+								"thumbnails",
+								"video_1656319306.mp4"
 							]
 						}
 					},
@@ -90,7 +118,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"keywords\": [\"sss\"]\r\n}",
+							"raw": "{\r\n    \"sign_language\" : 1,\r\n    \"keywords\": [\"hi\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -98,13 +126,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/videos/retrieve/",
+							"raw": "http://172.20.227.205:5000/media/videos/retrieve/",
 							"protocol": "http",
 							"host": [
-								"10",
-								"16",
+								"172",
 								"20",
-								"233"
+								"227",
+								"205"
 							],
 							"port": "5000",
 							"path": [
@@ -123,13 +151,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/videos/retrieve/all_filenames/",
+							"raw": "http://172.20.227.205:5000/media/videos/retrieve/all_filenames/",
 							"protocol": "http",
 							"host": [
-								"10",
-								"16",
+								"172",
 								"20",
-								"233"
+								"227",
+								"205"
 							],
 							"port": "5000",
 							"path": [
@@ -149,7 +177,32 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/videos/retrieve/keywords",
+							"raw": "http://172.20.227.205:5000/media/videos/retrieve/keywords",
+							"protocol": "http",
+							"host": [
+								"172",
+								"20",
+								"227",
+								"205"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"videos",
+								"retrieve",
+								"keywords"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete specific video",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/videos/remove/video_1656323473.mp4",
 							"protocol": "http",
 							"host": [
 								"10",
@@ -161,8 +214,8 @@
 							"path": [
 								"media",
 								"videos",
-								"retrieve",
-								"keywords"
+								"remove",
+								"video_1656323473.mp4"
 							]
 						}
 					},
@@ -189,13 +242,13 @@
 							]
 						},
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/images/new/",
+							"raw": "http://172.20.227.205:5000/media/images/new/",
 							"protocol": "http",
 							"host": [
-								"10",
-								"16",
+								"172",
 								"20",
-								"233"
+								"227",
+								"205"
 							],
 							"port": "5000",
 							"path": [
@@ -209,12 +262,12 @@
 					"response": []
 				},
 				{
-					"name": "retrieve specific image",
+					"name": "retrieve specific image - original",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://10.16.20.233:5000/media/images/retrieve/image1.jpg",
+							"raw": "http://10.16.20.233:5000/media/images/retrieve/originals/image_1656322326.jpg",
 							"protocol": "http",
 							"host": [
 								"10",
@@ -227,7 +280,34 @@
 								"media",
 								"images",
 								"retrieve",
-								"image1.jpg"
+								"originals",
+								"image_1656322326.jpg"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve specific image - thumbnail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/images/retrieve/thumbnails/image_1656322326.jpg",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"images",
+								"retrieve",
+								"thumbnails",
+								"image_1656322326.jpg"
 							]
 						}
 					},
@@ -254,6 +334,31 @@
 								"retrieve",
 								"all_filenames",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete specific image",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://10.16.20.233:5000/media/images/remove/image_1656323548.jpg",
+							"protocol": "http",
+							"host": [
+								"10",
+								"16",
+								"20",
+								"233"
+							],
+							"port": "5000",
+							"path": [
+								"media",
+								"images",
+								"remove",
+								"image_1656323548.jpg"
 							]
 						}
 					},
@@ -350,13 +455,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://10.16.20.233:5000/users/login/",
+							"raw": "http://172.20.227.205:5000/users/login/",
 							"protocol": "http",
 							"host": [
-								"10",
-								"16",
+								"172",
 								"20",
-								"233"
+								"227",
+								"205"
 							],
 							"port": "5000",
 							"path": [
