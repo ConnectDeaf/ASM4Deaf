@@ -308,7 +308,7 @@ def add_new_video():
         
         return render_template("new-video.html", races=races, languages=languages), 200
 
-@app.route('/media/videos/retrieve/original/<path:path>', methods=["GET"])
+@app.route('/media/videos/retrieve/originals/<path:path>', methods=["GET"])
 def retrieve_video_original(path):
     '''
         returns video files
@@ -318,7 +318,7 @@ def retrieve_video_original(path):
     else:
         return "Forbidden Access", 403
 
-@app.route('/media/videos/retrieve/thumbnail/<path:path>', methods=["GET"])
+@app.route('/media/videos/retrieve/thumbnails/<path:path>', methods=["GET"])
 def retrieve_video_thumbnail(path):
     '''
         returns video files
