@@ -7,11 +7,13 @@ var ADD_NEW_VIDEO_URL = "http://10.16.20.233:5000/media/videos/new/";
 var QUERY_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
 var RETRIEVE_VIDEO_ORIGINAL_URL = "http://10.16.20.233:5000/media/videos/retrieve/originals/";
 var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://10.16.20.233:5000/media/videos/retrieve/thumbnails/";
+var DELETE_VIDEO_URL = "http://10.16.20.233:5000/media/videos/remove/";
 
 var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
 var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
 var RETRIEVE_IMAGE_ORIGINAL_URL = "http://10.16.20.233:5000/media/images/retrieve/originals/";
 var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://10.16.20.233:5000/media/images/retrieve/thumbnails/";
+var DELETE_IMAGE_URL = "http://10.16.20.233:5000/media/images/remove/";
 
 
 /****************** All pages (base template) *******************/
@@ -263,7 +265,6 @@ function display_videos_in_preview_area(response){
         let gif_element = video_create(video_src, "", "300", "250", gif["id"]);    
         gif_element.classList.add("mx-3");
         
-  
         //create video details preview button
         let details_button = document.createElement("button");
         details_button.type = "button";
@@ -275,6 +276,32 @@ function display_videos_in_preview_area(response){
         details_button.classList.add("mx-3");
         details_button.classList.add("my-3");
         details_button.textContent = "Click for more";
+        //onclick update the modal
+        details_button.onclick = function(){
+            //adapt the modal's info
+            document.querySelector("#video_id").textContent = gif["id"];
+            document.querySelector("#video_filename").textContent = gif["filename"];
+            document.querySelector("#sign_language").textContent = gif["sign_language"];
+            document.querySelector("#signer_race").textContent = gif["signer_race"];
+            //adapt the remove button
+            $("button#remove_video_from_modal").click(function(e) {              
+                $.ajax({
+                    url: DELETE_VIDEO_URL + gif["filename"],
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify(jsonData),
+                    success: function (response) {
+                        wrapper.remove();
+                        alert(response);
+                    },
+                    error: function(response) {
+                        alert(response.responseText);
+                    },
+                    cache: false,
+                    processData: false
+                });
+            });
+        };
         
         //append elements to wrapper
         wrapper.appendChild(gif_element);
