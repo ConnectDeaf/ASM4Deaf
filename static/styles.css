@@ -38,10 +38,17 @@ input#keywords{
 /************************ Query GIF page ************************/
 div#gif_preview_area{
     width: 100%;
-    height: 400px;
+    height: 325px;
 }
 
 div#gif_preview_area img, div#gif_preview_area{
     border: 1px grey solid;
+}
+
+div#gif_preview_area div{
+    border-right: 1px black solid;
+}
+div#gif_preview_area button, div#gif_preview_area video{
+    display: block;
 }
 /****************************************************************/

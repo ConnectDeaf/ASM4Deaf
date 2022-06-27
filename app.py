@@ -3,9 +3,6 @@ from flask import Flask, render_template, request, send_file, send_from_director
 from itsdangerous import base64_encode
 from flask_sqlalchemy import SQLAlchemy
 from my_config import *
-from io import BytesIO
-from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
-from datauri import DataURI
 from datetime import timedelta
 # from faceswap.openCV.videoFaceSwap.videoFaceSwapping import swap
 import json
@@ -404,6 +401,24 @@ def get_all_video_keywords():
     else:
         return "Forbidden Access", 403
  
+@app.route('/media/videos/remove/<filename>', methods=["DELETE"])
+def remove_video_with_filename(filename):
+
+    if not "user" in session:
+        flash("You must be logged in to remove a video!", "info")
+        return redirect(url_for("login")), 403
+
+    
+    VideosModel.query.filter_by(FileName=filename).delete()
+    db.session.commit()
+
+    filepath = MEDIA_FILEPATH_ROOT + "videos/" + filename
+    thumbnail_filepath = MEDIA_FILEPATH_ROOT + "thumbnails/video_thumbnails/" + filename
+    os.remove(filepath)
+    os.remove(thumbnail_filepath)
+
+    return "Video successfully removed!", 200
+
 ###########################
 
 @app.route('/media/images/new', methods=["POST", "GET"])
@@ -503,6 +518,25 @@ def get_all_image_filenames():
         return jsonify(all_images), 200
     else:
         return "Forbidden Access", 403
+
+@app.route('/media/images/remove/<filename>', methods=["DELETE"])
+def remove_image_with_filename(filename):
+
+    if not "user" in session:
+        flash("You must be logged in to remove an image!", "info")
+        return redirect(url_for("login")), 403
+
+    
+    ImagesModel.query.filter_by(FileName=filename).delete()
+    db.session.commit()
+
+    filepath = MEDIA_FILEPATH_ROOT + "images/" + filename
+    thumbnail_filepath = MEDIA_FILEPATH_ROOT + "thumbnails/image_thumbnails/" + filename
+    os.remove(filepath)
+    os.remove(thumbnail_filepath)
+
+    return "Image successfully removed!", 200
+
 
 ###########################
 

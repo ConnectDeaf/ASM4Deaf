@@ -1,17 +1,17 @@
-var LOGIN_URL = "http://172.20.227.205:5000/users/login/";
-var REGISTER_URL = "http://172.20.227.205:5000/users/register/";
-var REMOVE_USER_URL = "http://172.20.227.205:5000/users/remove/";
-var VERIFY_USER_URL = "http://172.20.227.205:5000/users/verify/";
+var LOGIN_URL = "http://10.16.20.233:5000/users/login/";
+var REGISTER_URL = "http://10.16.20.233:5000/users/register/";
+var REMOVE_USER_URL = "http://10.16.20.233:5000/users/remove/";
+var VERIFY_USER_URL = "http://10.16.20.233:5000/users/verify/";
 
-var ADD_NEW_VIDEO_URL = "http://172.20.227.205:5000/media/videos/new/";
-var QUERY_VIDEO_URL = "http://172.20.227.205:5000/media/videos/retrieve/";
-var RETRIEVE_VIDEO_ORIGINAL_URL = "http://172.20.227.205:5000/media/videos/retrieve/originals/";
-var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://172.20.227.205:5000/media/videos/retrieve/thumbnails/";
+var ADD_NEW_VIDEO_URL = "http://10.16.20.233:5000/media/videos/new/";
+var QUERY_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
+var RETRIEVE_VIDEO_ORIGINAL_URL = "http://10.16.20.233:5000/media/videos/retrieve/originals/";
+var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://10.16.20.233:5000/media/videos/retrieve/thumbnails/";
 
-var ADD_NEW_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
-var QUERY_IMAGE_URL = "http://172.20.227.205:5000/media/images/new/";
-var RETRIEVE_IMAGE_ORIGINAL_URL = "http://172.20.227.205:5000/media/images/retrieve/originals/";
-var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://172.20.227.205:5000/media/images/retrieve/thumbnails/";
+var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+var RETRIEVE_IMAGE_ORIGINAL_URL = "http://10.16.20.233:5000/media/images/retrieve/originals/";
+var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://10.16.20.233:5000/media/images/retrieve/thumbnails/";
 
 
 /****************** All pages (base template) *******************/
@@ -238,8 +238,8 @@ function video_create(src, alt, width, height, id) {
     let video = document.createElement("video");
     video.setAttribute('src', src);
     video.setAttribute('alt', alt);
-    video.setAttribute('height', height);
     video.setAttribute('width', width);
+    video.setAttribute('height', height);
     video.setAttribute('id', id);
     video.autoplay = false;
     video.controls = true;
@@ -252,11 +252,39 @@ function display_videos_in_preview_area(response){
 
     let gif_preview_area = document.querySelector("div#gif_preview_area");
     response["gif_matches"].forEach( function(gif, index){
-        console.log(RETRIEVE_VIDEO_ORIGINAL_URL+gif["filename"])
-        let gif_element = video_create(RETRIEVE_VIDEO_ORIGINAL_URL+gif["filename"], "", "300", "350", gif["id"]);
-        gif_element.classList.add("my-2");
-        gif_element.classList.add("mx-2");
-        gif_preview_area.appendChild(gif_element)
+        
+        //create element wrapper
+        let wrapper = document.createElement("div");
+        wrapper.setAttribute("height", "100%");
+        wrapper.setAttribute("width", "300");
+        
+        //create video element
+        let video_src = RETRIEVE_VIDEO_ORIGINAL_URL + gif["filename"];
+        let gif_element = video_create(video_src, "", "300", "250", gif["id"]);    
+        gif_element.classList.add("mx-3");
+        
+  
+        //create video details preview button
+        let details_button = document.createElement("button");
+        details_button.type = "button";
+        details_button.setAttribute("data-bs-toggle", "modal");
+        details_button.setAttribute("data-bs-target", "#previewModal");
+        details_button.classList.add("btn");
+        details_button.classList.add("btn-warning");
+        details_button.classList.add("btn-sm");
+        details_button.classList.add("mx-3");
+        details_button.classList.add("my-3");
+        details_button.textContent = "Click for more";
+        
+        //append elements to wrapper
+        wrapper.appendChild(gif_element);
+        wrapper.appendChild(details_button);
+
+        //append wrapper to preview area
+        gif_preview_area.appendChild(wrapper);
+
+
+
     });
 
 }
@@ -275,7 +303,7 @@ $("form#query_gifs").submit(function(e) {
         contentType: 'application/json',
         data: JSON.stringify(jsonData),
         success: function (response) {
-            remove_all_elements_matching_to_selector("div#gif_preview_area img");
+            remove_all_elements_matching_to_selector("div#gif_preview_area div");
             display_videos_in_preview_area(response);
         },
         error: function(response) {
