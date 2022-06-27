@@ -326,7 +326,6 @@ def retrieve_video_thumbnail(path):
     else:
         return "Forbidden Access", 403
 
-
 @app.route('/media/videos/retrieve', methods=['POST','GET'])
 @app.route('/media/videos/retrieve/', methods=['POST', 'GET'])
 def query_video_filenames():
@@ -400,7 +399,7 @@ def get_all_video_keywords():
     else:
         return "Forbidden Access", 403
  
-
+###########################
 
 @app.route('/media/images/retrieve/<path:path>', methods=["GET"])
 def retrieve_image(path):
@@ -455,26 +454,28 @@ def add_new_image():
     else:
         return render_template("new-image.html"), 200
 
-@app.route('/media/images/retrieve', methods=['POST','GET'])
-@app.route('/media/images/retrieve/', methods=['POST', 'GET']) #PENDING
-def query_image_filenames():    
-    return render_template("all-images.html"), 200
-
-@app.route('/media/images/retrieve/all_filenames', methods=["GET"])
-@app.route('/media/images/retrieve/all_filenames/', methods=["GET"])
-def get_all_image_filenames():
+@app.route('/media/images/retrieve', methods=["POST", "GET"])
+@app.route('/media/images/retrieve/', methods=["POST", "GET"])#PENDING
+def get_all_images():
     '''
         Retrieves the filenames of all the available images from the database.
         These filenames must be appended to the URL for image retrieval.
     '''
     
-    if "user" in session:
-        all_videos =  ImagesModel.query.all()
-        all_videos = [i.FileName for i in all_videos]
-        return jsonify(all_videos), 200
-    else:
+    if "user" not in session:
         return "Forbidden Access", 403
 
+    #get all the image names from the database
+    all_images =  ImagesModel.query.all()
+    all_images = [i.FileName for i in all_images]
+
+    if request.method == "POST":
+        #PENDING TO pass the related information to the template so it can render the images
+        return render_template("all-images.html"), 200
+    else:
+        return jsonify(all_images), 200
+
+###########################
 
 # @app.route('/faceswap/openCV', methods=["GET"]) #PENDING
 # def faceswap_with_ids():
