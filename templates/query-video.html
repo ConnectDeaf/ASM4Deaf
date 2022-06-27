@@ -75,8 +75,36 @@
             <div class="overflow-scroll d-flex justify-content-start" id="gif_preview_area">
             </div>
         </div>
-    </div>
-
-    
+    </div>    
 </form>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Remove
+</button>
+  
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Video Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <p><span class="fw-bold">Id:</span> <span id="video_id"></span></p>
+        <p><span class="fw-bold">Filename: </span><span id="video_filename"></span></p>
+        <p><span class="fw-bold">Sign Language: </span><span id="sign_language"></span></p>
+        <p><span class="fw-bold">Signer's Race: </span><span id="signer_race"></span></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger">Remove</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+    </div>
+</div>
+</div>
+
+
 {% endblock %}

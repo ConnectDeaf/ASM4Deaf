@@ -28,15 +28,23 @@ def prepare_database_keyword_query(sign_language, keywords):
     return query_str
 
 
-def create_dictionary_array_from_cursor_results(cursor_results):
+def create_dictionary_array_from_cursor_results(cursor_results, languages, races):
     
     result_dictionary = []
+    languages_dict = {}
+    races_dict = {}
+    for l in languages:
+        languages_dict[l[0]] = l[1]
+    for r in races:
+        races_dict[r[0]] = r[1]
     
     for row in cursor_results:
         gif_record_dict = row._asdict()
         result_dictionary.append({
             "id" : gif_record_dict["VideoID"],
-            "filename": gif_record_dict["FileName"]
+            "filename": gif_record_dict["FileName"],
+            "sign_language": languages_dict[gif_record_dict["LanguageID"]],
+            "signer_race": races_dict[gif_record_dict["RaceID"]],
         })
     
     return result_dictionary

@@ -329,7 +329,7 @@ def retrieve_video_thumbnail(path):
         return "Forbidden Access", 403
 
 @app.route('/media/videos/retrieve', methods=['POST','GET'])
-@app.route('/media/videos/retrieve/', methods=['POST', 'GET'])
+@app.route('/media/videos/retrieve/', methods=['POST', 'GET'])#PENDING
 def query_video_filenames():
     '''
         queries the database (using the provided language and array of keywords)
@@ -342,6 +342,12 @@ def query_video_filenames():
         flash("You need to log in to access the Add New GIF page!", "info")
         return redirect(url_for("login")), 403
 
+    
+    languages =  SignLanguagesModel.query.all()
+    languages = [[l.LanguageID, l.LanguageName] for l in languages]
+
+    races =  SignerRacesModel.query.all()
+    races = [[r.RaceID, r.RaceName] for r in races]
 
     if request.method == 'POST':
         try:
@@ -353,17 +359,14 @@ def query_video_filenames():
 
         try:
             query_str = aux_.prepare_database_keyword_query(sign_language, keywords)
-            gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str))
+            gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str), languages, races)
             augmented_response = { "gif_matches" : gifs_dict_array}
 
             return jsonify(augmented_response), 200
         except:
             return "Failed to perform database query.", 500
 
-    else:
-        languages =  SignLanguagesModel.query.all()
-        languages = [[l.LanguageID, l.LanguageName] for l in languages]
-        
+    else:        
         return render_template("query-video.html", languages=languages), 200
 
 @app.route('/media/videos/retrieve/all_filenames', methods=["GET"])
@@ -402,26 +405,6 @@ def get_all_video_keywords():
         return "Forbidden Access", 403
  
 ###########################
-
-@app.route('/media/images/retrieve/originals/<path:path>', methods=["GET"])
-def retrieve_image_original(path):
-    '''
-        returns image files
-    '''
-    if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/images/', path)
-    else:
-        return "Forbidden Access", 403
-
-@app.route('/media/images/retrieve/thumbnails/<path:path>', methods=["GET"])
-def retrieve_image_thumbnail(path):
-    '''
-        returns image files
-    '''
-    if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/image_thumbnails/', path)
-    else:
-        return "Forbidden Access", 403
 
 @app.route('/media/images/new', methods=["POST", "GET"])
 @app.route('/media/images/new/', methods=["POST", "GET"])
@@ -466,6 +449,26 @@ def add_new_image():
         return "Successfully stored the image!", 201
     else:
         return render_template("new-image.html"), 200
+
+@app.route('/media/images/retrieve/originals/<path:path>', methods=["GET"])
+def retrieve_image_original(path):
+    '''
+        returns image files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/images/', path)
+    else:
+        return "Forbidden Access", 403
+
+@app.route('/media/images/retrieve/thumbnails/<path:path>', methods=["GET"])
+def retrieve_image_thumbnail(path):
+    '''
+        returns image files
+    '''
+    if "user" in session:
+        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/image_thumbnails/', path)
+    else:
+        return "Forbidden Access", 403
 
 @app.route('/media/images/retrieve', methods=["GET"])
 @app.route('/media/images/retrieve/', methods=["GET"])#PENDING
