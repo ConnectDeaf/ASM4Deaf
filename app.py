@@ -498,7 +498,7 @@ def query_image_filenames():
 
     #get all the image names from the database
     all_images =  ImagesModel.query.all()
-    all_images = [i.FileName for i in all_images]
+    all_images = [[i.ImageID, i.FileName] for i in all_images]
 
     return render_template("all-images.html", images=all_images), 200
     

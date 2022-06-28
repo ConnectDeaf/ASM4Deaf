@@ -257,6 +257,21 @@ function display_videos_in_preview_area(response){
         let wrapper = document.createElement("div");
         wrapper.setAttribute("height", "100%");
         wrapper.setAttribute("width", "300");
+
+        //create a row with a single column x2 (adding some bootstrap magic to center the elements)
+        let row1 = document.createElement("div");
+        row1.classList.add("row");
+        let column1 = document.createElement("div");
+        column1.classList.add("col-12");
+        column1.classList.add("d-flex");
+        column1.classList.add("justify-content-center");
+        
+        let row2 = document.createElement("div");
+        row2.classList.add("row");
+        let column2 = document.createElement("div");
+        column2.classList.add("d-flex");
+        column2.classList.add("justify-content-center");
+        column2.classList.add("col-12");
         
         //create video element
         let video_src = RETRIEVE_VIDEO_ORIGINAL_URL + gif["filename"];
@@ -302,8 +317,12 @@ function display_videos_in_preview_area(response){
         };
         
         //append elements to wrapper
-        wrapper.appendChild(gif_element);
-        wrapper.appendChild(details_button);
+        column1.appendChild(gif_element);
+        column2.appendChild(details_button);
+        row1.appendChild(column1);
+        row2.appendChild(column2);
+        wrapper.appendChild(row1);
+        wrapper.appendChild(row2);
 
         //append wrapper to preview area
         gif_preview_area.appendChild(wrapper);
