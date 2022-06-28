@@ -10,7 +10,7 @@ var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://10.16.20.233:5000/media/videos/retrie
 var DELETE_VIDEO_URL = "http://10.16.20.233:5000/media/videos/remove/";
 
 var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
-var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
+var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/retrieve/";
 var RETRIEVE_IMAGE_ORIGINAL_URL = "http://10.16.20.233:5000/media/images/retrieve/originals/";
 var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://10.16.20.233:5000/media/images/retrieve/thumbnails/";
 var DELETE_IMAGE_URL = "http://10.16.20.233:5000/media/images/remove/";
@@ -296,14 +296,15 @@ function display_videos_in_preview_area(response){
             document.querySelector("#video_filename").textContent = gif["filename"];
             document.querySelector("#sign_language").textContent = gif["sign_language"];
             document.querySelector("#signer_race").textContent = gif["signer_race"];
+            //enable the modal's remove button
+            document.querySelector("#remove_video_from_modal").disabled = false;
             //adapt the remove button
             $("button#remove_video_from_modal").click(function(e) {              
                 $.ajax({
                     url: DELETE_VIDEO_URL + gif["filename"],
                     type: 'DELETE',
-                    contentType: 'application/json',
-                    data: JSON.stringify(jsonData),
                     success: function (response) {
+                        document.querySelector("#remove_video_from_modal").disabled = true;
                         wrapper.remove();
                         alert(response);
                     },
@@ -482,5 +483,31 @@ $("form#new_image").submit(function(e) {
 
 
 /******************** Preview All Images page *******************/
+function get_image_filename(image){
+    return image.getAttribute("image_filename");
+}
+function get_image_id(image){
+    return image.getAttribute("image_id");
+}
 
+function removeImage(e){
+    let image = e;
+    $.ajax({
+        url: DELETE_IMAGE_URL + get_image_filename(image),
+        type: 'DELETE',
+        success: function (response) {
+            document.querySelector("#remove_image_from_modal_" + get_image_id(image)).disabled = true;
+            alert(response);
+            window.location.replace(QUERY_IMAGE_URL);
+        },
+        error: function(response) {
+            alert(response.responseText);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+
+    
+}
 /****************************************************************/
