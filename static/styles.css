@@ -48,7 +48,20 @@ div#gif_preview_area img, div#gif_preview_area{
 div#gif_preview_area div{
     border-right: 1px black solid;
 }
+
 div#gif_preview_area button, div#gif_preview_area video{
     display: block;
 }
+/****************************************************************/
+
+
+/********************** Preview Images page *********************/
+div#image_preview_area{
+ background-color: gray;
+}
+div.img_wrapper{
+    width: 250px;
+    height: 200px;
+}
+
 /****************************************************************/

@@ -36,4 +36,33 @@
 {% endblock %}
 {% block content %}
 <h2 class="my-5">Preview Images</h2>
+
+<div id="image_preview_area">
+    {% for img_filename in images %}
+        <div class="img_wrapper float-start d-flex justify-content-center my-2 mx-2">
+            <img src="{{ url_for('retrieve_image_original', path=img_filename) }}" alt="{{img_filename}}" height="200">
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="previewModalLabel">Image Details</h5>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p><span class="fw-bold">Id:</span> <span id="image_id"></span></p>
+            <p><span class="fw-bold">Filename: </span><span id="image_filename"></span></p>
+        </div>
+        <div class="modal-footer">
+            <button id="remove_image_from_modal" type="button" class="btn btn-danger btn-sm">Remove</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+    </div>
+    
 {% endblock %}

@@ -234,7 +234,6 @@ function prepare_json_data_for_query_page(){
     return jsonData;
 }
 
-
 function video_create(src, alt, width, height, id) {
 
     let video = document.createElement("video");
@@ -248,7 +247,6 @@ function video_create(src, alt, width, height, id) {
 
     return video;
 }
-
 
 function display_videos_in_preview_area(response){
 
@@ -309,8 +307,6 @@ function display_videos_in_preview_area(response){
 
         //append wrapper to preview area
         gif_preview_area.appendChild(wrapper);
-
-
 
     });
 
@@ -467,6 +463,5 @@ $("form#new_image").submit(function(e) {
 
 
 /******************** Preview All Images page *******************/
-
 
 /****************************************************************/

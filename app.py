@@ -500,9 +500,7 @@ def query_image_filenames():
     all_images =  ImagesModel.query.all()
     all_images = [i.FileName for i in all_images]
 
-    #PENDING TO pass the related information to the template so it can render the images
-
-    return render_template("all-images.html"), 200
+    return render_template("all-images.html", images=all_images), 200
     
 @app.route('/media/images/retrieve/all_filenames', methods=["GET"])
 @app.route('/media/images/retrieve/all_filenames/', methods=["GET"])
