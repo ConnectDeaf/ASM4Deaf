@@ -1,19 +1,19 @@
-var LOGIN_URL = "http://10.16.20.233:5000/users/login/";
-var REGISTER_URL = "http://10.16.20.233:5000/users/register/";
-var REMOVE_USER_URL = "http://10.16.20.233:5000/users/remove/";
-var VERIFY_USER_URL = "http://10.16.20.233:5000/users/verify/";
+var LOGIN_URL = "http://10.16.20.139:5000/users/login/";
+var REGISTER_URL = "http://10.16.20.139:5000/users/register/";
+var REMOVE_USER_URL = "http://10.16.20.139:5000/users/remove/";
+var VERIFY_USER_URL = "http://10.16.20.139:5000/users/verify/";
 
-var ADD_NEW_VIDEO_URL = "http://10.16.20.233:5000/media/videos/new/";
-var QUERY_VIDEO_URL = "http://10.16.20.233:5000/media/videos/retrieve/";
-var RETRIEVE_VIDEO_ORIGINAL_URL = "http://10.16.20.233:5000/media/videos/retrieve/originals/";
-var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://10.16.20.233:5000/media/videos/retrieve/thumbnails/";
-var DELETE_VIDEO_URL = "http://10.16.20.233:5000/media/videos/remove/";
+var ADD_NEW_VIDEO_URL = "http://10.16.20.139:5000/media/videos/new/";
+var QUERY_VIDEO_URL = "http://10.16.20.139:5000/media/videos/retrieve/";
+var RETRIEVE_VIDEO_ORIGINAL_URL = "http://10.16.20.139:5000/media/videos/retrieve/originals/";
+var RETRIEVE_VIDEO_THUMBNAIL_URL = "http://10.16.20.139:5000/media/videos/retrieve/thumbnails/";
+var DELETE_VIDEO_URL = "http://10.16.20.139:5000/media/videos/remove/";
 
-var ADD_NEW_IMAGE_URL = "http://10.16.20.233:5000/media/images/new/";
-var QUERY_IMAGE_URL = "http://10.16.20.233:5000/media/images/retrieve/";
-var RETRIEVE_IMAGE_ORIGINAL_URL = "http://10.16.20.233:5000/media/images/retrieve/originals/";
-var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://10.16.20.233:5000/media/images/retrieve/thumbnails/";
-var DELETE_IMAGE_URL = "http://10.16.20.233:5000/media/images/remove/";
+var ADD_NEW_IMAGE_URL = "http://10.16.20.139:5000/media/images/new/";
+var QUERY_IMAGE_URL = "http://10.16.20.139:5000/media/images/retrieve/";
+var RETRIEVE_IMAGE_ORIGINAL_URL = "http://10.16.20.139:5000/media/images/retrieve/originals/";
+var RETRIEVE_IMAGE_THUMBNAIL_URL = "http://10.16.20.139:5000/media/images/retrieve/thumbnails/";
+var DELETE_IMAGE_URL = "http://10.16.20.139:5000/media/images/remove/";
 
 
 /****************** All pages (base template) *******************/

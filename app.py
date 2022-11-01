@@ -4,7 +4,7 @@ from itsdangerous import base64_encode
 from flask_sqlalchemy import SQLAlchemy
 from my_config import *
 from datetime import timedelta
-# from faceswap.openCV.videoFaceSwap.videoFaceSwapping import swap
+from faceswap.openCV.videoFaceSwap.videoFaceSwapping import swap
 import json
 import aux_
 import time
@@ -12,7 +12,6 @@ import base64
 import os
 import hashlib
 import shutil
-
 
 
 app = Flask(__name__)
@@ -26,61 +25,86 @@ db = SQLAlchemy(app)
 ############################### 
 ## DECLARING DATABASE TABLES ##
 ###############################
-class UsersModel(db.Model):
-    __tablename__ = 'users'
+# class UsersModel(db.Model):
+#     __tablename__ = 'users'
 
-    UserID = db.Column(db.Integer, primary_key = True)
-    Email = db.Column(db.String(300), primary_key = True) 
-    PwdSaltedDigest = db.Column(db.LargeBinary)
-    IsVerified = db.Column(db.Integer, default=0)
+#     UserID = db.Column(db.Integer, primary_key = True)
+#     Email = db.Column(db.String(300), primary_key = True) 
+#     PwdSaltedDigest = db.Column(db.LargeBinary)
+#     IsVerified = db.Column(db.Integer, default=0)
     
-    def __init__(self, Email, PwdSaltedDigest):
-        self.Email = Email
-        self.PwdSaltedDigest = PwdSaltedDigest
+#     def __init__(self, Email, PwdSaltedDigest):
+#         self.Email = Email
+#         self.PwdSaltedDigest = PwdSaltedDigest
 
-class SignerRacesModel(db.Model):
-    __tablename__ = 'signerraces'
+# class SignerRacesModel(db.Model):
+#     __tablename__ = 'signerraces'
  
-    RaceID = db.Column(db.Integer, primary_key = True)
-    RaceName = db.Column(db.String(50)) 
-    Videos = db.relationship('VideosModel', backref='signerraces', lazy=True)
+#     RaceID = db.Column(db.Integer, primary_key = True)
+#     RaceName = db.Column(db.String(50)) 
+#     Videos = db.relationship('VideosModel', backref='signerraces', lazy=True)
     
-    def __init__(self, RaceName):
-        self.RaceName = RaceName
+#     def __init__(self, RaceName):
+#         self.RaceName = RaceName
 
-class SignLanguagesModel(db.Model):
-    __tablename__ = 'signlanguages'
+# class SignLanguagesModel(db.Model):
+#     __tablename__ = 'signlanguages'
  
-    LanguageID = db.Column(db.Integer, primary_key = True)
-    LanguageName = db.Column(db.String(50))
-    Videos = db.relationship('VideosModel', backref='signlanguages', lazy=True)
+#     LanguageID = db.Column(db.Integer, primary_key = True)
+#     LanguageName = db.Column(db.String(50))
+#     Videos = db.relationship('VideosModel', backref='signlanguages', lazy=True)
     
-    def __init__(self, LanguageName):
-        self.LanguageName = LanguageName
+#     def __init__(self, LanguageName):
+#         self.LanguageName = LanguageName
 
 class VideosModel(db.Model):
     __tablename__ = 'videos'
  
-    VideoID = db.Column(db.Integer, primary_key = True)
-    Keywords = db.Column(db.String(200))
-    FileName = db.Column(db.String(1000))
-    RaceID = db.Column(db.Integer, db.ForeignKey('signerraces.RaceID'), nullable=False)
-    LanguageID = db.Column(db.Integer, db.ForeignKey('signlanguages.LanguageID'), nullable=False)
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.Integer)
+    title = db.Column(db.String(200))
+    keywords = db.Column(db.String(200))
+    target_file = db.Column(db.String(1000))
+    download_file = db.Column(db.String(1000))
+    subtitles = db.Column(db.String(200))
+    country = db.Column(db.String(200))
+    race = db.Column(db.String(200))
+    gender = db.Column(db.String(200))
+    hand = db.Column(db.String(200))
+    # RaceID = db.Column(db.Integer, db.ForeignKey('signerraces.RaceID'), nullable=False)
+    # LanguageID = db.Column(db.Integer, db.ForeignKey('signlanguages.LanguageID'), nullable=False)
     
-    def __init__(self, Keywords, FileName, RaceID, LanguageID):
-        self.Keywords = Keywords
-        self.FileName = FileName
-        self.RaceID = RaceID
-        self.LanguageID = LanguageID
+    def __init__(self, username, title, keywords, target_file, download_file, subtitles, country, race, gender, hand):
+        self.username = username
+        self.title = title
+        self.keywords = keywords
+        self.target_file = target_file
+        self.download_file = download_file
+        self.subtitles = subtitles
+        self.country = country
+        self.race = race
+        self.gender = gender
+        self.hand = hand
+        
         
 class ImagesModel(db.Model):
-    __tablename__ = 'images'
+    __tablename__ = 'photos'
  
-    ImageID = db.Column(db.Integer, primary_key = True)
-    FileName = db.Column(db.String(1000))
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.Integer)
+    name = db.Column(db.String(1000))
+    category = db.Column(db.String(1000))
+    target_file = db.Column(db.String(1000))
+    download_file = db.Column(db.String(1000))
+    face = db.Column(db.String(1000))
     
-    def __init__(self, FileName):
-        self.FileName = FileName
+    def __init__(self, username, name, category, target_file, download_file, face):
+        self.username = username
+        self.name = name
+        self.category = category
+        self.target_file = target_file
+        self.download_file = download_file
+        self.face = face
     
 
 ##############################################################
@@ -90,240 +114,250 @@ class ImagesModel(db.Model):
 #        the POST endpoint versions do the actual work
 ##############################################################
 
-@app.route('/users/register', methods=["POST", "GET"])
-@app.route('/users/register/', methods=["POST", "GET"])
-def register_user():
-    '''
-        adds an unverified user to the database;
-        the administrator needs to login to the database to verify the user later on
-    '''  
-    if request.method == 'POST':
-        try:
-            request_data = request.get_json()
-            email = request_data['email']
-            password = request_data["password"]
-        except:
-                return "Incorect parameters!", 400
+# @app.route('/users/register', methods=["POST", "GET"])
+# @app.route('/users/register/', methods=["POST", "GET"])
+# def register_user():
+#     '''
+#         adds an unverified user to the database;
+#         the administrator needs to login to the database to verify the user later on
+#     '''  
+#     if request.method == 'POST':
+#         try:
+#             request_data = request.get_json()
+#             email = request_data['email']
+#             password = request_data["password"]
+#         except:
+#                 return "Incorect parameters!", 400
 
-        try:
-            #hash password
-            salt = os.urandom(32)
-            pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-            salted_digest = salt + pwd_digest
-        except:
-            return "Failed to process (hash) password!", 500
+#         try:
+#             #hash password
+#             salt = os.urandom(32)
+#             pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+#             salted_digest = salt + pwd_digest
+#         except:
+#             return "Failed to process (hash) password!", 500
 
-        existence_check_user = UsersModel.query.filter_by(Email=email).first()
-        if existence_check_user:
-            return "User with this email already exists!", 403
+#         existence_check_user = UsersModel.query.filter_by(Email=email).first()
+#         if existence_check_user:
+#             return "User with this email already exists!", 403
 
-        try:
-            #add new unverified user to the database
-            new_user_record = UsersModel(email, salted_digest)
-            db.session.add(new_user_record)
-            db.session.commit()
-        except:
-            return "Failed store user data into database", 500
+#         try:
+#             #add new unverified user to the database
+#             new_user_record = UsersModel(email, salted_digest)
+#             db.session.add(new_user_record)
+#             db.session.commit()
+#         except:
+#             return "Failed store user data into database", 500
 
-        flash("Thak you for your registration! An administrator will examine your request soon.")
-        return redirect(url_for("login")), 200
-    else:
-        if "user" in session:
-            flash("You cannot register while you are logged in!", "info")
-            return redirect(url_for("login")), 403
-        return render_template("register.html"), 200
+#         flash("Thak you for your registration! An administrator will examine your request soon.")
+#         return redirect(url_for("login")), 200
+#     else:
+#         if "user" in session:
+#             flash("You cannot register while you are logged in!", "info")
+#             return redirect(url_for("login")), 403
+#         return render_template("register.html"), 200
     
-@app.route('/users/login', methods=["POST", "GET"])
-@app.route('/users/login/', methods=["POST", "GET"])
-def login():
+# @app.route('/users/login', methods=["POST", "GET"])
+# @app.route('/users/login/', methods=["POST", "GET"])
+# def login():
 
-    if request.method == 'POST':
-        try:
-            request_data = request.get_json()
-            email = request_data['email']
-            password = request_data["password"]
-        except:
-                return "Incorect parameters!", 400
+#     if request.method == 'POST':
+#         try:
+#             request_data = request.get_json()
+#             email = request_data['email']
+#             password = request_data["password"]
+#         except:
+#                 return "Incorect parameters!", 400
 
 
-        #check if the user is already logged in with another account
-        if "user" in session:
-            return f"You are logged in with another email ({session['user']})," + \
-                            f" please logout and try again with this one!", 403
+#         #check if the user is already logged in with another account
+#         if "user" in session:
+#             return f"You are logged in with another email ({session['user']})," + \
+#                             f" please logout and try again with this one!", 403
 
-        #retrieve user data from the database
-        found_user = UsersModel.query.filter_by(Email=email).first()
-        if not found_user:
-            return f"This user ({email}) does not exist!", 404
+#         #retrieve user data from the database
+#         found_user = UsersModel.query.filter_by(Email=email).first()
+#         if not found_user:
+#             return f"This user ({email}) does not exist!", 404
     
-        if not found_user.IsVerified:
-            return "This user has not been unverified yet!", 403
+#         if not found_user.IsVerified:
+#             return "This user has not been unverified yet!", 403
 
-        stored_salt = found_user.PwdSaltedDigest[:32]
-        stored_salted_digest = found_user.PwdSaltedDigest[32:]
+#         stored_salt = found_user.PwdSaltedDigest[:32]
+#         stored_salted_digest = found_user.PwdSaltedDigest[32:]
 
-        try:
-            #hash password
-            pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), stored_salt, 100000)
-        except:
-            return "Failed to hash password", 500
+#         try:
+#             #hash password
+#             pwd_digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), stored_salt, 100000)
+#         except:
+#             return "Failed to hash password", 500
 
-        if not stored_salted_digest == pwd_digest:
-            return "Incorrect password!", 403
+#         if not stored_salted_digest == pwd_digest:
+#             return "Incorrect password!", 403
 
-        #create a permanent session for user
-        session.permanent = True
-        session["user"] = email
+#         #create a permanent session for user
+#         session.permanent = True
+#         session["user"] = email
 
-        flash("User successfully logged in!", "info")
-        return "User successfully logged in!", 200
-    else:
-        if "user" in session:
-            flash("Already logged in!", "info")
-            return redirect(url_for("add_new_video")), 200
-        return render_template("login.html"), 200
+#         flash("User successfully logged in!", "info")
+#         return "User successfully logged in!", 200
+#     else:
+#         if "user" in session:
+#             flash("Already logged in!", "info")
+#             return redirect(url_for("add_new_video")), 200
+#         return render_template("login.html"), 200
             
-@app.route("/users/logout", methods=["GET"])
-@app.route("/users/logout/", methods=["GET"])
-def logout():
-    if "user" in session:
-        session.pop("user", None)
-        flash("Succesfully logged out!", "info")
-    else:
-        flash("User already logged out!", "info")
-    return redirect(url_for("login")), 200
+# @app.route("/users/logout", methods=["GET"])
+# @app.route("/users/logout/", methods=["GET"])
+# def logout():
+#     if "user" in session:
+#         session.pop("user", None)
+#         flash("Succesfully logged out!", "info")
+#     else:
+#         flash("User already logged out!", "info")
+#     return redirect(url_for("login")), 200
 
-@app.route("/users/remove/<email>", methods=["DELETE"])
-def remove_user(email):
+# @app.route("/users/remove/<email>", methods=["DELETE"])
+# def remove_user(email):
 
-    if not "user" in session:
-        flash("You must be logged in to remove a user!", "info")
-        return redirect(url_for("login")), 403
+#     if not "user" in session:
+#         flash("You must be logged in to remove a user!", "info")
+#         return redirect(url_for("login")), 403
 
-    if session["user"] == email:
-        return "You cannot remove yourself! This is to ensure that at least one person has access to this web UI.", 400
+#     if session["user"] == email:
+#         return "You cannot remove yourself! This is to ensure that at least one person has access to this web UI.", 400
 
-    UsersModel.query.filter_by(Email=email).delete()
-    db.session.commit()
+#     UsersModel.query.filter_by(Email=email).delete()
+#     db.session.commit()
 
-    return "User successfully removed!", 200
+#     return "User successfully removed!", 200
     
-@app.route("/users/verify/<email>", methods=["PUT"])
-def verify_user(email):
-    if not "user" in session:
-        flash("You must be logged in to verify a user!", "info")
-        return redirect(url_for("login")), 403
+# @app.route("/users/verify/<email>", methods=["PUT"])
+# def verify_user(email):
+#     if not "user" in session:
+#         flash("You must be logged in to verify a user!", "info")
+#         return redirect(url_for("login")), 403
 
-    UsersModel.query.filter_by(Email=email).first().IsVerified = 1
-    db.session.commit()
+#     UsersModel.query.filter_by(Email=email).first().IsVerified = 1
+#     db.session.commit()
 
-    return "User has been verified!", 200
+#     return "User has been verified!", 200
     
-@app.route("/users/manage", methods=["GET"])
-@app.route("/users/manage/", methods=["GET"])
-def manage_users():
-    if not "user" in session:
-        flash("You need to log in to access the Manage Users page!", "info")
-        return redirect(url_for("login")), 403
-    users =  UsersModel.query.order_by(UsersModel.UserID.asc()).all()
-    users = [[u.UserID, u.Email, u.IsVerified] for u in users]
-    return render_template("users.html", users=users), 200
+# @app.route("/users/manage", methods=["GET"])
+# @app.route("/users/manage/", methods=["GET"])
+# def manage_users():
+#     if not "user" in session:
+#         flash("You need to log in to access the Manage Users page!", "info")
+#         return redirect(url_for("login")), 403
+#     users =  UsersModel.query.order_by(UsersModel.UserID.asc()).all()
+#     users = [[u.UserID, u.Email, u.IsVerified] for u in users]
+#     return render_template("users.html", users=users), 200
 
 ###########################
 
-@app.route('/media/videos/new', methods=["POST", "GET"])
-@app.route('/media/videos/new/', methods=["POST", "GET"])
-def add_new_video():
-    '''
-        stores the uploaded gif to the filesystem and creates the necessary database entry.
-        (it does not check for duplicates- I don't see a way to automatically check for duplicates)
-    '''
+# @app.route('/media/videos/new', methods=["POST", "GET"])
+# @app.route('/media/videos/new/', methods=["POST", "GET"])
+# def add_new_video():
+#     '''
+#         stores the uploaded gif to the filesystem and creates the necessary database entry.
+#         (it does not check for duplicates- I don't see a way to automatically check for duplicates)
+#     '''
 
-    #regardless of method, check if user is logged in
-    if not "user" in session:
-        flash("You need to log in to access the Add New GIF page!", "info")
-        return redirect(url_for("login")), 403
+#     #regardless of method, check if user is logged in
+#     # if not "user" in session:
+#     #     flash("You need to log in to access the Add New GIF page!", "info")
+#     #     return redirect(url_for("login")), 403
 
-    if request.method == "POST":
-        try:
+#     if request.method == "POST":
+#         try:
 
-            try:
-                if request.form['new_language_toggle']:
-                    try:
-                        #insert the new language into the database
-                        sign_language_name = request.form["new_language"].lower()
-                        for lang in SignLanguagesModel.query.all():
-                            if lang.LanguageName == sign_language_name:
-                                return "Sign language already exists!", 400
-                        new_language_record = SignLanguagesModel(sign_language_name)
-                        db.session.add(new_language_record)
-                        db.session.commit()
-                        sign_language = new_language_record.LanguageID
-                    except:
-                        return "Failed to create new sign language!", 500
-            except:
-                sign_language = request.form["sign_languages"]
+#             try:
+#                 if request.form['new_language_toggle']:
+#                     try:
+#                         #insert the new language into the database
+#                         sign_language_name = request.form["new_language"].lower()
+#                         for lang in SignLanguagesModel.query.all():
+#                             if lang.LanguageName == sign_language_name:
+#                                 return "Sign language already exists!", 400
+#                         new_language_record = SignLanguagesModel(sign_language_name)
+#                         db.session.add(new_language_record)
+#                         db.session.commit()
+#                         sign_language = new_language_record.LanguageID
+#                     except:
+#                         return "Failed to create new sign language!", 500
+#             except:
+#                 sign_language = request.form["sign_languages"]
 
-            signer_race = request.form["signer_race"]
-            keywords = request.form["keywords"]
-        except:
-            return "Incorect parameters!", 400
+#             signer_race = request.form["signer_race"]
+#             keywords = request.form["keywords"]
+#         except:
+#             return "Incorect parameters!", 400
         
-        try:
-            save_directory = MEDIA_FILEPATH_ROOT + "videos/"
-            thumbnail_save_directory = MEDIA_FILEPATH_ROOT + "thumbnails/video_thumbnails/"
-            filename_prefix = "video"
+#         try:
+#             save_directory = MEDIA_FILEPATH_ROOT + "videos/"
+#             thumbnail_save_directory = MEDIA_FILEPATH_ROOT + "thumbnails/video_thumbnails/"
+#             filename_prefix = "video"
             
-            unique_filename_suffix = str(int(time.time()))
-            unique_filename = f"{filename_prefix}_{unique_filename_suffix}{VIDEO_FILE_FORMAT}"
+#             unique_filename_suffix = str(int(time.time()))
+#             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{VIDEO_FILE_FORMAT}"
 
-            filepath = aux_.save_on_the_file_system(request, "GIFfile" , save_directory, unique_filename)
-            thumbnail_filepath = f"{thumbnail_save_directory}{unique_filename}"
-            shutil.copy(filepath, thumbnail_filepath)
+#             filepath = aux_.save_on_the_file_system(request, "GIFfile" , save_directory, unique_filename)
+#             thumbnail_filepath = f"{thumbnail_save_directory}{unique_filename}"
+#             shutil.copy(filepath, thumbnail_filepath)
 
-            new_gif_record = VideosModel(keywords, unique_filename, signer_race, sign_language)
+#             new_gif_record = VideosModel(keywords, unique_filename, signer_race, sign_language)
             
-            db.session.add(new_gif_record)
-            db.session.commit()
-        except:
-            try:
-                aux_.delete_file_from_file_system(filepath)
-                aux_.delete_file_from_file_system(thumbnail_filepath)
-            except:
-                pass
+#             db.session.add(new_gif_record)
+#             db.session.commit()
+#         except:
+#             try:
+#                 aux_.delete_file_from_file_system(filepath)
+#                 aux_.delete_file_from_file_system(thumbnail_filepath)
+#             except:
+#                 pass
 
-            return "Failed to store the GIF!", 500
+#             return "Failed to store the GIF!", 500
 
-        return "Successfully stored the GIF!", 201
-    else:
-        #retrieve sign languages and signer races from the database
-        races =  SignerRacesModel.query.all()
-        races = [[r.RaceID, r.RaceName] for r in races]
+#         return "Successfully stored the GIF!", 201
+#     else:
+#         #retrieve sign languages and signer races from the database
+#         races =  SignerRacesModel.query.all()
+#         races = [[r.RaceID, r.RaceName] for r in races]
        
-        languages =  SignLanguagesModel.query.all()
-        languages = [[l.LanguageID, l.LanguageName] for l in languages]
+#         languages =  SignLanguagesModel.query.all()
+#         languages = [[l.LanguageID, l.LanguageName] for l in languages]
         
-        return render_template("new-video.html", races=races, languages=languages), 200
+#         return render_template("new-video.html", races=races, languages=languages), 200
 
 @app.route('/media/videos/retrieve/originals/<path:path>', methods=["GET"])
 def retrieve_video_original(path):
     '''
         returns video files
     '''
-    if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/videos/', path)
-    else:
-        return "Forbidden Access", 403
+    # if "user" in session:
+    return send_from_directory(f'{GIF_FILEPATH_ROOT}', path)
+    # else:
+    #     return "Forbidden Access", 403
+
+@app.route('/media/swaps/retrieve/swaped/<path:path>', methods=["GET"])
+def retrieve_video_swaped(path):
+    '''
+        returns video files
+    '''
+    # if "user" in session:
+    return send_from_directory(f'{SWAPS_FILEPATH_ROOT}', path)
+    # else:
+    #     return "Forbidden Access", 403
 
 @app.route('/media/videos/retrieve/thumbnails/<path:path>', methods=["GET"])
 def retrieve_video_thumbnail(path):
     '''
         returns video files
     '''
-    if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/video_thumbnails/', path)
-    else:
-        return "Forbidden Access", 403
+    # if "user" in session:
+    return send_from_directory(f'{VIDEO_THUMBNAIL_ROOT}', path)
+    # else:
+    #     return "Forbidden Access", 403
 
 @app.route('/media/videos/retrieve', methods=['POST','GET'])
 @app.route('/media/videos/retrieve/', methods=['POST', 'GET'])#PENDING
@@ -335,36 +369,29 @@ def query_video_filenames():
     '''
 
     #regardless of method, check if user is logged in
-    if not "user" in session:
-        flash("You need to log in to access the Add New GIF page!", "info")
-        return redirect(url_for("login")), 403
-
-    
-    languages =  SignLanguagesModel.query.all()
-    languages = [[l.LanguageID, l.LanguageName] for l in languages]
-
-    races =  SignerRacesModel.query.all()
-    races = [[r.RaceID, r.RaceName] for r in races]
+    # if not "user" in session:
+    #     flash("You need to log in to access the Add New GIF page!", "info")
+    #     return redirect(url_for("login")), 403
 
     if request.method == 'POST':
         try:
             request_data = request.get_json()
-            sign_language = request_data['sign_language']
+            hand = request_data['hand']
             keywords = request_data["keywords"]
         except:
                 return "Incorect parameters!", 400
 
         try:
-            query_str = aux_.prepare_database_keyword_query(sign_language, keywords)
-            gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str), languages, races)
+            query_str = aux_.prepare_database_keyword_query(hand, keywords)
+            gifs_dict_array = aux_.create_dictionary_array_from_cursor_results(db.engine.execute(query_str))
             augmented_response = { "gif_matches" : gifs_dict_array}
 
             return jsonify(augmented_response), 200
         except:
             return "Failed to perform database query.", 500
 
-    else:        
-        return render_template("query-video.html", languages=languages), 200
+    # else:        
+    #     return render_template("query-video.html", languages=languages), 200
 
 @app.route('/media/videos/retrieve/all_filenames', methods=["GET"])
 @app.route('/media/videos/retrieve/all_filenames/', methods=["GET"])
@@ -374,12 +401,12 @@ def get_all_video_filenames():
         These filenames must be appended to the URL for video retrieval.
     '''
     
-    if "user" in session:
-        all_videos =  VideosModel.query.all()
-        all_videos = [v.FileName for v in all_videos]
-        return jsonify(all_videos), 200
-    else:
-        return "Forbidden Access", 403
+    # if "user" in session:
+    all_videos =  VideosModel.query.all()
+    all_videos = [v.target_file for v in all_videos]
+    return jsonify(all_videos), 200
+    # else:
+    #     return "Forbidden Access", 403
 
 @app.route('/media/videos/retrieve/keywords', methods=["GET"])
 @app.route('/media/videos/retrieve/keywords/', methods=["GET"])
@@ -388,32 +415,32 @@ def get_all_video_keywords():
         Retrieves all the available keywords from the database. (no duplicates or empty strings)
     '''
     
-    if "user" in session:
-        keywords =  VideosModel.query.all()
-        keywords_with_duplicates = ""
-        for k in keywords:
-            keywords_with_duplicates += k.Keywords + ','
-        
-        keywords_with_duplicates = keywords_with_duplicates.split(',')
-        keywords_no_duplicates =  list(filter(None, list(dict.fromkeys(keywords_with_duplicates))))
+    # if "user" in session:
+    keywords =  VideosModel.query.all()
+    keywords_with_duplicates = ""
+    for k in keywords:
+        keywords_with_duplicates += k.keywords + ','
+    
+    keywords_with_duplicates = keywords_with_duplicates.split(',')
+    keywords_no_duplicates =  list(filter(None, list(dict.fromkeys(keywords_with_duplicates))))
 
-        return jsonify(keywords_no_duplicates), 200
-    else:
-        return "Forbidden Access", 403
+    return jsonify(keywords_no_duplicates), 200
+    # else:
+    #     return "Forbidden Access", 403
  
-@app.route('/media/videos/remove/<filename>', methods=["DELETE"])
-def remove_video_with_filename(filename):
+@app.route('/media/videos/remove/<target_file>', methods=["DELETE"])
+def remove_video_with_filename(target_file):
 
-    if not "user" in session:
-        flash("You must be logged in to remove a video!", "info")
-        return redirect(url_for("login")), 403
+    # if not "user" in session:
+    #     flash("You must be logged in to remove a video!", "info")
+    #     return redirect(url_for("login")), 403
 
     
-    VideosModel.query.filter_by(FileName=filename).delete()
+    VideosModel.query.filter_by(target_file=target_file).delete()
     db.session.commit()
 
-    filepath = MEDIA_FILEPATH_ROOT + "videos/" + filename
-    thumbnail_filepath = MEDIA_FILEPATH_ROOT + "thumbnails/video_thumbnails/" + filename
+    filepath = GIF_FILEPATH_ROOT + target_file
+    thumbnail_filepath = VIDEO_THUMBNAIL_ROOT + target_file
     os.remove(filepath)
     os.remove(thumbnail_filepath)
 
@@ -421,69 +448,69 @@ def remove_video_with_filename(filename):
 
 ###########################
 
-@app.route('/media/images/new', methods=["POST", "GET"])
-@app.route('/media/images/new/', methods=["POST", "GET"])
-def add_new_image():
-    '''
-        stores the uploaded image to the filesystem and creates the necessary database entry.
-        (it does not check for duplicates- I don't see a way to automatically check for duplicates)
-    '''
+# @app.route('/media/images/new', methods=["POST", "GET"])
+# @app.route('/media/images/new/', methods=["POST", "GET"])
+# def add_new_image():
+#     '''
+#         stores the uploaded image to the filesystem and creates the necessary database entry.
+#         (it does not check for duplicates- I don't see a way to automatically check for duplicates)
+#     '''
 
-    #regardless of method, check if user is logged in
-    if not "user" in session:
-        flash("You need to log in to access the Add New Image page!", "info")
-        return redirect(url_for("login")), 403
+#     #regardless of method, check if user is logged in
+#     # if not "user" in session:
+#     #     flash("You need to log in to access the Add New Image page!", "info")
+#     #     return redirect(url_for("login")), 403
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        try:
-            save_directory = MEDIA_FILEPATH_ROOT + "images/"
-            thumbnail_save_directory = MEDIA_FILEPATH_ROOT + "thumbnails/image_thumbnails/"
-            filename_prefix = "image"
+#         try:
+#             save_directory = MEDIA_FILEPATH_ROOT + "images/"
+#             thumbnail_save_directory = MEDIA_FILEPATH_ROOT + "thumbnails/image_thumbnails/"
+#             filename_prefix = "image"
             
-            unique_filename_suffix = str(int(time.time()))
-            unique_filename = f"{filename_prefix}_{unique_filename_suffix}{IMAGE_FILE_FORMAT}"
+#             unique_filename_suffix = str(int(time.time()))
+#             unique_filename = f"{filename_prefix}_{unique_filename_suffix}{IMAGE_FILE_FORMAT}"
 
-            filepath = aux_.save_on_the_file_system(request, "Imagefile", save_directory, unique_filename)
-            thumbnail_filepath = f"{thumbnail_save_directory}{unique_filename}"
-            shutil.copy(filepath, thumbnail_filepath)
+#             filepath = aux_.save_on_the_file_system(request, "Imagefile", save_directory, unique_filename)
+#             thumbnail_filepath = f"{thumbnail_save_directory}{unique_filename}"
+#             shutil.copy(filepath, thumbnail_filepath)
 
-            new_image_record = ImagesModel(unique_filename)
+#             new_image_record = ImagesModel(unique_filename)
             
-            db.session.add(new_image_record)
-            db.session.commit()
-        except:
-            try:
-                aux_.delete_file_from_file_system(filepath)
-                aux_.delete_file_from_file_system(thumbnail_filepath)
-            except:
-                pass
+#             db.session.add(new_image_record)
+#             db.session.commit()
+#         except:
+#             try:
+#                 aux_.delete_file_from_file_system(filepath)
+#                 aux_.delete_file_from_file_system(thumbnail_filepath)
+#             except:
+#                 pass
 
-            return "Failed to store the image!", 500
+#             return "Failed to store the image!", 500
 
-        return "Successfully stored the image!", 201
-    else:
-        return render_template("new-image.html"), 200
+#         return "Successfully stored the image!", 201
+#     # else:
+#     #     return render_template("new-image.html"), 200
 
 @app.route('/media/images/retrieve/originals/<path:path>', methods=["GET"])
 def retrieve_image_original(path):
     '''
         returns image files
     '''
-    if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/images/', path)
-    else:
-        return "Forbidden Access", 403
+    # if "user" in session:
+    return send_from_directory(f'{HEADPHOTOS_FILEPATH_ROOT}', path)
+    # else:
+    #     return "Forbidden Access", 403
 
 @app.route('/media/images/retrieve/thumbnails/<path:path>', methods=["GET"])
 def retrieve_image_thumbnail(path):
     '''
         returns image files
     '''
-    if "user" in session:
-        return send_from_directory(f'{MEDIA_FILEPATH_ROOT}/thumbnails/image_thumbnails/', path)
-    else:
-        return "Forbidden Access", 403
+    # if "user" in session:
+    return send_from_directory(f'{IMAGE_THUMBNAIL_ROOT}', path)
+    # else:
+    #     return "Forbidden Access", 403
 
 @app.route('/media/images/retrieve', methods=["GET"])
 @app.route('/media/images/retrieve/', methods=["GET"])#PENDING
@@ -493,14 +520,14 @@ def query_image_filenames():
         These filenames must be appended to the URL for image retrieval.
     '''
     
-    if "user" not in session:
-        return "Forbidden Access", 403
+    # if "user" not in session:
+    #     return "Forbidden Access", 403
 
     #get all the image names from the database
     all_images =  ImagesModel.query.all()
-    all_images = [[i.ImageID, i.FileName] for i in all_images]
+    all_images = [[i.id, i.target_file] for i in all_images]
 
-    return render_template("all-images.html", images=all_images), 200
+    # return render_template("all-images.html", images=all_images), 200
     
 @app.route('/media/images/retrieve/all_filenames', methods=["GET"])
 @app.route('/media/images/retrieve/all_filenames/', methods=["GET"])
@@ -510,26 +537,26 @@ def get_all_image_filenames():
         These filenames must be appended to the URL for image retrieval.
     '''
     
-    if "user" in session:
-        all_images =  ImagesModel.query.all()
-        all_images = [i.FileName for i in all_images]
-        return jsonify(all_images), 200
-    else:
-        return "Forbidden Access", 403
+    # if "user" in session:
+    all_images =  ImagesModel.query.all()
+    all_images = [i.target_file for i in all_images]
+    return jsonify(all_images), 200
+    # else:
+    #     return "Forbidden Access", 403
 
-@app.route('/media/images/remove/<filename>', methods=["DELETE"])
-def remove_image_with_filename(filename):
+@app.route('/media/images/remove/<target_file>', methods=["DELETE"])
+def remove_image_with_filename(target_file):
 
-    if not "user" in session:
-        flash("You must be logged in to remove an image!", "info")
-        return redirect(url_for("login")), 403
+    # if not "user" in session:
+    #     flash("You must be logged in to remove an image!", "info")
+    #     return redirect(url_for("login")), 403
 
     
-    ImagesModel.query.filter_by(FileName=filename).delete()
+    ImagesModel.query.filter_by(target_file=target_file).delete()
     db.session.commit()
 
-    filepath = MEDIA_FILEPATH_ROOT + "images/" + filename
-    thumbnail_filepath = MEDIA_FILEPATH_ROOT + "thumbnails/image_thumbnails/" + filename
+    filepath = HEADPHOTOS_FILEPATH_ROOT + target_file
+    thumbnail_filepath = IMAGE_THUMBNAIL_ROOT + target_file
     os.remove(filepath)
     os.remove(thumbnail_filepath)
 
@@ -538,40 +565,47 @@ def remove_image_with_filename(filename):
 
 ###########################
 
-# @app.route('/faceswap/openCV', methods=["GET"]) #PENDING
-# def faceswap_with_ids():
-#     '''
-#         creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
-#     '''
-#     if "user" in session:
-#         if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
-#             return "Incorect arguments!", 400
-
-
-#         ## PENDING ## : GET IDs + USE DB & PASSED IDs TO GET IMAGE AND VIDEO NAMEs
-#         gif_filename = request.args.get('gif_filename')
-#         head_photo = request.args.get('head_photo')
-
-#         gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
-#         head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
-#         ###############
+@app.route('/faceswap/openCV', methods=["GET"]) #PENDING
+def faceswap_with_ids():
+    '''
+        creates and returns the requested faceswap using the openCV/DYI faceswapping tool (tool 1)
+    '''
+    # if "user" in session:
         
-#         unique_filename_prefix = "swap"
-#         unique_filename_suffix = str(int(time.time()))
-#         unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{SWAPS_FILE_FORMAT}"
-#         result_fullpath = f"{SWAPS_FILEPATH_ROOT}/{unique_filename}"
+    # else:
+    #     return "Forbidden Access", 403
 
-#         try:
-#             swap(DETECTOR_FULLPATH, gif_fullpath, head_photo_fullpath, result_fullpath)       
-#         except e:
-#             return "Failed to faceswap!", 500
+    if request.args.get('gif_filename') == None or request.args.get('head_photo') == None:
+        return "Incorect arguments!", 400
 
-#         try:
-#             return send_from_directory(SWAPS_FILEPATH_ROOT, unique_filename), 200
-#         except:
-#             return "Failed to retrieve faceswap video file.", 500
-#     else:
-#         return "Forbidden Access", 403
+
+    ## PENDING ## : GET IDs + USE DB & PASSED IDs TO GET IMAGE AND VIDEO NAMEs
+    gif_filename = request.args.get('gif_filename')
+    head_photo = request.args.get('head_photo')
+
+    gif_fullpath = f'{GIF_FILEPATH_ROOT}/{gif_filename}'
+    head_photo_fullpath = f'{HEADPHOTOS_FILEPATH_ROOT}/{head_photo}'
+    ###############
+    
+    unique_filename_prefix = "swap"
+    unique_filename_suffix = str(int(time.time()))
+    unique_filename = f"{unique_filename_prefix}_{unique_filename_suffix}{SWAPS_FILE_FORMAT}"
+    result_fullpath = f"{SWAPS_FILEPATH_ROOT}/{unique_filename}"
+
+    try:
+        swap(DETECTOR_FULLPATH, gif_fullpath, head_photo_fullpath, result_fullpath)       
+    except e:
+        return "Failed to faceswap!", 500
+
+    try:
+        
+        url = f"{IP_ADDRESS}{SWAPS_FILEPATH_ROOT_RESULT}{unique_filename}"
+        
+        return url, 200
+        #return send_from_directory(SWAPS_FILEPATH_ROOT, unique_filename), 200
+    except:
+        return "Failed to retrieve faceswap video file.", 500
+
 
 # @app.route('/faceswap/openCV', methods=["POST"]) #PENDING
 # def faceswap_with_user_image():
