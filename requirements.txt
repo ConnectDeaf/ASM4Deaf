@@ -18,7 +18,6 @@ Mako==1.2.0
 MarkupSafe==2.1.0
 mysql-connector-python==8.0.28
 numpy==1.21.4
-manylinux_2_27_x86_64.whl
 opencv-python==4.5.4.60
 protobuf==3.19.4
 pycosat==0.6.3
